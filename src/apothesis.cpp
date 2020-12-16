@@ -572,6 +572,11 @@ vector<double> Apothesis::calculateProbabilities(vector<Process *> pProcesses)
   {
     *itr = *itr / total;
   }
+  
+  // Increment time
+  double random = (double)rand() / RAND_MAX;
+
+  m_time += -log(random)/total;
 
   return probability;
 }
