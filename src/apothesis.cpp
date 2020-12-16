@@ -43,7 +43,8 @@ typedef rapidjson::SizeType SizeType;
 Apothesis::Apothesis(int argc, char *argv[])
     : pLattice(0),
       pRead(0),
-      m_debugMode(false)
+      m_debugMode(false),
+      m_time(0)
 {
   m_iArgc = argc;
   m_vcArgv = argv;
