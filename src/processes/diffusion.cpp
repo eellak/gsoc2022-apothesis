@@ -111,31 +111,32 @@ void Diffusion::perform()
   Desorption* d = getDesorption();
   d->setSite(m_site);
   d->perform();
-
+  
   Adsorption* a = getAdsorption();
   a->setSite(diffuseTo);
   a->perform();
 
+  m_site->m_updateNeighbourList();
+  diffuseTo->m_updateNeighbourList();
+
   // update number of neighbours for all adjacent 
+  // TODO: can I combine this with the desorption counter?
   vector<Site*> neigh = m_site->getNeighs();
   for(vector<Site*> :: iterator itr = neigh.begin(); itr != neigh.end(); ++itr)
   {
     // update number of possible diffusion sites
     updateSiteCounter((*itr)->getNeighboursNum(), false);
-    int newNeighbourNum = mf_getNumNeighbours(*itr);
+    int newNeighbourNum = (*itr)->m_updateNeighbours();
     updateSiteCounter(newNeighbourNum, true);
   }
 
-  // update number of possible diffusion sites
+  // update number of possible sdiffusion sites
   updateSiteCounter(currentNeighbourNum, false);
   int newNeighbourNum = diffuseTo->getNeighboursNum();
   updateSiteCounter(newNeighbourNum, true);
 
   // get new number of neighbours
   mf_removeFromList();
-
-  //TODO: Is this function still valid for diffusion process?
-//  mf_updateNeighNum(m_site);
 
   // If we are in debugging more, print more information
   if (m_apothesis->getDebugMode())
