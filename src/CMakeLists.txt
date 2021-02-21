@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 #set(CMAKE_BUILD_TYPE Debug)
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 
 find_package(RapidJSON)
 
@@ -10,7 +10,7 @@ set(header_files
     apothesis.h
     pointers.h
     register.h
-    processes/io.h
+    IO/io.h
     processes/abstract_process.h
     lattice/lattice.h
     processes/process.h
@@ -26,6 +26,7 @@ set(header_files
     processes/parameters.h
     IO/read.h
     species/species.h
+
 )
 set(essential_src_files
     apothesis.cpp
@@ -40,10 +41,31 @@ set(process_files
     processes/factory_process.cpp
     processes/process.cpp
     processes/parameters.cpp
-    processes/io.cpp
+    IO/io.cpp
     processes/desorption.cpp
     processes/SurfaceReaction.cpp
     processes/process.cpp
+)
+set(new_files
+    processes/adsorption_new.h
+    processes/adsorption_new.cpp
+    processes/desorption_new.h
+    processes/desorption_new.cpp
+    processes/diffusion_new.h
+    processes/diffusion_new.cpp
+    processes/process_new.h
+    processes/process_new.cpp
+    processes/reaction_new.h
+    processes/reaction_new.cpp
+    processes/processpool.h
+    processes/processpool.cpp
+    species/species_new.h
+    species/species_new.cpp
+    aux/mersenne.cpp
+    aux/random_generator.cpp
+    aux/random_generator.h
+    aux/randomc.h
+    properties.cpp
 )
 set(error_files
     error/errorhandler.cpp 
@@ -67,6 +89,7 @@ add_executable(${PROJECT_NAME} "main.cpp"
     ${lattice_files}
     ${species_files}
     ${essential_src_files}
+    ${new_files}
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
