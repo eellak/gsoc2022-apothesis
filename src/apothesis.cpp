@@ -483,24 +483,24 @@ void Apothesis::exec()
 {
     // Initialize Random generator.
     pRandomGen->init( 0 );
-    newDesign::ProrcessPool* procPool = new newDesign::ProrcessPool();
+    newDesign::ProcessPool* procPool = new newDesign::ProcessPool();
 
     //---------------------- Creation of the process map & initialization (must be transferred to init) ------------------------------>//
-    Adsorption_new* adsosption = new Adsorption_new();
-    adsosption->setActivationEnergy( 12.0 );
-    adsosption->setName("Adsoprtion");
-    adsosption->setID( 0 );
+    Adsorption_new* adsorption = new Adsorption_new();
+    adsorption->setActivationEnergy( 12.0 );
+    adsorption->setName("Adsoprtion");
+    adsorption->setID( 0 );
 
     pair<string, set<int> > p;
-    p.first = adsosption->getName();
+    p.first = adsorption->getName();
     set< int > ids;
 
     m_procMap.insert( p );
-    procPool->addProcess( adsosption->getName(), adsosption );
-    procPool->addProcess( adsosption->getID(),  adsosption);
+    procPool->addProcess( adsorption->getName(), adsorption );
+    procPool->addProcess( adsorption->getID(),  adsorption);
 
     for (Site* s:pLattice->getSites() )
-        m_procMap[ adsosption->getName() ].insert( s->getID() );
+        m_procMap[ adsorption->getName() ].insert( s->getID() );
 
     Desorption_new* desorption_1N = new Desorption_new();
     desorption_1N->setName("Desorption 1N");

@@ -1,5 +1,5 @@
-#ifndef PRORCESSPOOL_H
-#define PRORCESSPOOL_H
+#ifndef PROCESSPOOL_H
+#define PROCESSPOOL_H
 
 #include <string>
 #include <map>
@@ -11,10 +11,10 @@ using namespace std;
 namespace newDesign
 {
 
-class ProrcessPool
+class ProcessPool
 {
 public:
-    ProrcessPool();
+    ProcessPool();
 
     inline Process_new* getProcessByName(string name) { return m_mapProcs[ name ]; }
     inline Process_new* getProcessByID( int id ){ return m_mapProcsIDs[ id ]; }
@@ -30,4 +30,4 @@ private:
 
 }
 
-#endif // PRORCESSPOOL_H
+#endif // PROCESSPOOL_H

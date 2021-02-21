@@ -3,9 +3,9 @@
 namespace newDesign
 {
 
-ProrcessPool::ProrcessPool(){}
+ProcessPool::ProcessPool(){}
 
-void ProrcessPool::addProcess( string name, Process_new* proc)
+void ProcessPool::addProcess( string name, Process_new* proc)
 {
     pair<string, Process_new* > p;
     p.first = name;
@@ -14,7 +14,7 @@ void ProrcessPool::addProcess( string name, Process_new* proc)
     m_mapProcs.insert( p );
 }
 
-void ProrcessPool::addProcess( int id, Process_new* proc)
+void ProcessPool::addProcess( int id, Process_new* proc)
 {
     pair<int, Process_new* > p;
     p.first = id;
