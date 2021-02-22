@@ -67,6 +67,11 @@ namespace SurfaceTiles
     m_iHeight++;
   }
 
+  void Site::increaseHeight(int height)
+  {
+    m_iHeight += height;
+  }
+
   void Site::decreaseHeight(){
     m_iHeight--;
   }

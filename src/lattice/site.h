@@ -167,6 +167,9 @@ public:
     //Increase the height of the site by one
     void increaseHeight();
 
+    //Overloaded function to increase the height of the site by > 1
+    void increaseHeight(int height);
+
     //Decrease the height of the site by one
     void decreaseHeight();
 
