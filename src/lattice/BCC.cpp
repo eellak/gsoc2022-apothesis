@@ -112,8 +112,12 @@ void BCC::setStepInfo(int sizeX, int sizeY, int sizeZ)
 void BCC::mf_buildSteps()
 {
 	// Pick dimension of step
-	// TODO: Can we assume that the largest value is the dimension of stepping?
-	// Find the initial height from arbitrary site
+	// Largest value is the direction of stepping
+	// i.e. lattice is [40 x 20], having a step array of [40, 2, 1] 
+	// steps of height 1 in the z direction, and 2 consecutive sites 
+	// in the y direction are the same height
+
+	// 1. Find the initial height from arbitrary site
 	int initialHeight = m_vSites[0]->getHeight();
 	vector<int> currentDimensions{m_iSizeX, m_iSizeY, initialHeight};
 
@@ -121,7 +125,7 @@ void BCC::mf_buildSteps()
 	int stepDimension = 0, stepSoFar = 0, growthDimension = 0, growthSoFar = 0, latentDimension = 0;
 	for (auto &dim : m_stepInfo)
 	{
-		// If the step information is the same value as lattice dim, this will not be the step/growth dimension
+		// 2. If the step information is the same value as lattice dim, this will not be the step/growth dimension
 		if (dim != currentDimensions[iteration])
 		{
 			// The step dimension will be the largest value
@@ -142,8 +146,6 @@ void BCC::mf_buildSteps()
 
 		iteration++;
 	}
-
-	// steps [160, 20, 1]
 
 	for (unsigned int firstDim = 0; firstDim < currentDimensions[latentDimension]; ++firstDim)
 	{
