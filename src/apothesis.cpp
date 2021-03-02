@@ -116,22 +116,8 @@ void Apothesis::init()
         pIO->openOutputFile("Output");
 
     //---------------------- Creation of the process map & initialization (must be transferred to init) ------------------------------>//
-    Adsorption_new* adsorption = new Adsorption_new();
-    adsorption->setActivationEnergy( 12.0 );
-    adsorption->setName("Adsorption");
-    adsorption->setID( 0 );
-
+    int id = 0;
     pair<string, set<int> > p;
-    p.first = adsorption->getName();
-    set< int > ids;
-
-    m_procMap.insert( p );
-    m_procPool->addProcess( adsorption->getName(), adsorption );
-    m_procPool->addProcess( adsorption->getID(),  adsorption);
-
-    for (Site* s:pLattice->getSites() )
-        m_procMap[ adsorption->getName() ].insert( s->getID() );
-
     Desorption_new* desorption_1N = new Desorption_new();
     desorption_1N->setName("Desorption 1N");
     desorption_1N->setNumNeigh( 1 );
@@ -237,9 +223,7 @@ void Apothesis::init()
     for (Site* s:pLattice->getSites() )
         m_procMap[ diffusion_5N->getName() ].insert( s->getID() );
 
-    //Set reference to each process5
-    for (pair<string, set<int> > p:m_procMap)
-        m_procPool->getProcessByName( p.first )->setLattice( pLattice );
+    
     //<---------------------- End creation of the process map & initialization  ------------------------------//
 
 
@@ -259,9 +243,13 @@ void Apothesis::init()
 
         for (int i = 0; i < mws.size(); ++i)
         {
-            Species *s = new Species(names[i], mws[i], m_nSpecies);
+            // Define key, value for species map
+            pair<int, species_new*> speciesID;
+            speciesID.first = m_nSpecies;
+            species_new *s = new species_new(names[i], mws[i], m_nSpecies);
+            speciesID.second = s;
             m_nSpecies++;
-            m_species[names[i]] = s;
+            m_speciesMap.insert(speciesID);
         }
     }
 
@@ -353,14 +341,27 @@ void Apothesis::init()
                 }
 
             }
+            
             Adsorption* a = new Adsorption(this, species[i], m_species[species[i]], sticking[i], massFraction[i], direct);
+            Adsorption_new* adsorption = new Adsorption_new();
+            adsorption->setActivationEnergy( 12.0 );
+            adsorption->setName("Adsorption_" + species[i]);
+            adsorption->setID( id );
+            // TODO: Generalize to be able to put in more than 1 species
+            adsorption->setSpecies(m_speciesMap[0]);
 
-            // Keep two separate vectors: one for all processes, one for adsorption processes only
-            m_vAdsorption.push_back(a);
-            m_vProcesses.push_back(a);
+            // Increment id 
+            id++;
+
+            p.first = adsorption->getName();
+
+            m_procMap.insert( p );
+            m_procPool->addProcess( adsorption->getName(), adsorption );
+            m_procPool->addProcess( adsorption->getID(),  adsorption);
+
+            for (Site* s:pLattice->getSites() )
+                m_procMap[ adsorption->getName() ].insert( s->getID() );
         }
-
-        // Resolving Conflicts
 
         pIO->writeLogOutput("...Done initializing Adsorption process.");
     }
@@ -614,6 +615,10 @@ void Apothesis::init()
         pSite->initSpeciesMap(m_nSpecies);
     }
 
+    //Set reference to each process5
+    for (pair<string, set<int> > p:m_procMap)
+        m_procPool->getProcessByName( p.first )->setLattice( pLattice );
+
 }
 
 void Apothesis::exec()
@@ -662,7 +667,8 @@ void Apothesis::exec()
                 m_iSiteNum = pRandomGen->getIntRandom(0, m_procMap[ p.first ].size() - 1 );
 
                 //3. From this process pick the random site with id and perform it:
-                m_procPool->getProcessByName( p.first )->perform( *next(m_procMap[ p.first ].begin(), m_iSiteNum) );
+                //m_procPool->getProcessByName( p.first )->perform( *next(m_procMap[ p.first ].begin(), m_iSiteNum) );
+                m_procPool->getProcessByName( p.first )->perform(  m_iSiteNum );
                 m_procPool->getProcessByName( p.first )->eventHappened();
 
                 //4. Re-compute the processes rates and re-compute Rtot (see ppt).
