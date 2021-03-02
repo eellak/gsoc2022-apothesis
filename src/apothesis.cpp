@@ -43,6 +43,7 @@
 #include <numeric>
 
 using namespace MicroProcesses;
+using namespace newDesign;
 
 typedef rapidjson::Document Document;
 typedef rapidjson::Value Value;
@@ -82,6 +83,12 @@ Apothesis::Apothesis(int argc, char *argv[])
 
     // initialize number of species
     m_nSpecies = 0;
+
+    // Initialize Random generator.
+    pRandomGen->init( 0 );
+
+    // Initialize process pool
+    m_procPool = new newDesign::ProcessPool();
 }
 
 Apothesis::~Apothesis()
@@ -107,6 +114,135 @@ void Apothesis::init()
 
     if (!pIO->outputOpen())
         pIO->openOutputFile("Output");
+
+    //---------------------- Creation of the process map & initialization (must be transferred to init) ------------------------------>//
+    Adsorption_new* adsorption = new Adsorption_new();
+    adsorption->setActivationEnergy( 12.0 );
+    adsorption->setName("Adsorption");
+    adsorption->setID( 0 );
+
+    pair<string, set<int> > p;
+    p.first = adsorption->getName();
+    set< int > ids;
+
+    m_procMap.insert( p );
+    m_procPool->addProcess( adsorption->getName(), adsorption );
+    m_procPool->addProcess( adsorption->getID(),  adsorption);
+
+    for (Site* s:pLattice->getSites() )
+        m_procMap[ adsorption->getName() ].insert( s->getID() );
+
+    Desorption_new* desorption_1N = new Desorption_new();
+    desorption_1N->setName("Desorption 1N");
+    desorption_1N->setNumNeigh( 1 );
+    desorption_1N->setID( 1 );
+
+    p.first = desorption_1N->getName();
+    m_procMap.insert( p );
+    m_procPool->addProcess( desorption_1N->getName(), desorption_1N );
+    m_procPool->addProcess( desorption_1N->getID(), desorption_1N );
+
+    Desorption_new* desorption_2N = new Desorption_new();
+    desorption_2N->setName("Desorption 2N");
+    desorption_2N->setNumNeigh( 2 );
+    desorption_2N->setID( 2 );
+
+    p.first = desorption_2N->getName();
+    m_procMap.insert( p );
+    m_procPool->addProcess( desorption_2N->getName(), desorption_2N );
+    m_procPool->addProcess( desorption_2N->getID(), desorption_2N );
+
+    Desorption_new* desorption_3N = new Desorption_new();
+    desorption_3N->setName("Desorption 3N");
+    desorption_3N->setNumNeigh( 3 );
+    desorption_3N->setID( 3 );
+
+    p.first = desorption_3N->getName();
+    m_procMap.insert( p );
+    m_procPool->addProcess( desorption_3N->getName(), desorption_3N );
+    m_procPool->addProcess( desorption_3N->getID(), desorption_3N );
+
+    Desorption_new* desorption_4N = new Desorption_new();
+    desorption_4N->setName("Desorption 4N");
+    desorption_4N->setNumNeigh( 4 );
+    desorption_4N->setID( 4 );
+
+    p.first = desorption_4N->getName();
+    m_procMap.insert( p );
+    m_procPool->addProcess( desorption_4N->getName(), desorption_4N );
+    m_procPool->addProcess( desorption_4N->getID(), desorption_4N );
+
+    Desorption_new* desorption_5N = new Desorption_new();
+    desorption_5N->setName("Desorption 5N");
+    desorption_5N->setNumNeigh( 5 );
+    desorption_5N->setID( 5 );
+
+    p.first = desorption_5N->getName();
+    m_procMap.insert( p );
+    m_procPool->addProcess( desorption_5N->getName(), desorption_5N );
+    m_procPool->addProcess( desorption_5N->getID(), desorption_5N );
+
+    for (Site* s:pLattice->getSites() )
+        m_procMap[ desorption_5N->getName() ].insert( s->getID() );
+
+    Diffusion_new* diffusion_1N = new Diffusion_new();
+    diffusion_1N->setName("Diffusion 1N");
+    diffusion_1N->setNeigh(1);
+    diffusion_1N->setID(6);
+
+    p.first = diffusion_1N->getName();
+    m_procMap.insert( p );
+    m_procPool->addProcess( diffusion_1N->getName(), diffusion_1N );
+    m_procPool->addProcess( diffusion_1N->getID(), diffusion_1N );
+
+    Diffusion_new* diffusion_2N = new Diffusion_new();
+    diffusion_2N->setName("Diffusion 2N");
+    diffusion_2N->setID(7);
+
+    p.first = diffusion_2N->getName();
+    m_procMap.insert( p );
+    m_procPool->addProcess( diffusion_2N->getName(), diffusion_2N );
+    m_procPool->addProcess( diffusion_2N->getID(), diffusion_2N );
+
+    Diffusion_new* diffusion_3N = new Diffusion_new();
+    diffusion_3N->setName("Diffusion 3N");
+    diffusion_3N->setNeigh(3);
+    diffusion_3N->setID(8);
+
+    p.first = diffusion_3N->getName();
+    m_procMap.insert( p );
+    m_procPool->addProcess( diffusion_3N->getName(), diffusion_3N );
+    m_procPool->addProcess( diffusion_3N->getID(), diffusion_3N );
+
+    Diffusion_new* diffusion_4N = new Diffusion_new();
+    diffusion_4N->setName("Diffusion 4N");
+    diffusion_4N->setNeigh(4);
+    diffusion_4N->setID(9);
+
+    p.first = diffusion_4N->getName();
+    m_procMap.insert( p );
+    m_procPool->addProcess( diffusion_4N->getName(), diffusion_4N );
+    m_procPool->addProcess( diffusion_4N->getID(), diffusion_4N );
+
+    Diffusion_new* diffusion_5N = new Diffusion_new();
+    diffusion_5N->setName("Diffusion 5N");
+    diffusion_5N->setNeigh(5);
+    diffusion_5N->setID(10);
+
+    p.first = diffusion_5N->getName();
+    m_procMap.insert( p );
+    m_procPool->addProcess( diffusion_5N->getName(), diffusion_5N );
+    m_procPool->addProcess( diffusion_5N->getID(), diffusion_5N );
+
+    for (Site* s:pLattice->getSites() )
+        m_procMap[ diffusion_5N->getName() ].insert( s->getID() );
+
+    //Set reference to each process5
+    for (pair<string, set<int> > p:m_procMap)
+        m_procPool->getProcessByName( p.first )->setLattice( pLattice );
+    //<---------------------- End creation of the process map & initialization  ------------------------------//
+
+
 
     // Processes in this case
     vector<string> pProc = m_processes;
@@ -482,138 +618,7 @@ void Apothesis::init()
 
 void Apothesis::exec()
 {
-    // Initialize Random generator.
-    pRandomGen->init( 0 );
-    newDesign::ProcessPool* procPool = new newDesign::ProcessPool();
-
-    //---------------------- Creation of the process map & initialization (must be transferred to init) ------------------------------>//
-    Adsorption_new* adsorption = new Adsorption_new();
-    adsorption->setActivationEnergy( 12.0 );
-    adsorption->setName("Adsoprtion");
-    adsorption->setID( 0 );
-
-    pair<string, set<int> > p;
-    p.first = adsorption->getName();
-    set< int > ids;
-
-    m_procMap.insert( p );
-    procPool->addProcess( adsorption->getName(), adsorption );
-    procPool->addProcess( adsorption->getID(),  adsorption);
-
-    for (Site* s:pLattice->getSites() )
-        m_procMap[ adsorption->getName() ].insert( s->getID() );
-
-    Desorption_new* desorption_1N = new Desorption_new();
-    desorption_1N->setName("Desorption 1N");
-    desorption_1N->setNumNeigh( 1 );
-    desorption_1N->setID( 1 );
-
-    p.first = desorption_1N->getName();
-    m_procMap.insert( p );
-    procPool->addProcess( desorption_1N->getName(), desorption_1N );
-    procPool->addProcess( desorption_1N->getID(), desorption_1N );
-
-    Desorption_new* desorption_2N = new Desorption_new();
-    desorption_2N->setName("Desorption 2N");
-    desorption_2N->setNumNeigh( 2 );
-    desorption_2N->setID( 2 );
-
-    p.first = desorption_2N->getName();
-    m_procMap.insert( p );
-    procPool->addProcess( desorption_2N->getName(), desorption_2N );
-    procPool->addProcess( desorption_2N->getID(), desorption_2N );
-
-    Desorption_new* desorption_3N = new Desorption_new();
-    desorption_3N->setName("Desorption 3N");
-    desorption_3N->setNumNeigh( 3 );
-    desorption_3N->setID( 3 );
-
-    p.first = desorption_3N->getName();
-    m_procMap.insert( p );
-    procPool->addProcess( desorption_3N->getName(), desorption_3N );
-    procPool->addProcess( desorption_3N->getID(), desorption_3N );
-
-    Desorption_new* desorption_4N = new Desorption_new();
-    desorption_4N->setName("Desorption 4N");
-    desorption_4N->setNumNeigh( 4 );
-    desorption_4N->setID( 4 );
-
-    p.first = desorption_4N->getName();
-    m_procMap.insert( p );
-    procPool->addProcess( desorption_4N->getName(), desorption_4N );
-    procPool->addProcess( desorption_4N->getID(), desorption_4N );
-
-    Desorption_new* desorption_5N = new Desorption_new();
-    desorption_5N->setName("Desorption 5N");
-    desorption_5N->setNumNeigh( 5 );
-    desorption_5N->setID( 5 );
-
-    p.first = desorption_5N->getName();
-    m_procMap.insert( p );
-    procPool->addProcess( desorption_5N->getName(), desorption_5N );
-    procPool->addProcess( desorption_5N->getID(), desorption_5N );
-
-    for (Site* s:pLattice->getSites() )
-        m_procMap[ desorption_5N->getName() ].insert( s->getID() );
-
-    Diffusion_new* diffusion_1N = new Diffusion_new();
-    diffusion_1N->setName("Diffusion 1N");
-    diffusion_1N->setNeigh(1);
-    diffusion_1N->setID(6);
-
-    p.first = diffusion_1N->getName();
-    m_procMap.insert( p );
-    procPool->addProcess( diffusion_1N->getName(), diffusion_1N );
-    procPool->addProcess( diffusion_1N->getID(), diffusion_1N );
-
-    Diffusion_new* diffusion_2N = new Diffusion_new();
-    diffusion_2N->setName("Diffusion 2N");
-    diffusion_2N->setID(7);
-
-    p.first = diffusion_2N->getName();
-    m_procMap.insert( p );
-    procPool->addProcess( diffusion_2N->getName(), diffusion_2N );
-    procPool->addProcess( diffusion_2N->getID(), diffusion_2N );
-
-    Diffusion_new* diffusion_3N = new Diffusion_new();
-    diffusion_3N->setName("Diffusion 3N");
-    diffusion_3N->setNeigh(3);
-    diffusion_3N->setID(8);
-
-    p.first = diffusion_3N->getName();
-    m_procMap.insert( p );
-    procPool->addProcess( diffusion_3N->getName(), diffusion_3N );
-    procPool->addProcess( diffusion_3N->getID(), diffusion_3N );
-
-    Diffusion_new* diffusion_4N = new Diffusion_new();
-    diffusion_4N->setName("Diffusion 4N");
-    diffusion_4N->setNeigh(4);
-    diffusion_4N->setID(9);
-
-    p.first = diffusion_4N->getName();
-    m_procMap.insert( p );
-    procPool->addProcess( diffusion_4N->getName(), diffusion_4N );
-    procPool->addProcess( diffusion_4N->getID(), diffusion_4N );
-
-    Diffusion_new* diffusion_5N = new Diffusion_new();
-    diffusion_5N->setName("Diffusion 5N");
-    diffusion_5N->setNeigh(5);
-    diffusion_5N->setID(10);
-
-    p.first = diffusion_5N->getName();
-    m_procMap.insert( p );
-    procPool->addProcess( diffusion_5N->getName(), diffusion_5N );
-    procPool->addProcess( diffusion_5N->getID(), diffusion_5N );
-
-    for (Site* s:pLattice->getSites() )
-        m_procMap[ diffusion_5N->getName() ].insert( s->getID() );
-
-    //Set reference to each process5
-    for (pair<string, set<int> > p:m_procMap)
-        procPool->getProcessByName( p.first )->setLattice( pLattice );
-    //<---------------------- End creation of the process map & initialization  ------------------------------//
-
-
+    
     //--------------- Open files for writting ---------------------->
     pIO->openRoughnessFile( "testRough" );
 
@@ -624,17 +629,17 @@ void Apothesis::exec()
     //Perform the number of KMC steps read from the input.
     m_dEndTime = pParameters->getEndTime();
 
-    if (m_dEndTime == 0.0){
-        pErrorHandler->error_simple_msg("Zero iterations found.");
-        exit(0);
-    }
-    else
-        pIO->writeLogOutput("Running " + to_string( m_dEndTime ) + " sec");
+    //if (m_dEndTime == 0.0){
+    //    pErrorHandler->error_simple_msg("Zero iterations found.");
+    //    exit(0);
+    //}
+    //else
+    //    pIO->writeLogOutput("Running " + to_string( m_dEndTime ) + " sec");
 
     //Calculate the total probability (R) --------------------------//
     m_dRTot = 0.0;
     for (pair<string, set<int> > p:m_procMap)
-        m_dRTot += (double)procPool->getProcessByName( p.first )->getProbability()*p.second.size();
+        m_dRTot += (double) m_procPool->getProcessByName( p.first )->getProbability()*p.second.size();
 
     m_dEndTime = 0.01;
 
@@ -647,7 +652,7 @@ void Apothesis::exec()
 
         m_dSum = 0.0;
         for (pair<string, set<int> > p:m_procMap) {
-            m_dProcRate = (double)procPool->getProcessByName( p.first )->getProbability()*p.second.size();
+            m_dProcRate = (double) m_procPool->getProcessByName( p.first )->getProbability()*p.second.size();
             m_dSum += m_dProcRate/m_dRTot;
 
             //2. Pick a process according to the rates
@@ -657,13 +662,13 @@ void Apothesis::exec()
                 m_iSiteNum = pRandomGen->getIntRandom(0, m_procMap[ p.first ].size() - 1 );
 
                 //3. From this process pick the random site with id and perform it:
-                procPool->getProcessByName( p.first )->perform( *next(m_procMap[ p.first ].begin(), m_iSiteNum) );
-                procPool->getProcessByName( p.first )->eventHappened();
+                m_procPool->getProcessByName( p.first )->perform( *next(m_procMap[ p.first ].begin(), m_iSiteNum) );
+                m_procPool->getProcessByName( p.first )->eventHappened();
 
                 //4. Re-compute the processes rates and re-compute Rtot (see ppt).
                 m_dRTot = 0.0;
                 for (pair<string, set<int> > p:m_procMap)
-                    m_dRTot += (double)procPool->getProcessByName( p.first )->getProbability()*p.second.size();
+                    m_dRTot += (double) m_procPool->getProcessByName( p.first )->getProbability()*p.second.size();
 
                 //5. Compute dt = -ln(ksi)/Rtot
                 m_dt = -log( pRandomGen->getDoubleRandom()  )/m_dRTot;
@@ -680,7 +685,7 @@ void Apothesis::exec()
         pIO->writeRoughness( m_dProcTime, pProperties->getRoughness() );
     }
 
-    delete procPool;
+    delete m_procPool;
 }
 
 void Apothesis::addProcess(string process)

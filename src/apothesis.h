@@ -39,6 +39,7 @@ namespace Utils{ class ErrorHandler; class Parameters; class Properties; }
 namespace SurfaceTiles{ class Site; }
 namespace MicroProcesses { class Process; class Adsorption; class Desorption; class Diffusion; class SurfaceReaction; }
 namespace RandomGen { class RandomGenerator; }
+namespace newDesign { class ProcessPool; }
 
 class Lattice;
 class IO;
@@ -132,6 +133,9 @@ private:
     // "Adsorption:CuAMD" must be a name of a process because we want to be able to do
     // m_procMap["Adsorption:CuAMD"]->addSite(Site);
     map< string, set< int > > m_procMap;
+
+    //This holds the process pools so that we can have access from entire class
+    newDesign::ProcessPool* m_procPool;
 
     //The map holding all tbe species. The int is the same as the ID of the species.
     // e.g Assuming the user has procided CuAMD, H2, SiH4, SiH2
