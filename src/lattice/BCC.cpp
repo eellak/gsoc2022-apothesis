@@ -302,7 +302,8 @@ void BCC::adsorp(int siteID, species_new *chemSpec)
 	//Remove site and its neihbors from its previous position in diffusion and desorption classes
 	for (auto &p : *m_pProcMap)
 	{
-		if (!IO::contains(p.first, "Adsoprtion"))
+		string adsorption = "Adsorption_" + chemSpec->getChemFormula();
+		if (!IO::contains(p.first, "Adsorption_" + adsorption))
 		{
 			p.second.erase(siteID);
 
@@ -360,7 +361,7 @@ void BCC::desorp(int siteID, species_new *chemSpecies)
 	//Remove site and its neihbors from its previous position in diffusion and desorption classes
 	for (auto &p : *m_pProcMap)
 	{
-		if (!IO::contains(p.first, "Adsoprtion"))
+		if (!IO::contains(p.first, "Adsorption"))
 		{
 			p.second.erase(siteID);
 

@@ -14,6 +14,7 @@ class species_new
 {
 public:
     species_new();
+    species_new(string name, double mw, int id);
     ~species_new();
 
     inline void setChemFormula( string chemForm ){ m_sChemForm = chemForm; }
@@ -34,6 +35,9 @@ private:
 
     /// The id of this species
     int m_iID;
+
+    /// Molecular weight
+    double m_mw;
 
     /// The reactions that species participates in
     vector< reaction_new* > m_vReactions;
