@@ -1,8 +1,8 @@
 #include "desorption_new.h"
 
-Desorption_new::Desorption_new() : m_iNeigh(0){};
+Desorption_new::Desorption_new() : m_iNeigh(0) {}
 
-Desorption_new::Desorption_new(int numNeigh, species_new *species) : m_iNeigh(numNeigh), m_Species(species){};
+Desorption_new::Desorption_new(int numNeigh, species_new *species) : m_iNeigh(numNeigh), m_Species(species) {}
 
 Desorption_new::~Desorption_new() {}
 

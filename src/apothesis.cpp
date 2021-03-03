@@ -118,59 +118,6 @@ void Apothesis::init()
     //---------------------- Creation of the process map & initialization (must be transferred to init) ------------------------------>//
     int id = 0;
     pair<string, set<int> > p;
-
-    Diffusion_new* diffusion_1N = new Diffusion_new();
-    diffusion_1N->setName("Diffusion 1N");
-    diffusion_1N->setNeigh(1);
-    diffusion_1N->setID(6);
-
-    p.first = diffusion_1N->getName();
-    m_procMap.insert( p );
-    m_procPool->addProcess( diffusion_1N->getName(), diffusion_1N );
-    m_procPool->addProcess( diffusion_1N->getID(), diffusion_1N );
-
-    Diffusion_new* diffusion_2N = new Diffusion_new();
-    diffusion_2N->setName("Diffusion 2N");
-    diffusion_2N->setID(7);
-
-    p.first = diffusion_2N->getName();
-    m_procMap.insert( p );
-    m_procPool->addProcess( diffusion_2N->getName(), diffusion_2N );
-    m_procPool->addProcess( diffusion_2N->getID(), diffusion_2N );
-
-    Diffusion_new* diffusion_3N = new Diffusion_new();
-    diffusion_3N->setName("Diffusion 3N");
-    diffusion_3N->setNeigh(3);
-    diffusion_3N->setID(8);
-
-    p.first = diffusion_3N->getName();
-    m_procMap.insert( p );
-    m_procPool->addProcess( diffusion_3N->getName(), diffusion_3N );
-    m_procPool->addProcess( diffusion_3N->getID(), diffusion_3N );
-
-    Diffusion_new* diffusion_4N = new Diffusion_new();
-    diffusion_4N->setName("Diffusion 4N");
-    diffusion_4N->setNeigh(4);
-    diffusion_4N->setID(9);
-
-    p.first = diffusion_4N->getName();
-    m_procMap.insert( p );
-    m_procPool->addProcess( diffusion_4N->getName(), diffusion_4N );
-    m_procPool->addProcess( diffusion_4N->getID(), diffusion_4N );
-
-    Diffusion_new* diffusion_5N = new Diffusion_new();
-    diffusion_5N->setName("Diffusion 5N");
-    diffusion_5N->setNeigh(5);
-    diffusion_5N->setID(10);
-
-    p.first = diffusion_5N->getName();
-    m_procMap.insert( p );
-    m_procPool->addProcess( diffusion_5N->getName(), diffusion_5N );
-    m_procPool->addProcess( diffusion_5N->getID(), diffusion_5N );
-
-    for (Site* s:pLattice->getSites() )
-        m_procMap[ diffusion_5N->getName() ].insert( s->getID() );
-
     
     //<---------------------- End creation of the process map & initialization  ------------------------------//
 
@@ -369,12 +316,12 @@ void Apothesis::init()
                 m_procMap.insert( p );
                 m_procPool->addProcess( desorption->getName(), desorption );
                 m_procPool->addProcess( desorption->getID(), desorption );
-
-                for (Site* s:pLattice->getSites() )
-                    m_procMap[ desorption->getName() ].insert( s->getID() );
-
-
             }
+
+            string desorption_name = "Desorption_" + species[i] + " " + to_string(5) + "N";
+            for (Site* s:pLattice->getSites() )
+                m_procMap[ desorption_name ].insert( s->getID() );
+
            
             m_vDesorption.push_back(d);
             m_vProcesses.push_back(d);
@@ -416,6 +363,35 @@ void Apothesis::init()
             frequency.push_back(vFreq[i].GetDouble());
         }
 
+        // Add process to m_vProcesses
+        for (int i = 0; i < species.size(); ++i)
+        {
+            // Create new instance of desorption class
+            for (int j = 1; j < 6; j++)
+            {
+                string diffusion_name = "Diffusion_" + species[i] + " " + to_string(j) + "N";
+                Diffusion_new* diffusion = new Diffusion_new(j, m_speciesMap.at(species[i]));
+                diffusion->setName(diffusion_name);
+                diffusion->setID( id );
+
+                id++;
+
+                p.first = diffusion->getName();
+                m_procMap.insert( p );
+                m_procPool->addProcess( diffusion->getName(), diffusion );
+                m_procPool->addProcess( diffusion->getID(), diffusion );
+
+            }
+            
+            // Add all sites to process map for 5N
+            string diffusion_name = "Diffusion_" + species[i] + " " + to_string(5) + "N";
+            for (Site* s:pLattice->getSites() )
+                  m_procMap[ diffusion_name ].insert( s->getID() );
+
+           
+            //m_vDesorption.push_back(d);
+            //m_vProcesses.push_back(d);
+        }
         // Add process to m_vProcesses
         //for (int i = 0; i < species.size(); ++i)
         //{
