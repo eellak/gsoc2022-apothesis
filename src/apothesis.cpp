@@ -118,16 +118,7 @@ void Apothesis::init()
     //---------------------- Creation of the process map & initialization (must be transferred to init) ------------------------------>//
     int id = 0;
     pair<string, set<int> > p;
-    Desorption_new* desorption_1N = new Desorption_new();
-    desorption_1N->setName("Desorption 1N");
-    desorption_1N->setNumNeigh( 1 );
-    desorption_1N->setID( 1 );
-
-    p.first = desorption_1N->getName();
-    m_procMap.insert( p );
-    m_procPool->addProcess( desorption_1N->getName(), desorption_1N );
-    m_procPool->addProcess( desorption_1N->getID(), desorption_1N );
-
+    
     Desorption_new* desorption_2N = new Desorption_new();
     desorption_2N->setName("Desorption 2N");
     desorption_2N->setNumNeigh( 2 );
@@ -403,19 +394,35 @@ void Apothesis::init()
         // Add process to m_vProcesses
         for (int i = 0; i < species.size(); ++i)
         {
-            // Call function to find adsorption class
-            Adsorption *pAdsorption = findAdsorption(species[i]);
-
             // Create new instance of desorption class
             Desorption *d = new Desorption(this, species[i], m_species[species[i]], energy[i], frequency[i]);
 
-            // Check if associated adsorption class is a valid (non-null) pointer. Associate desorption class with appropriate adsorption and vice versa
-            if (pAdsorption)
+            for (int j = 1; j < 6; j++)
             {
-                d->setAdsorptionPointer(pAdsorption);
-                pAdsorption->setDesorptionPointer(d);
-                pAdsorption->setDesorption(true);
+                string desorption_name = "Desorption_" + species[i] + " " + to_string(j) + "N";
+                Desorption_new* desorption = new Desorption_new();
+                desorption->setName(desorption_name);
+                desorption->setNumNeigh( j );
+                desorption->setID( id );
+                id++;
+
+                p.first = desorption->getName();
+                m_procMap.insert( p );
+                m_procPool->addProcess( desorption->getName(), desorption );
+                m_procPool->addProcess( desorption->getID(), desorption );
+
+                for (Site* s:pLattice->getSites() )
+                    m_procMap[ desorption->getName() ].insert( s->getID() );
+
+
             }
+            // Check if associated adsorption class is a valid (non-null) pointer. Associate desorption class with appropriate adsorption and vice versa
+            //if (pAdsorption)
+            //{
+            //    d->setAdsorptionPointer(pAdsorption);
+            //    pAdsorption->setDesorptionPointer(d);
+            //    pAdsorption->setDesorption(true);
+            //}
 
             // if not, create associations in adsorption and desorption
 
@@ -667,8 +674,7 @@ void Apothesis::exec()
                 m_iSiteNum = pRandomGen->getIntRandom(0, m_procMap[ p.first ].size() - 1 );
 
                 //3. From this process pick the random site with id and perform it:
-                //m_procPool->getProcessByName( p.first )->perform( *next(m_procMap[ p.first ].begin(), m_iSiteNum) );
-                m_procPool->getProcessByName( p.first )->perform(  m_iSiteNum );
+                m_procPool->getProcessByName( p.first )->perform( *next(m_procMap[ p.first ].begin(), m_iSiteNum) );
                 m_procPool->getProcessByName( p.first )->eventHappened();
 
                 //4. Re-compute the processes rates and re-compute Rtot (see ppt).
