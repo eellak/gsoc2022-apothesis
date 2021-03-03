@@ -143,7 +143,7 @@ private:
     //      m_speciesMAP[ 1 ]= > H2
     //      m_speciesMAP[ 2 ]= > SiH4
     //      m_speciesMAP[ 3 ]= > SiH2
-    map< int, species_new* > m_speciesMap;
+    map< string, species_new* > m_speciesMap; //TODO 03.03.2021 : Can this be rewritten as m_speciesMap<string, species_new*>?
 
     // Hold the name and the stichiometric coeficient of the reactants in the surface reactions
     // The elements of the vector can be accessed through thr id of the species.

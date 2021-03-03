@@ -329,7 +329,7 @@ void BCC::adsorp(int siteID, species_new *chemSpec)
 	for (Site *s : m_vSites[siteID]->getNeighs())
 	{
 		m_iSiteNeighsNum = calculateNeighNum(s->getID());
-		string strProc = "Desorption " + to_string(m_iSiteNeighsNum) + "N";
+		string strProc = "Desorption_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
 		m_pProcMap->at(strProc).insert(s->getID());
 		strProc = "Diffusion " + to_string(m_iSiteNeighsNum) + "N";
 		m_pProcMap->at(strProc).insert(s->getID());
@@ -378,7 +378,7 @@ void BCC::desorp(int siteID, species_new *chemSpecies)
 	m_vSites[siteID]->decreaseHeight();
 	m_iSiteNeighsNum = calculateNeighNum(siteID);
 
-	string strProc = "Desorption " + to_string(m_iSiteNeighsNum) + "N";
+	string strProc = "Desorption_" + chemSpecies->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
 	m_pProcMap->at(strProc).insert(siteID);
 
 	strProc = "Diffusion " + to_string(m_iSiteNeighsNum) + "N";
@@ -387,7 +387,7 @@ void BCC::desorp(int siteID, species_new *chemSpecies)
 	for (Site *s : m_vSites[siteID]->getNeighs())
 	{
 		m_iSiteNeighsNum = calculateNeighNum(s->getID());
-		string strProc = "Desorption " + to_string(m_iSiteNeighsNum) + "N";
+		string strProc = "Desorption_" + chemSpecies->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
 		m_pProcMap->at(strProc).insert(s->getID());
 		strProc = "Diffusion " + to_string(m_iSiteNeighsNum) + "N";
 		m_pProcMap->at(strProc).insert(s->getID());
@@ -395,7 +395,7 @@ void BCC::desorp(int siteID, species_new *chemSpecies)
 		for (Site *firstNeigh : s->getNeighs())
 		{
 			m_iSiteNeighsNum = calculateNeighNum(firstNeigh->getID());
-			string strProc = "Desorption " + to_string(m_iSiteNeighsNum) + "N";
+			string strProc = "Desorption_" + chemSpecies->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
 			m_pProcMap->at(strProc).insert(firstNeigh->getID());
 			strProc = "Diffusion " + to_string(m_iSiteNeighsNum) + "N";
 			m_pProcMap->at(strProc).insert(firstNeigh->getID());

@@ -118,49 +118,6 @@ void Apothesis::init()
     //---------------------- Creation of the process map & initialization (must be transferred to init) ------------------------------>//
     int id = 0;
     pair<string, set<int> > p;
-    
-    Desorption_new* desorption_2N = new Desorption_new();
-    desorption_2N->setName("Desorption 2N");
-    desorption_2N->setNumNeigh( 2 );
-    desorption_2N->setID( 2 );
-
-    p.first = desorption_2N->getName();
-    m_procMap.insert( p );
-    m_procPool->addProcess( desorption_2N->getName(), desorption_2N );
-    m_procPool->addProcess( desorption_2N->getID(), desorption_2N );
-
-    Desorption_new* desorption_3N = new Desorption_new();
-    desorption_3N->setName("Desorption 3N");
-    desorption_3N->setNumNeigh( 3 );
-    desorption_3N->setID( 3 );
-
-    p.first = desorption_3N->getName();
-    m_procMap.insert( p );
-    m_procPool->addProcess( desorption_3N->getName(), desorption_3N );
-    m_procPool->addProcess( desorption_3N->getID(), desorption_3N );
-
-    Desorption_new* desorption_4N = new Desorption_new();
-    desorption_4N->setName("Desorption 4N");
-    desorption_4N->setNumNeigh( 4 );
-    desorption_4N->setID( 4 );
-
-    p.first = desorption_4N->getName();
-    m_procMap.insert( p );
-    m_procPool->addProcess( desorption_4N->getName(), desorption_4N );
-    m_procPool->addProcess( desorption_4N->getID(), desorption_4N );
-
-    Desorption_new* desorption_5N = new Desorption_new();
-    desorption_5N->setName("Desorption 5N");
-    desorption_5N->setNumNeigh( 5 );
-    desorption_5N->setID( 5 );
-
-    p.first = desorption_5N->getName();
-    m_procMap.insert( p );
-    m_procPool->addProcess( desorption_5N->getName(), desorption_5N );
-    m_procPool->addProcess( desorption_5N->getID(), desorption_5N );
-
-    for (Site* s:pLattice->getSites() )
-        m_procMap[ desorption_5N->getName() ].insert( s->getID() );
 
     Diffusion_new* diffusion_1N = new Diffusion_new();
     diffusion_1N->setName("Diffusion 1N");
@@ -235,9 +192,12 @@ void Apothesis::init()
         for (int i = 0; i < mws.size(); ++i)
         {
             // Define key, value for species map
-            pair<int, species_new*> speciesID;
-            speciesID.first = m_nSpecies;
-            species_new *s = new species_new(names[i], mws[i], m_nSpecies);
+            pair<string, species_new*> speciesID;
+            speciesID.first = names[i];
+            species_new *s = new species_new();
+            s->setChemFormula(names[i]);
+            s->setMW(mws[i]);
+            s->setID(m_nSpecies);
             speciesID.second = s;
             m_nSpecies++;
             m_speciesMap.insert(speciesID);
@@ -338,8 +298,7 @@ void Apothesis::init()
             adsorption->setActivationEnergy( 12.0 );
             adsorption->setName("Adsorption_" + species[i]);
             adsorption->setID( id );
-            // TODO: Generalize to be able to put in more than 1 species
-            adsorption->setSpecies(m_speciesMap[0]);
+            adsorption->setSpecies(m_speciesMap[species[i]]);
 
             // Increment id 
             id++;
@@ -400,10 +359,10 @@ void Apothesis::init()
             for (int j = 1; j < 6; j++)
             {
                 string desorption_name = "Desorption_" + species[i] + " " + to_string(j) + "N";
-                Desorption_new* desorption = new Desorption_new();
+                Desorption_new* desorption = new Desorption_new(j, m_speciesMap.at(species[i]));
                 desorption->setName(desorption_name);
-                desorption->setNumNeigh( j );
                 desorption->setID( id );
+
                 id++;
 
                 p.first = desorption->getName();
@@ -416,18 +375,7 @@ void Apothesis::init()
 
 
             }
-            // Check if associated adsorption class is a valid (non-null) pointer. Associate desorption class with appropriate adsorption and vice versa
-            //if (pAdsorption)
-            //{
-            //    d->setAdsorptionPointer(pAdsorption);
-            //    pAdsorption->setDesorptionPointer(d);
-            //    pAdsorption->setDesorption(true);
-            //}
-
-            // if not, create associations in adsorption and desorption
-
-            // else, output warning
-
+           
             m_vDesorption.push_back(d);
             m_vProcesses.push_back(d);
         }
@@ -469,24 +417,25 @@ void Apothesis::init()
         }
 
         // Add process to m_vProcesses
-        for (int i = 0; i < species.size(); ++i)
-        {
-            // Call function to find adsorption class
-            Adsorption *pAdsorption = findAdsorption(species[i]);
-            Desorption *pDesorption = findDesorption(species[i]);
-
-            Diffusion *diff = new Diffusion(this, species[i], energy[i], frequency[i]);
-            diff->setAdsorptionPointer(pAdsorption);
-            diff->setDesorptionPointer(pDesorption);
-
-            pAdsorption->setDiffusion(true);
-            pAdsorption->setDiffusionPointer(diff);
-
-            pDesorption->setDiffusion(true);
-            pDesorption->setDiffusionPointer(diff);
-
-            m_vProcesses.push_back(diff);
-        }
+        //for (int i = 0; i < species.size(); ++i)
+        //{
+        //    // Call function to find adsorption class
+        //    Adsorption *pAdsorption = findAdsorption(species[i]);
+        //    Desorption *pDesorption = findDesorption(species[i]);
+        //
+        //    Diffusion *diff = new Diffusion(this, species[i], energy[i], frequency[i]);
+        //    diff->setAdsorptionPointer(pAdsorption);
+        //    diff->setDesorptionPointer(pDesorption);
+        //
+        //    pAdsorption->setDiffusion(true);
+        //    pAdsorption->setDiffusionPointer(diff);
+        //
+        //    pDesorption->setDiffusion(true);
+        //    pDesorption->setDiffusionPointer(diff);
+        //
+        //    m_vProcesses.push_back(diff);
+        //}
+        
         pIO->writeLogOutput("...Done initializing diffusion process.");
     }
     if (std::find(pProc.begin(), pProc.end(), "Reaction") != pProc.end())

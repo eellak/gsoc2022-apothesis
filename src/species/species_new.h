@@ -14,7 +14,7 @@ class species_new
 {
 public:
     species_new();
-    species_new(string name, double mw, int id);
+    species_new( string name, double  mw, int id );
     ~species_new();
 
     inline void setChemFormula( string chemForm ){ m_sChemForm = chemForm; }
@@ -22,6 +22,9 @@ public:
 
     inline void setID( int id ){ m_iID = id; }
     inline int getID(){ return m_iID; }
+
+    inline void setMW( int mw ){ m_mw = mw; }
+    inline int getMW(){ return m_mw; }
 
     void addReaction( reaction_new* reaction );
     vector< reaction_new* > getReactions();
