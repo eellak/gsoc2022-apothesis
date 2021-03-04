@@ -328,7 +328,7 @@ void Apothesis::init()
             for (int j = 1; j < 6; j++)
             {
                 string desorption_name = "Desorption_" + species[i] + " " + to_string(j) + "N";
-                Desorption_new* desorption = new Desorption_new(j, m_speciesMap.at(species[i]));
+                Desorption_new* desorption = new Desorption_new(j, energy[i], frequency[i], m_speciesMap.at(species[i]), pParameters);
                 desorption->setName(desorption_name);
                 desorption->setID( id );
 
