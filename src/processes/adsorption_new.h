@@ -7,6 +7,7 @@
 #include "process_new.h"
 #include "site.h"
 #include "species_new.h"
+#include "parameters.h"
 
 using namespace std;
 
@@ -14,6 +15,7 @@ class Adsorption_new: public Process_new
 {
 public:
     Adsorption_new();
+    Adsorption_new( double actNrg, double molFrac, double sticking, double siteDensity, double mass, species_new* species, Parameters* parameter );
     virtual ~Adsorption_new();
 
     inline void setActivationEnergy( double nrg ){ m_dActNrg = nrg; }
@@ -28,6 +30,15 @@ public:
     inline void setSpecies( species_new* s ){ m_Species = s; }
     inline species_new* getSpecies(){ return m_Species; }
 
+    inline void setSticking( double sticking ) { m_dStick = sticking; }
+    inline double getSticking() { return m_dStick; }
+
+    inline void setSiteDensity( double sitedensity ) { m_siteDensity = sitedensity; }
+    inline double getSiteDensity () { return m_siteDensity; }
+
+    inline void setMass( double mass ) { m_mass = mass; }
+    inline double getMass() { return m_mass; }
+
     double getProbability();
 
     void rules(set<string, std::any>) override {}
@@ -35,17 +46,30 @@ public:
     void perform( int siteID  ) override;
 
 private:
-    ///The activation energy of the adsoprtion process
+    ///The activation energy of the adsorption process
     double m_dActNrg;
+
+    ///The sticking coefficient of the adsorption process
+    double m_dStick;
 
     ///The mole fraction of the adsorption process
     double m_dMolFrac;
 
+    /// Site density [sites/m^2] 
+    /// Vlachos code says [moles sites/m^2]
+    double m_siteDensity;
+
+    /// mass of system [kg]
+    double m_mass;
+
     ///The site that adsorption will be performed
     Site* m_Site;
 
-    ///The species that must adsopt
+    /// The species that must adsopt
     species_new* m_Species;
+
+    /// Pointer to parameters
+    Parameters* pParameters;
 };
 
 #endif // ADSORPTION_NEW_H

@@ -48,7 +48,7 @@ class Adsorption: public Process
       string speciesName,
       Species* species,
       double stickingCoeffs,
-      double massFraction,
+      double molFraction,
       bool direct
     );
 
@@ -134,7 +134,7 @@ class Adsorption: public Process
     /// adsroption in a BCC lattice.
     int mf_updateNeighNum();
 
-    const double getMassFraction();
+    const double getMolFraction();
 
     /// The value of the probability of the process is stored here
     double m_dProbability;
@@ -152,7 +152,7 @@ class Adsorption: public Process
     double m_stickingCoeffs;
     
     /// Mass fractions
-    double m_massfraction;
+    double m_molFraction;
 
     /// Return pointer to corresponding desorption class
     Desorption* getDesorption();

@@ -1,12 +1,25 @@
 #include "adsorption_new.h"
 
-Adsorption_new::Adsorption_new():m_Species(0){}
+Adsorption_new::Adsorption_new() : m_Species(0) {}
 
-Adsorption_new::~Adsorption_new(){}
-
-void Adsorption_new::perform( int siteID )
+Adsorption_new::Adsorption_new(double actNrg, double molFrac, double sticking,
+                               double siteDensity, double mass, species_new *species,
+                               Parameters *parameter)
+    : m_dActNrg(actNrg),
+      m_dMolFrac(molFrac),
+      m_dStick(sticking),
+      m_siteDensity(siteDensity),
+      m_mass(mass),
+      m_Species(species),
+      pParameters(parameter)
 {
-    m_pLattice->adsorp( siteID, m_Species );
+}
+
+Adsorption_new::~Adsorption_new() {}
+
+void Adsorption_new::perform(int siteID)
+{
+        m_pLattice->adsorp(siteID, m_Species);
 }
 
 //--------------------- Transitions probabilities ----------------------------------------//
@@ -44,21 +57,20 @@ void Adsorption_new::perform( int siteID )
         system("pause");
 --------------------------------------------------*/
 
-double Adsorption_new::getProbability(){
+double Adsorption_new::getProbability()
+{
 
-    //These must trenafered in the global definitions
-    double Na = 6.0221417930e+23;		// Avogadro's number [1/mol]
-    double P = 101325;					// [Pa]
-    double T = 500;						// [K]
-    double k = 1.3806503e-23;			// Boltzmann's constant [j/K]
-    double s0 = 0.1;
-    double C_tot = 1.0e+19;				// [sites/m^2] Vlachos code says [moles sites/m^2]
-    double E_d = (7.14e+4)/Na;			// [j]
-    double E = 71128/Na;   //(7.14e+4)/Na;			// [j]
-    double m = 32e-3/Na;				// [kg]
-    double E_m = (4.28e+4)/Na;			// [j]
-    double k_d = 1.0e+13;				// [s^-1]
-    double y = 2.0e-3;					// Mole fraction of the precursor on the wafer
+        //Constants
+        double Na = 6.0221417930e+23; // Avogadro's number [1/mol]
+        double k = 1.3806503e-23;     // Boltzmann's constant [j/K]
 
-    return s0*y*P/(C_tot*sqrt(2.0e0*3.14159265*m*k*T) );
+        //Case-dependent values read from input file
+        double P = pParameters->getPressure();    // [Pa]
+        double T = pParameters->getTemperature(); // [K]
+        double s0 = getSticking();
+        double C_tot = getSiteDensity(); // [sites/m^2] Vlachos code says [moles sites/m^2]
+        double m = getMass() / Na;           // [kg]
+        double y = getMolFrac();         // Mole fraction of the precursor on the wafer
+
+        return s0 * y * P / (C_tot * sqrt(2.0e0 * 3.14159265 * m * k * T));
 }

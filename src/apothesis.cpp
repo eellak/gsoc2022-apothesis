@@ -183,18 +183,27 @@ void Apothesis::init()
         // Read parameters for Adsorption
         Value &specie = doc["Process"]["Adsorption"]["Species"];
         Value &stick = doc["Process"]["Adsorption"]["Sticking"];
-        Value &mFrac = doc["Process"]["Adsorption"]["MassFraction"];
+        Value &mFrac = doc["Process"]["Adsorption"]["MolFraction"];
+        Value &nrgs = doc["Process"]["Adsorption"]["Energy"];
+        Value &sitedensity = doc["Process"]["Adsorption"]["C_tot"];
+        Value &mas = doc["Process"]["Adsorption"]["Mass"];
         Value &ads = doc["Process"]["Adsorption"];
 
         // Verify presence of each parameter in input file
         logSuccessfulRead(specie.IsArray(), "Adsorption species");
         logSuccessfulRead(stick.IsArray(), "Adsorption sticking coefficients");
-        logSuccessfulRead(mFrac.IsArray(), "Adsorption mass fraction");
+        logSuccessfulRead(mFrac.IsArray(), "Adsorption mol fraction");
+        logSuccessfulRead(nrgs.IsArray(), "Adsorption energies");
+        logSuccessfulRead(sitedensity.IsNumber(), "C_total");
+        logSuccessfulRead(mas.IsNumber(), "Mass");
 
         // Initialize vectors
         vector<string> species;
         vector<double> sticking;
-        vector<double> massFraction;
+        vector<double> molFraction;
+        vector<double> energies;
+        double C_tot;
+        double mass;
 
         // Sum of mass fraction. Later used to normalize.
         double sum = 0;
@@ -208,18 +217,33 @@ void Apothesis::init()
                 pErrorHandler->error_simple_msg("Sticking coefficient format is not a double");
             if (!mFrac[i].IsNumber())
                 pErrorHandler->error_simple_msg("Mass fraction format is not a double");
-
+            if (!nrgs[i].IsNumber())
+                pErrorHandler->error_simple_msg("Adsorption energy format is not a double");
+    
             // Push values to corresponding vectors
             species.push_back(specie[i].GetString());
             sticking.push_back(stick[i].GetDouble());
-            massFraction.push_back(mFrac[i].GetDouble());
-            sum += massFraction[i];
+            molFraction.push_back(mFrac[i].GetDouble());
+            energies.push_back(nrgs[i].GetDouble());
+            sum += molFraction[i];
         }
 
+        if (!sitedensity.IsNumber())
+            pErrorHandler->error_simple_msg("C_tot format is not a double");
+        if (!mas.IsNumber())
+            pErrorHandler->error_simple_msg("Mass format is not a double");
+
+        C_tot = sitedensity.GetDouble();
+        mass = mas.GetDouble(); 
+
         // Normalize the values of the mass fraction
-        for (vector<double>::iterator itr = massFraction.begin(); itr != massFraction.end(); ++itr)
+        // if there is > 1 element
+        if (molFraction.size() > 1)
         {
-            *itr = *itr / sum;
+            for (vector<double>::iterator itr = molFraction.begin(); itr != molFraction.end(); ++itr)
+            {
+                *itr = *itr / sum;
+            }
         }
 
         for (int i = 0; i < species.size(); ++i)
@@ -240,12 +264,10 @@ void Apothesis::init()
 
             }
             
-            Adsorption* a = new Adsorption(this, species[i], m_species[species[i]], sticking[i], massFraction[i], direct);
-            Adsorption_new* adsorption = new Adsorption_new();
-            adsorption->setActivationEnergy( 12.0 );
+            Adsorption* a = new Adsorption(this, species[i], m_species[species[i]], sticking[i], molFraction[i], direct);
+            Adsorption_new* adsorption = new Adsorption_new(energies[i], molFraction[i], sticking[i], C_tot, mass, m_speciesMap.at(species[i]), pParameters);
             adsorption->setName("Adsorption_" + species[i]);
             adsorption->setID( id );
-            adsorption->setSpecies(m_speciesMap[species[i]]);
 
             // Increment id 
             id++;

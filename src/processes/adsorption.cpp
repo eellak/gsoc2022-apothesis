@@ -28,7 +28,7 @@ namespace MicroProcesses
       string speciesName,
       Species *species,
       double stickingCoeffs,
-      double massFraction,
+      double molFraction,
       bool direct)
       : m_sName("Adsorption"),
         m_iNeighNum(0),
@@ -36,7 +36,7 @@ namespace MicroProcesses
         m_adsorptionSpeciesName(speciesName),
         m_adsorptionSpecies(species),
         m_stickingCoeffs(stickingCoeffs),
-        m_massfraction(massFraction),
+        m_molFraction(molFraction),
         m_canDesorb(false),
         m_canDiffuse(false), //TODO: Do I need to initialize m_interactions?
         m_direct(direct)
@@ -186,9 +186,9 @@ namespace MicroProcesses
 
   void Adsorption::mf_addToList(Site *s) { m_lAdsSites.push_back(s); }
 
-  const double Adsorption::getMassFraction()
+  const double Adsorption::getMolFraction()
   {
-    return m_massfraction;
+    return m_molFraction;
   }
 
   list<Site *> Adsorption::getActiveList()
@@ -215,7 +215,7 @@ namespace MicroProcesses
     double dstick = m_stickingCoeffs;
     //TODO: Is dCites from input file?
     double dCites = 1.4e+19;
-    double dy = getMassFraction();
+    double dy = getMolFraction();
 
     /* Adsorption probability see Lam and Vlachos */
     double dflux = dstick * dPres * dy / (dCites * sqrt(2.0 * dpi * dmass * dkBoltz * dTemp));
