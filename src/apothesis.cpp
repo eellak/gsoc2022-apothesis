@@ -356,17 +356,20 @@ void Apothesis::init()
 
         // Read parameters for Diffusion
         Value &vSpecie = doc["Process"]["Diffusion"]["Species"];
-        Value &vEnergy = doc["Process"]["Diffusion"]["Energy"];
+        Value &vEnergy = doc["Process"]["Diffusion"]["E_d"];
+        Value &vEm = doc["Process"]["Diffusion"]["E_m"];
         Value &vFreq = doc["Process"]["Diffusion"]["Frequency"];
 
         // Verify presence of each parameter in input file
         logSuccessfulRead(vSpecie.IsArray(), "Diffusion species");
-        logSuccessfulRead(vEnergy.IsArray(), "Diffusion energy");
+        logSuccessfulRead(vEnergy.IsArray(), "Bond energy");
+        logSuccessfulRead(vEm.IsArray(), "Desorption energy");
         logSuccessfulRead(vFreq.IsArray(), "Diffusion frequency");
 
         // Initialize vectors
         vector<string> species;
         vector<double> energy;
+        vector<double> Em;
         vector<double> frequency;
 
         for (SizeType i = 0; i < vSpecie.Size(); i++)
@@ -375,13 +378,16 @@ void Apothesis::init()
             if (!vSpecie[i].IsString())
                 pErrorHandler->error_simple_msg("Species format is not a string");
             if (!vEnergy[i].IsNumber())
-                pErrorHandler->error_simple_msg("Diffusion energy format is not a number");
+                pErrorHandler->error_simple_msg("Bond energy (E_d) format is not a number");
+            if (!vEm[i].IsNumber())
+                pErrorHandler->error_simple_msg("Desorption energy (E_m) format is not a number");
             if (!vFreq[i].IsNumber())
                 pErrorHandler->error_simple_msg("Diffusion frequency format is not a number");
 
             // Push values to corresponding vectors
             species.push_back(vSpecie[i].GetString());
             energy.push_back(vEnergy[i].GetDouble());
+            Em.push_back(vEm[i].GetDouble());
             frequency.push_back(vFreq[i].GetDouble());
         }
 
@@ -392,7 +398,7 @@ void Apothesis::init()
             for (int j = 1; j < 6; j++)
             {
                 string diffusion_name = "Diffusion_" + species[i] + " " + to_string(j) + "N";
-                Diffusion_new* diffusion = new Diffusion_new(j, m_speciesMap.at(species[i]));
+                Diffusion_new* diffusion = new Diffusion_new(j, energy[i], Em[i], frequency[i], m_speciesMap.at(species[i]), pParameters);
                 diffusion->setName(diffusion_name);
                 diffusion->setID( id );
 

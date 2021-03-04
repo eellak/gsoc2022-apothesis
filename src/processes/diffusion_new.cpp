@@ -2,8 +2,13 @@
 
 Diffusion_new::Diffusion_new() : m_iNeighNum(0) {}
 
-Diffusion_new::Diffusion_new(int numNeigh, species_new *species) : m_iNeighNum(numNeigh),
-                                                                   m_Species(species) {}
+Diffusion_new::Diffusion_new(int numNeigh, double E_d, double E_m, double freq, species_new *species, Parameters *parameter)
+    : m_iNeighNum(numNeigh),
+      m_dActNrg(E_d),
+      m_Em(E_m),
+      m_freq(freq),
+      m_Species(species),
+      pParameters(parameter) {}
 
 Diffusion_new::~Diffusion_new() {}
 
@@ -22,24 +27,21 @@ double Diffusion_new::getProbability()
 
     //These must trenafered in the global definitions
     /*--- Taken from  Lam and Vlachos (2000)PHYSICAL REVIEW B, VOLUME 64, 035401 - DOI: 10.1103/PhysRevB.64.035401 ---*/
+    // Constants
     double Na = 6.0221417930e+23; // Avogadro's number [1/mol]
-    double P = 101325;            // [Pa]
-    double T = 500;               // [K]
     double k = 1.3806503e-23;     // Boltzmann's constant [j/K]
-    double s0 = 0.1;
-    double C_tot = 1.0e+19;      // [sites/m^2] Vlachos code says [moles sites/m^2]
-    double E_d = (7.14e+4) / Na; // [j]
-    double E = 71128 / Na;       //(7.14e+4)/Na;			// [j] -> 17 kcal
-    double m = 32e-3 / Na;       // [kg]
-    double E_m = (4.28e+4) / Na; // [j]
-    double k_d = 1.0e+13;        // [s^-1]
-    double y = 2.0e-3;           // Mole fraction of the precursor on the wafer
+
+    double P = pParameters->getPressure();    // [Pa]
+    double T = pParameters->getTemperature(); // [K]
+    double E_d = getActivationEnergy() / Na;              // [j]
+    double E_m = getDesorptionEnergy() / Na;              // [j]
+    double k_d = getFrequency();                     // [s^-1]
     /*--------------------------------------------------*/
 
     double v0 = k_d; //*exp(-E/(k*T));
     double A = exp((E_d - E_m) / (k * T));
 
     //--------------------- Transitions probability ----------------------------------------//
-    return 0; // A*v0*exp( -m_iNeighNum*E/(k*T) );
+    return A*v0*exp( -m_iNeighNum*E_d/(k*T) );
     //----------------------------------------------------------------------------------------//
 }
