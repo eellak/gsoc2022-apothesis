@@ -141,10 +141,7 @@ void Apothesis::init()
             // Define key, value for species map
             pair<string, species_new*> speciesID;
             speciesID.first = names[i];
-            species_new *s = new species_new();
-            s->setChemFormula(names[i]);
-            s->setMW(mws[i]);
-            s->setID(m_nSpecies);
+            species_new *s = new species_new(names[i], mws[i], m_nSpecies);
             speciesID.second = s;
             m_nSpecies++;
             m_speciesMap.insert(speciesID);
@@ -264,7 +261,7 @@ void Apothesis::init()
 
             }
             
-            Adsorption* a = new Adsorption(this, species[i], m_species[species[i]], sticking[i], molFraction[i], direct);
+            //Adsorption* a = new Adsorption(this, species[i], m_species[species[i]], sticking[i], molFraction[i], direct);
             Adsorption_new* adsorption = new Adsorption_new(energies[i], molFraction[i], sticking[i], C_tot, mass, m_speciesMap.at(species[i]), pParameters);
             adsorption->setName("Adsorption_" + species[i]);
             adsorption->setID( id );

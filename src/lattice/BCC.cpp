@@ -320,27 +320,52 @@ void BCC::adsorp(int siteID, species_new *chemSpec)
 	m_vSites[siteID]->increaseHeight();
 	m_iSiteNeighsNum = calculateNeighNum(siteID);
 
+	
 	string strProc = "Desorption_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N" ;
-	m_pProcMap->at(strProc).insert(siteID);
-
+	map<string, set<int>>:: iterator itr = (*m_pProcMap).find(strProc);
+	if (itr != (*m_pProcMap).end())
+	{
+		m_pProcMap->at(strProc).insert(siteID);
+	}
+	
 	strProc = "Diffusion_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
-	m_pProcMap->at(strProc).insert(siteID);
+	itr = (*m_pProcMap).find(strProc);
+	if (itr != (*m_pProcMap).end())
+	{
+		m_pProcMap->at(strProc).insert(siteID);
+	}
 
 	for (Site *s : m_vSites[siteID]->getNeighs())
 	{
 		m_iSiteNeighsNum = calculateNeighNum(s->getID());
 		string strProc = "Desorption_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
-		m_pProcMap->at(strProc).insert(s->getID());
+		map<string, set<int>>:: iterator itr = (*m_pProcMap).find(strProc);
+		if (itr != (*m_pProcMap).end())
+		{
+			m_pProcMap->at(strProc).insert(s->getID());
+		}
 		strProc = "Diffusion_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
-		m_pProcMap->at(strProc).insert(s->getID());
+		itr = (*m_pProcMap).find(strProc);
+		if (itr != (*m_pProcMap).end())
+		{
+			m_pProcMap->at(strProc).insert(s->getID());
+		}
 
 		for (Site *firstNeigh : s->getNeighs())
 		{
 			m_iSiteNeighsNum = calculateNeighNum(firstNeigh->getID());
 			string strProc = "Desorption_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
-			m_pProcMap->at(strProc).insert(firstNeigh->getID());
+			itr = (*m_pProcMap).find(strProc);
+			if (itr != (*m_pProcMap).end())
+			{
+				m_pProcMap->at(strProc).insert(firstNeigh->getID());
+			}
 			strProc = "Diffusion_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
-			m_pProcMap->at(strProc).insert(firstNeigh->getID());
+			itr = (*m_pProcMap).find(strProc);
+			if (itr != (*m_pProcMap).end())
+			{
+				m_pProcMap->at(strProc).insert(firstNeigh->getID());
+			}
 		}
 	}
 	// ---------  For Lam & Vlachos (2000) ------------------------------------<//
