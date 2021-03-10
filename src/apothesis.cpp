@@ -261,7 +261,6 @@ void Apothesis::init()
 
             }
             
-            //Adsorption* a = new Adsorption(this, species[i], m_species[species[i]], sticking[i], molFraction[i], direct);
             Adsorption_new* adsorption = new Adsorption_new(energies[i], molFraction[i], sticking[i], C_tot, mass, m_speciesMap.at(species[i]), pParameters);
             adsorption->setName("Adsorption_" + species[i]);
             adsorption->setID( id );
@@ -320,8 +319,6 @@ void Apothesis::init()
         for (int i = 0; i < species.size(); ++i)
         {
             // Create new instance of desorption class
-            Desorption *d = new Desorption(this, species[i], m_species[species[i]], energy[i], frequency[i]);
-
             for (int j = 1; j < 6; j++)
             {
                 string desorption_name = "Desorption_" + species[i] + " " + to_string(j) + "N";
@@ -340,10 +337,6 @@ void Apothesis::init()
             string desorption_name = "Desorption_" + species[i] + " " + to_string(5) + "N";
             for (Site* s:pLattice->getSites() )
                 m_procMap[ desorption_name ].insert( s->getID() );
-
-           
-            m_vDesorption.push_back(d);
-            m_vProcesses.push_back(d);
         }
         pIO->writeLogOutput("...Done initializing desorption process.");
     }
@@ -414,29 +407,8 @@ void Apothesis::init()
                   m_procMap[ diffusion_name ].insert( s->getID() );
 
            
-            //m_vDesorption.push_back(d);
-            //m_vProcesses.push_back(d);
         }
-        // Add process to m_vProcesses
-        //for (int i = 0; i < species.size(); ++i)
-        //{
-        //    // Call function to find adsorption class
-        //    Adsorption *pAdsorption = findAdsorption(species[i]);
-        //    Desorption *pDesorption = findDesorption(species[i]);
-        //
-        //    Diffusion *diff = new Diffusion(this, species[i], energy[i], frequency[i]);
-        //    diff->setAdsorptionPointer(pAdsorption);
-        //    diff->setDesorptionPointer(pDesorption);
-        //
-        //    pAdsorption->setDiffusion(true);
-        //    pAdsorption->setDiffusionPointer(diff);
-        //
-        //    pDesorption->setDiffusion(true);
-        //    pDesorption->setDiffusionPointer(diff);
-        //
-        //    m_vProcesses.push_back(diff);
-        //}
-        
+       
         pIO->writeLogOutput("...Done initializing diffusion process.");
     }
     if (std::find(pProc.begin(), pProc.end(), "Reaction") != pProc.end())
@@ -509,16 +481,6 @@ void Apothesis::init()
             cout << "Warning! Mass balance of Reaction is not balanced" << endl;
         }
 
-        // Read immobilization variable
-        bool immobilized = true;
-        if (pRxn.HasMember("Immobilize"))
-        {
-            immobilized = pRxn["Immobilize"].GetBool();
-        }
-
-        SurfaceReaction *s = new SurfaceReaction(this, species, stoichiometry, energy, preexp, immobilized);
-        m_vProcesses.push_back(s);
-        m_vSurfaceReaction.push_back(s);
         pIO->writeLogOutput("...Done initializing reaction.");
     }
 
@@ -554,15 +516,6 @@ void Apothesis::init()
     }
     cout<<endl;
     cout<<endl;
-    /// First the processes that participate in the simulation
-
-    /// that were read from the file input and the I/O functionality
-    //m_vProcesses[0]->setInstance( this );
-    for (vector<Process *>::iterator itr = m_vProcesses.begin(); itr != m_vProcesses.end(); ++itr)
-    {
-        Process *p = *itr;
-        p->activeSites(pLattice);
-    }
 
     // Initialize species map in lattice
     vector<Site*> sites = pLattice->getSites();
@@ -572,7 +525,7 @@ void Apothesis::init()
         pSite->initSpeciesMap(m_nSpecies);
     }
 
-    //Set reference to each process5
+    //Set reference to each process
     for (pair<string, set<int> > p:m_procMap)
         m_procPool->getProcessByName( p.first )->setLattice( pLattice );
 
