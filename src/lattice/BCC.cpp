@@ -25,8 +25,7 @@ BCC::BCC(Apothesis *apothesis) : Lattice(apothesis), m_iMinNeigs(1)
 	;
 }
 
-BCC::BCC(Apothesis *apothesis, bool step, vector<int> stepInfo) : Lattice(apothesis),
-																  m_hasSteps(step),
+BCC::BCC(Apothesis *apothesis, bool step, vector<int> stepInfo) : Lattice(apothesis, step),
 																  m_stepInfo(stepInfo)
 {
 	;
@@ -85,7 +84,7 @@ void BCC::build()
 		cout << " " << endl;
 	}
 
-	if (m_bHasSteps)
+	if (m_hasSteps)
 		mf_buildSteps();
 
 	mf_neigh();
@@ -99,7 +98,7 @@ BCC::~BCC()
 
 void BCC::setSteps(bool hasSteps)
 {
-	m_bHasSteps = hasSteps;
+	m_hasSteps = hasSteps;
 }
 
 void BCC::setStepInfo(int sizeX, int sizeY, int sizeZ)
@@ -113,8 +112,8 @@ void BCC::mf_buildSteps()
 {
 	// Pick dimension of step
 	// Largest value is the direction of stepping
-	// i.e. lattice is [40 x 20], having a step array of [40, 2, 1] 
-	// steps of height 1 in the z direction, and 2 consecutive sites 
+	// i.e. lattice is [40 x 20], having a step array of [40, 2, 1]
+	// steps of height 1 in the z direction, and 2 consecutive sites
 	// in the y direction are the same height
 
 	// 1. Find the initial height from arbitrary site
@@ -318,16 +317,16 @@ void BCC::adsorp(int siteID, species_new *chemSpec)
 
 	//For PVD results
 	m_vSites[siteID]->increaseHeight();
+
 	m_iSiteNeighsNum = calculateNeighNum(siteID);
 
-	
-	string strProc = "Desorption_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N" ;
-	map<string, set<int>>:: iterator itr = (*m_pProcMap).find(strProc);
+	string strProc = "Desorption_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
+	map<string, set<int>>::iterator itr = (*m_pProcMap).find(strProc);
 	if (itr != (*m_pProcMap).end())
 	{
 		m_pProcMap->at(strProc).insert(siteID);
 	}
-	
+
 	strProc = "Diffusion_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
 	itr = (*m_pProcMap).find(strProc);
 	if (itr != (*m_pProcMap).end())
@@ -335,39 +334,7 @@ void BCC::adsorp(int siteID, species_new *chemSpec)
 		m_pProcMap->at(strProc).insert(siteID);
 	}
 
-	for (Site *s : m_vSites[siteID]->getNeighs())
-	{
-		m_iSiteNeighsNum = calculateNeighNum(s->getID());
-		string strProc = "Desorption_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
-		map<string, set<int>>:: iterator itr = (*m_pProcMap).find(strProc);
-		if (itr != (*m_pProcMap).end())
-		{
-			m_pProcMap->at(strProc).insert(s->getID());
-		}
-		strProc = "Diffusion_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
-		itr = (*m_pProcMap).find(strProc);
-		if (itr != (*m_pProcMap).end())
-		{
-			m_pProcMap->at(strProc).insert(s->getID());
-		}
-
-		for (Site *firstNeigh : s->getNeighs())
-		{
-			m_iSiteNeighsNum = calculateNeighNum(firstNeigh->getID());
-			string strProc = "Desorption_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
-			itr = (*m_pProcMap).find(strProc);
-			if (itr != (*m_pProcMap).end())
-			{
-				m_pProcMap->at(strProc).insert(firstNeigh->getID());
-			}
-			strProc = "Diffusion_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
-			itr = (*m_pProcMap).find(strProc);
-			if (itr != (*m_pProcMap).end())
-			{
-				m_pProcMap->at(strProc).insert(firstNeigh->getID());
-			}
-		}
-	}
+	updatePVD(siteID, chemSpec);
 	// ---------  For Lam & Vlachos (2000) ------------------------------------<//
 
 	//1.Add to this site species the new adroped species
@@ -409,23 +376,8 @@ void BCC::desorp(int siteID, species_new *chemSpecies)
 	strProc = "Diffusion_" + chemSpecies->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
 	m_pProcMap->at(strProc).insert(siteID);
 
-	for (Site *s : m_vSites[siteID]->getNeighs())
-	{
-		m_iSiteNeighsNum = calculateNeighNum(s->getID());
-		string strProc = "Desorption_" + chemSpecies->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
-		m_pProcMap->at(strProc).insert(s->getID());
-		strProc = "Diffusion_" + chemSpecies->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
-		m_pProcMap->at(strProc).insert(s->getID());
+	updatePVD(siteID, chemSpecies);
 
-		for (Site *firstNeigh : s->getNeighs())
-		{
-			m_iSiteNeighsNum = calculateNeighNum(firstNeigh->getID());
-			string strProc = "Desorption_" + chemSpecies->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
-			m_pProcMap->at(strProc).insert(firstNeigh->getID());
-			strProc = "Diffusion_" + chemSpecies->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
-			m_pProcMap->at(strProc).insert(firstNeigh->getID());
-		}
-	}
 	// ---------  For Lam & Vlachos (2000) ------------------------------------>//
 
 	// <--------  For Lam & Vlachos (2000) ------------------------------------//
@@ -474,8 +426,47 @@ void BCC::desorp(int siteID, species_new *chemSpecies)
 void BCC::react(int siteID)
 {
 	//1.React means increase the sites height by one.
+	m_vSites[siteID]->increaseHeight();
 
 	//2.Remove every species from this site (that means that the site is occupied by a lattice site).
+	m_vSites[siteID]->clearSite();
 
 	//3.Update neighbours and process map according to the new height as we would do in PVD.
+}
+
+void BCC::updatePVD(int siteID, species_new *chemSpec)
+{
+	for (Site *s : m_vSites[siteID]->getNeighs())
+	{
+		m_iSiteNeighsNum = calculateNeighNum(s->getID());
+		string strProc = "Desorption_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
+		map<string, set<int>>::iterator itr = (*m_pProcMap).find(strProc);
+		if (itr != (*m_pProcMap).end())
+		{
+			m_pProcMap->at(strProc).insert(s->getID());
+		}
+		strProc = "Diffusion_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
+		itr = (*m_pProcMap).find(strProc);
+		if (itr != (*m_pProcMap).end())
+		{
+			m_pProcMap->at(strProc).insert(s->getID());
+		}
+
+		for (Site *firstNeigh : s->getNeighs())
+		{
+			m_iSiteNeighsNum = calculateNeighNum(firstNeigh->getID());
+			string strProc = "Desorption_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
+			itr = (*m_pProcMap).find(strProc);
+			if (itr != (*m_pProcMap).end())
+			{
+				m_pProcMap->at(strProc).insert(firstNeigh->getID());
+			}
+			strProc = "Diffusion_" + chemSpec->getChemFormula() + " " + to_string(m_iSiteNeighsNum) + "N";
+			itr = (*m_pProcMap).find(strProc);
+			if (itr != (*m_pProcMap).end())
+			{
+				m_pProcMap->at(strProc).insert(firstNeigh->getID());
+			}
+		}
+	}
 }

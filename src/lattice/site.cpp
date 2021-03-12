@@ -23,15 +23,19 @@
 namespace SurfaceTiles
 {
 
-  Site::Site():m_phantom(false)
+  Site::Site() : m_phantom(false)
   {
-      vector<Site* > vec;
-      m_m1stNeighs = { {-1, vec}, { 0, vec }, {1, vec }, };
+    vector<Site *> vec;
+    m_m1stNeighs = {
+        {-1, vec},
+        {0, vec},
+        {1, vec},
+    };
   }
 
   Site::~Site() { ; }
 
-  void setLatticeInfo( Lattice::Type, string orient );
+  void setLatticeInfo(Lattice::Type, string orient);
 
   vector<Site *> Site::getNeighs()
   {
@@ -63,7 +67,8 @@ namespace SurfaceTiles
     return m_iHeight;
   }
 
-  void Site::increaseHeight(){
+  void Site::increaseHeight()
+  {
     m_iHeight++;
   }
 
@@ -72,7 +77,8 @@ namespace SurfaceTiles
     m_iHeight += height;
   }
 
-  void Site::decreaseHeight(){
+  void Site::decreaseHeight()
+  {
     m_iHeight--;
   }
 
@@ -83,17 +89,18 @@ namespace SurfaceTiles
 
   void Site::increaseNeighsNum()
   {
-      m_iNumNeighs++;
+    m_iNumNeighs++;
 
-      if ( m_iNumNeighs > 5 ){
-          cout << "Problem with the number of neighbors. Number larger than 5. " + m_iID << endl;
-          exit(-1);
-      }
+    if (m_iNumNeighs > 5)
+    {
+      cout << "Problem with the number of neighbors. Number larger than 5. " + m_iID << endl;
+      exit(-1);
+    }
   }
 
   void Site::setNeighPosition(Site *s, NeighPoisition np)
   {
-    m_mapNeigh[ np ] = s;
+    m_mapNeigh[np] = s;
   }
 
   Site *Site::getNeighPosition(NeighPoisition np)
@@ -247,7 +254,7 @@ namespace SurfaceTiles
   void Site::m_updateNeighbourList()
   {
     // If called on a different site, simply call the respective site's m_updateNeighbours() function
-    vector<Site*> neighbours {getNeighPosition(Site::EAST), getNeighPosition(Site::WEST), getNeighPosition(Site::NORTH), getNeighPosition(Site::SOUTH)};
+    vector<Site *> neighbours{getNeighPosition(Site::EAST), getNeighPosition(Site::WEST), getNeighPosition(Site::NORTH), getNeighPosition(Site::SOUTH)};
     for (int neigh = 0; neigh < neighbours.size(); ++neigh)
     {
       neighbours[neigh]->m_updateNeighbours();
@@ -262,17 +269,21 @@ namespace SurfaceTiles
     }
   }
 
-  void Site::initSpecies( int totalSpecies )
+  void Site::initSpecies(int totalSpecies)
   {
-    m_vReacSpecies.resize( totalSpecies );
+    m_vReacSpecies.resize(totalSpecies);
     for (int i = 0; i < totalSpecies; i++)
-        m_vReacSpecies[ i ]  = 0;
+      m_vReacSpecies[i] = 0;
   }
 
-
-  void Site::set1stNeibors(int level, Site* s)
+  void Site::set1stNeighbors(int level, Site *s)
   {
-      m_m1stNeighs.at( level ).push_back( s );
+    m_m1stNeighs.at(level).push_back(s);
+  }
+
+  void Site::clearSite()
+  {
+    m_vNeigh.clear();
   }
 
 } // namespace SurfaceTiles

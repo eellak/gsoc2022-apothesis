@@ -71,6 +71,7 @@ public:
   void adsorp(int siteID, species_new* chemSpecies) override;
   void desorp(int siteID, species_new* chemSpecies) override;
   void react(int siteID) override;
+  void updatePVD(int siteID, species_new* chemSpecies);
 
 protected:
   /// Build the neighbours for the BCC lattice for each site.
@@ -80,8 +81,6 @@ protected:
   void mf_buildNeighbours();
 
 private:
-  bool m_hasSteps = false;
-
   vector<int> m_stepInfo;
 
   int m_iMinNeigs;
