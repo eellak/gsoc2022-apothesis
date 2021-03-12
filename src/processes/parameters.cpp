@@ -17,15 +17,18 @@
 
 #include "parameters.h"
 
-namespace Utils  
+namespace Utils
 {
 
-  Parameters::Parameters(Apothesis* apothesis ):Pointers(apothesis){;}
-  
-  void Parameters::setProcess( string processName, vector< double > processParams )
+  Parameters::Parameters(Apothesis *apothesis)
+      : Pointers(apothesis),
+        m_dTime(0.01)
   {
-    m_mProcs[ processName ] = processParams;
   }
 
+  void Parameters::setProcess(string processName, vector<double> processParams)
+  {
+    m_mProcs[processName] = processParams;
+  }
 
 }

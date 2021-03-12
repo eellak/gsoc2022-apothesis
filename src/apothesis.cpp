@@ -556,8 +556,6 @@ void Apothesis::exec()
     for (pair<string, set<int> > p:m_procMap)
         m_dRTot += (double) m_procPool->getProcessByName( p.first )->getProbability()*p.second.size();
 
-    m_dEndTime = 0.01;
-
     pProperties->calculateRoughness();
     pIO->writeRoughness( m_dProcTime, pProperties->getRoughness() );
 

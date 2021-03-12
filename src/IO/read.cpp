@@ -126,6 +126,11 @@ Read::Read(Apothesis *apothesis)
     apothesis->logSuccessfulRead(m_input.HasMember("Process"), "Process");
     Value &process = m_input["Process"];
 
+    // Read time parameter
+    apothesis->logSuccessfulRead(m_input.HasMember("Time"), "Time");
+    double time = m_input["Time"].GetDouble();
+    m_parameters->setEndTime(time);
+
     // Add processes into a vector, stored under apothesis
     for (Value::ConstMemberIterator itr = process.MemberBegin(); itr != process.MemberEnd(); ++itr)
     {

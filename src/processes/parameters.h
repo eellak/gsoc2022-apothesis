@@ -39,10 +39,10 @@ class Parameters: public Pointers
     ~Parameters(){;}
 
     /// Set the temperature value.
-    inline void setTemperature( double T) { m_dT = T; }
+    inline void setTemperature( double T) { m_dTemp = T; }
 
     /// Get the temperature value.
-    inline double getTemperature() { return m_dT; }
+    inline double getTemperature() { return m_dTemp; }
 
     /// Set the pressure value.
     inline void setPressure( double P) { m_dP = P; };
@@ -79,7 +79,7 @@ class Parameters: public Pointers
 
   protected:
     /// The temperature.
-    double m_dT;
+    double m_dTemp;
 
     /// The pressure.
     double m_dP;
@@ -87,11 +87,12 @@ class Parameters: public Pointers
     /// The number of iterations to be performed.
     int m_iIter;
 
-    /// The time to run kmc.
-    int m_dTime;
-
     /// Stores the processes as read from the input file allong with their parameters.
     map< string,  vector< double> > m_mProcs;
+  
+  private:
+    /// The time to run kmc.
+    double m_dTime;
   };
 
 }
