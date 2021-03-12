@@ -20,7 +20,12 @@
 
 Lattice::Lattice(Apothesis *apothesis) : Pointers(apothesis)
 {
+}
 
+Lattice::Lattice(Apothesis *apothesis, bool hasSteps)
+    : Pointers(apothesis),
+      m_hasSteps(hasSteps)
+{
 }
 
 void Lattice::setType(string sType)
@@ -38,7 +43,6 @@ void Lattice::setX(int x) { m_iSizeX = x; }
 void Lattice::setY(int y) { m_iSizeY = y; }
 
 void Lattice::setInitialHeight(int height) { m_iHeight = height; }
-
 
 Lattice::~Lattice()
 {
@@ -62,28 +66,31 @@ Lattice::Type Lattice::getType()
     }
 }
 
-Site* Lattice::getSite(int id) { return m_vSites[id]; }
+Site *Lattice::getSite(int id) { return m_vSites[id]; }
 
-Site* Lattice::getSite(int i, int j)
+Site *Lattice::getSite(int i, int j)
 {
-    if ( i >= m_iSizeX ){
+    if (i >= m_iSizeX)
+    {
         m_errorHandler->error_simple_msg("ERROR: The site's index exceeds the size of the x-dimension of the lattice. ");
         exit(1);
     }
 
-    if ( j >= m_iSizeY ){
+    if (j >= m_iSizeY)
+    {
         m_errorHandler->error_simple_msg("ERROR: The site's index exceeds the size of the y-dimension of the lattice. ");
         exit(1);
     }
 
-    return m_vSites[ i*m_iSizeY + j ];
+    return m_vSites[i * m_iSizeY + j];
 }
 
-void Lattice::setProcMap( map<string, set< int > >* procMap )
+void Lattice::setProcMap(map<string, set<int>> *procMap)
 {
-    if ( procMap )
+    if (procMap)
         m_pProcMap = procMap;
-    else {
+    else
+    {
         m_errorHandler->warningSimple_msg("Process map could not be created.");
         exit(-1);
     }
@@ -91,38 +98,38 @@ void Lattice::setProcMap( map<string, set< int > >* procMap )
 
 void Lattice::print()
 {
-    for (int i = 0; i < m_iSizeY; i++){
+    for (int i = 0; i < m_iSizeY; i++)
+    {
         for (int j = 0; j < m_iSizeX; j++)
-            cout << m_vSites[ i*m_iSizeX + j ]->getID() << " ";
+            cout << m_vSites[i * m_iSizeX + j]->getID() << " ";
 
-        cout  << endl;
+        cout << endl;
     }
 }
 
-
-void Lattice::printNeighs( int ID )
+void Lattice::printNeighs(int ID)
 {
-    cout << "======= Printing neigbors ============ " << endl;
+    cout << "======= Printing neighbors ============ " << endl;
 
-    if ( ID < getSize() ){
+    if (ID < getSize())
+    {
         cout << "Level 0 neighs: ";
-        for ( int i = 0; i< m_vSites[ ID ]->get1stNeihbors()[ 0 ].size(); i++ )
-            cout << m_vSites[ ID ]->get1stNeihbors()[ 0 ].at( i )->getID() << " ";
+        for (int i = 0; i < m_vSites[ID]->get1stNeighbors()[0].size(); i++)
+            cout << m_vSites[ID]->get1stNeighbors()[0].at(i)->getID() << " ";
 
         cout << endl;
 
         cout << "Level -1 neighs: ";
-        for ( int i = 0; i< m_vSites[ ID ]->get1stNeihbors()[ -1 ].size(); i++ )
-            cout << m_vSites[ ID ]->get1stNeihbors()[ -1 ].at( i )->getID() << " ";
+        for (int i = 0; i < m_vSites[ID]->get1stNeighbors()[-1].size(); i++)
+            cout << m_vSites[ID]->get1stNeighbors()[-1].at(i)->getID() << " ";
 
         cout << endl;
 
-        cout << "======= end printing neigbors ============ " << endl;
-
+        cout << "======= end printing neighbors ============ " << endl;
     }
-    else {
+    else
+    {
         cout << "Cannot print neighs because ID exceeds the available number of sites." << endl;
         EXIT;
     }
-
 }

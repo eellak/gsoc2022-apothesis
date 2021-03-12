@@ -153,39 +153,39 @@ void FCC::mf_neigh_110()
             iPos  = i*m_iSizeX + j;
 
             //Same level
-            m_vSites[ iPos ]->set1stNeibors(0, m_vSites[ iPos - m_iSizeX ] ); //North
+            m_vSites[ iPos ]->set1stNeighbors(0, m_vSites[ iPos - m_iSizeX ] ); //North
             m_vSites[ iPos ]->setNeighPosition( m_vSites[ iPos - m_iSizeX ],  Site::NORTH );
 
-            m_vSites[ iPos ]->set1stNeibors(0, m_vSites[ iPos + m_iSizeX ]); //South
+            m_vSites[ iPos ]->set1stNeighbors(0, m_vSites[ iPos + m_iSizeX ]); //South
             m_vSites[ iPos ]->setNeighPosition( m_vSites[ iPos + m_iSizeX ],  Site::SOUTH);
 
-            m_vSites[ iPos ]->set1stNeibors(0, m_vSites[ iPos - 2 ]); //West
+            m_vSites[ iPos ]->set1stNeighbors(0, m_vSites[ iPos - 2 ]); //West
             m_vSites[ iPos ]->setNeighPosition( m_vSites[ iPos + m_iSizeX ],  Site::WEST);
 
-            m_vSites[ iPos ]->set1stNeibors(0, m_vSites[ iPos + 2 ]); //East
+            m_vSites[ iPos ]->set1stNeighbors(0, m_vSites[ iPos + 2 ]); //East
             m_vSites[ iPos ]->setNeighPosition( m_vSites[ iPos + m_iSizeX ],  Site::WEST);
 
             //Next|Previous level
             if ( iPos%2 == 0){
-                m_vSites[ iPos ]->set1stNeibors(-1, m_vSites[ iPos - m_iSizeX + 1 ] );
+                m_vSites[ iPos ]->set1stNeighbors(-1, m_vSites[ iPos - m_iSizeX + 1 ] );
                 m_vSites[ iPos ]->setNeighPosition( m_vSites[ iPos - m_iSizeX + 1 ],  Site::EAST_UP );
 
-                m_vSites[ iPos ]->set1stNeibors(-1, m_vSites[ iPos - m_iSizeX - 1 ] );
+                m_vSites[ iPos ]->set1stNeighbors(-1, m_vSites[ iPos - m_iSizeX - 1 ] );
                 m_vSites[ iPos ]->setNeighPosition( m_vSites[ iPos - m_iSizeX - 1 ],  Site::WEST_UP );
 
-                m_vSites[ iPos ]->set1stNeibors(-1, m_vSites[ iPos - 1 ] );
+                m_vSites[ iPos ]->set1stNeighbors(-1, m_vSites[ iPos - 1 ] );
                 m_vSites[ iPos ]->setNeighPosition( m_vSites[ iPos - 1 ],  Site::WEST_DOWN );
-                m_vSites[ iPos ]->set1stNeibors(-1, m_vSites[ iPos + 1 ] );
+                m_vSites[ iPos ]->set1stNeighbors(-1, m_vSites[ iPos + 1 ] );
                 m_vSites[ iPos ]->setNeighPosition( m_vSites[ iPos + 1 ],  Site::EAST_DOWN );
             }
             else {
-                m_vSites[ iPos ]->set1stNeibors(-1, m_vSites[ iPos + 1 ] );
+                m_vSites[ iPos ]->set1stNeighbors(-1, m_vSites[ iPos + 1 ] );
                 m_vSites[ iPos ]->setNeighPosition( m_vSites[ iPos +1 ],  Site::EAST_UP );
-                m_vSites[ iPos ]->set1stNeibors(-1, m_vSites[ iPos - 1 ] );
+                m_vSites[ iPos ]->set1stNeighbors(-1, m_vSites[ iPos - 1 ] );
                 m_vSites[ iPos ]->setNeighPosition( m_vSites[ iPos - 1 ],  Site::WEST_UP );
-                m_vSites[ iPos ]->set1stNeibors(-1, m_vSites[ iPos + m_iSizeX + 1 ] );
+                m_vSites[ iPos ]->set1stNeighbors(-1, m_vSites[ iPos + m_iSizeX + 1 ] );
                 m_vSites[ iPos ]->setNeighPosition( m_vSites[ iPos + m_iSizeX  + 1 ],  Site::EAST_DOWN );
-                m_vSites[ iPos ]->set1stNeibors(-1, m_vSites[ iPos + m_iSizeX  - 1 ] );
+                m_vSites[ iPos ]->set1stNeighbors(-1, m_vSites[ iPos + m_iSizeX  - 1 ] );
                 m_vSites[ iPos ]->setNeighPosition( m_vSites[ iPos + m_iSizeX  - 1 ],  Site::WEST_DOWN );
             }
 
@@ -206,212 +206,212 @@ void FCC::mf_neigh_110()
     int N5 = 1, N6 = N2 - 1, N7 = N4 - 1, N8 = N3 + 1;
 
     //N1
-    m_vSites[ N1 ]->set1stNeibors(0, m_vSites[ 2 ] );
+    m_vSites[ N1 ]->set1stNeighbors(0, m_vSites[ 2 ] );
     m_vSites[ N1 ]->setNeighPosition( m_vSites[ 2 ],  Site::EAST );
-    m_vSites[ N1 ]->set1stNeibors(0, m_vSites[ N2 - 1 ] );
+    m_vSites[ N1 ]->set1stNeighbors(0, m_vSites[ N2 - 1 ] );
     m_vSites[ N1 ]->setNeighPosition( m_vSites[ N2 - 1 ],  Site::WEST );
-    m_vSites[ N1 ]->set1stNeibors(0, m_vSites[ m_iSizeX ] );
+    m_vSites[ N1 ]->set1stNeighbors(0, m_vSites[ m_iSizeX ] );
     m_vSites[ N1 ]->setNeighPosition( m_vSites[ iPos + m_iSizeX ],  Site::SOUTH );
-    m_vSites[ N1 ]->set1stNeibors(0, m_vSites[ getSize() - m_iSizeX ] );
+    m_vSites[ N1 ]->set1stNeighbors(0, m_vSites[ getSize() - m_iSizeX ] );
     m_vSites[ N1 ]->setNeighPosition( m_vSites[ iPos + m_iSizeX ],  Site::NORTH );
-    m_vSites[ N1 ]->set1stNeibors( -1, m_vSites[ N1 + 1 ] );
+    m_vSites[ N1 ]->set1stNeighbors( -1, m_vSites[ N1 + 1 ] );
     m_vSites[ N1 ]->setNeighPosition( m_vSites[ N1 + 1 ],  Site::EAST_DOWN );
-    m_vSites[ N1 ]->set1stNeibors( -1, m_vSites[ N3 + 1 ] );
+    m_vSites[ N1 ]->set1stNeighbors( -1, m_vSites[ N3 + 1 ] );
     m_vSites[ N1 ]->setNeighPosition( m_vSites[ N3 + 1 ],  Site::EAST_UP );
-    m_vSites[ N1 ]->set1stNeibors( -1, m_vSites[ N2 ] );
+    m_vSites[ N1 ]->set1stNeighbors( -1, m_vSites[ N2 ] );
     m_vSites[ N1 ]->setNeighPosition( m_vSites[ N2 ],  Site::WEST_DOWN );
-    m_vSites[ N1 ]->set1stNeibors( -1, m_vSites[ N4 ] );
+    m_vSites[ N1 ]->set1stNeighbors( -1, m_vSites[ N4 ] );
     m_vSites[ N1 ]->setNeighPosition( m_vSites[ N4 ],  Site::WEST_UP );
 
     //N2
-    m_vSites[ N2 ]->set1stNeibors(0, m_vSites[ N2 - 2 ] );
+    m_vSites[ N2 ]->set1stNeighbors(0, m_vSites[ N2 - 2 ] );
     m_vSites[ N2 ]->setNeighPosition( m_vSites[ N2 - 2 ],  Site::WEST );
-    m_vSites[ N2 ]->set1stNeibors(0, m_vSites[ N1 + 1 ] );
+    m_vSites[ N2 ]->set1stNeighbors(0, m_vSites[ N1 + 1 ] );
     m_vSites[ N2 ]->setNeighPosition( m_vSites[ N1 + 1 ],  Site::EAST );
-    m_vSites[ N2 ]->set1stNeibors(0, m_vSites[ N4 ] );
+    m_vSites[ N2 ]->set1stNeighbors(0, m_vSites[ N4 ] );
     m_vSites[ N2 ]->setNeighPosition( m_vSites[ N4 ],  Site::NORTH );
-    m_vSites[ N2 ]->set1stNeibors(0, m_vSites[ N2 + m_iSizeX ] );
+    m_vSites[ N2 ]->set1stNeighbors(0, m_vSites[ N2 + m_iSizeX ] );
     m_vSites[ N2 ]->setNeighPosition( m_vSites[ N2 + m_iSizeX ],  Site::SOUTH );
-    m_vSites[ N2 ]->set1stNeibors( -1, m_vSites[ N2 - 1 ] );
+    m_vSites[ N2 ]->set1stNeighbors( -1, m_vSites[ N2 - 1 ] );
     m_vSites[ N2 ]->setNeighPosition( m_vSites[ N2 - 1 ],  Site::WEST_UP );
-    m_vSites[ N2 ]->set1stNeibors( -1, m_vSites[ N2 + m_iSizeX - 1 ] );
+    m_vSites[ N2 ]->set1stNeighbors( -1, m_vSites[ N2 + m_iSizeX - 1 ] );
     m_vSites[ N2 ]->setNeighPosition( m_vSites[ N2 + m_iSizeX - 1 ],  Site::WEST_DOWN );
-    m_vSites[ N2 ]->set1stNeibors( -1, m_vSites[ m_iSizeX ] );
+    m_vSites[ N2 ]->set1stNeighbors( -1, m_vSites[ m_iSizeX ] );
     m_vSites[ N2 ]->setNeighPosition( m_vSites[ m_iSizeX ],  Site::EAST_DOWN );
-    m_vSites[ N2 ]->set1stNeibors( -1, m_vSites[ N1 ] );
+    m_vSites[ N2 ]->set1stNeighbors( -1, m_vSites[ N1 ] );
     m_vSites[ N2 ]->setNeighPosition( m_vSites[ N1 ],  Site::EAST_UP );
 
     //N3
-    m_vSites[ N3 ]->set1stNeibors(0, m_vSites[ N3 + 2 ] );
+    m_vSites[ N3 ]->set1stNeighbors(0, m_vSites[ N3 + 2 ] );
     m_vSites[ N3 ]->setNeighPosition( m_vSites[ N3 + 2 ],  Site::EAST );
-    m_vSites[ N3 ]->set1stNeibors(0, m_vSites[ N4 - 1 ] );
+    m_vSites[ N3 ]->set1stNeighbors(0, m_vSites[ N4 - 1 ] );
     m_vSites[ N3 ]->setNeighPosition( m_vSites[ N4 - 1 ],  Site::WEST );
-    m_vSites[ N3 ]->set1stNeibors(0, m_vSites[ N1 ] );
+    m_vSites[ N3 ]->set1stNeighbors(0, m_vSites[ N1 ] );
     m_vSites[ N3 ]->setNeighPosition( m_vSites[ N1 ],  Site::SOUTH );
-    m_vSites[ N3 ]->set1stNeibors(0, m_vSites[ N3 - m_iSizeX ] );
+    m_vSites[ N3 ]->set1stNeighbors(0, m_vSites[ N3 - m_iSizeX ] );
     m_vSites[ N3 ]->setNeighPosition( m_vSites[ N3 - m_iSizeX ],  Site::NORTH );
-    m_vSites[ N3 ]->set1stNeibors( -1, m_vSites[ N3 - m_iSizeX + 1 ] );
+    m_vSites[ N3 ]->set1stNeighbors( -1, m_vSites[ N3 - m_iSizeX + 1 ] );
     m_vSites[ N3 ]->setNeighPosition( m_vSites[ N3 - m_iSizeX + 1 ],  Site::EAST_UP );
-    m_vSites[ N3 ]->set1stNeibors( -1, m_vSites[ N3 + 1 ] );
+    m_vSites[ N3 ]->set1stNeighbors( -1, m_vSites[ N3 + 1 ] );
     m_vSites[ N3 ]->setNeighPosition( m_vSites[ N3 + 1 ],  Site::EAST_DOWN );
-    m_vSites[ N3 ]->set1stNeibors( -1, m_vSites[ N4 ] );
+    m_vSites[ N3 ]->set1stNeighbors( -1, m_vSites[ N4 ] );
     m_vSites[ N3 ]->setNeighPosition( m_vSites[ N4 ],  Site::WEST_DOWN );
-    m_vSites[ N3 ]->set1stNeibors( -1, m_vSites[ N3 - 1 ] );
+    m_vSites[ N3 ]->set1stNeighbors( -1, m_vSites[ N3 - 1 ] );
     m_vSites[ N3 ]->setNeighPosition( m_vSites[ N3 - 1 ],  Site::WEST_UP );
 
     //N4
-    m_vSites[ N4 ]->set1stNeibors(0, m_vSites[ N3 + 1 ] );
+    m_vSites[ N4 ]->set1stNeighbors(0, m_vSites[ N3 + 1 ] );
     m_vSites[ N4 ]->setNeighPosition( m_vSites[ N3 + 1 ],  Site::EAST );
-    m_vSites[ N4 ]->set1stNeibors(0, m_vSites[ N4 - 2 ] );
+    m_vSites[ N4 ]->set1stNeighbors(0, m_vSites[ N4 - 2 ] );
     m_vSites[ N4 ]->setNeighPosition( m_vSites[ N4 - 2 ],  Site::WEST );
-    m_vSites[ N4 ]->set1stNeibors(0, m_vSites[ N2 ] );
+    m_vSites[ N4 ]->set1stNeighbors(0, m_vSites[ N2 ] );
     m_vSites[ N4 ]->setNeighPosition( m_vSites[ N2 ],  Site::SOUTH );
-    m_vSites[ N4 ]->set1stNeibors(0, m_vSites[ N4 - m_iSizeX ] );
+    m_vSites[ N4 ]->set1stNeighbors(0, m_vSites[ N4 - m_iSizeX ] );
     m_vSites[ N4 ]->setNeighPosition( m_vSites[ N4 - m_iSizeX  ],  Site::NORTH );
-    m_vSites[ N4 ]->set1stNeibors( -1, m_vSites[ N3 ] );
+    m_vSites[ N4 ]->set1stNeighbors( -1, m_vSites[ N3 ] );
     m_vSites[ N4 ]->setNeighPosition( m_vSites[ N3 ],  Site::WEST_UP );
-    m_vSites[ N4 ]->set1stNeibors( -1, m_vSites[ N6 ] );
+    m_vSites[ N4 ]->set1stNeighbors( -1, m_vSites[ N6 ] );
     m_vSites[ N4 ]->setNeighPosition( m_vSites[ N6 ],  Site::WEST_DOWN );
-    m_vSites[ N4 ]->set1stNeibors( -1, m_vSites[ N4 - 1 ] );
+    m_vSites[ N4 ]->set1stNeighbors( -1, m_vSites[ N4 - 1 ] );
     m_vSites[ N4 ]->setNeighPosition( m_vSites[ N4 - 1 ],  Site::EAST_UP );
-    m_vSites[ N4 ]->set1stNeibors( -1, m_vSites[ N1 ] );
+    m_vSites[ N4 ]->set1stNeighbors( -1, m_vSites[ N1 ] );
     m_vSites[ N4 ]->setNeighPosition( m_vSites[ N1 ],  Site::EAST_DOWN );
 
     //N5
-    m_vSites[ N5 ]->set1stNeibors(0, m_vSites[ N5 + 2 ] );
+    m_vSites[ N5 ]->set1stNeighbors(0, m_vSites[ N5 + 2 ] );
     m_vSites[ N5 ]->setNeighPosition( m_vSites[ N5 + 2 ],  Site::EAST );
-    m_vSites[ N5 ]->set1stNeibors(0, m_vSites[ N4 - 2 ] );
+    m_vSites[ N5 ]->set1stNeighbors(0, m_vSites[ N4 - 2 ] );
     m_vSites[ N5 ]->setNeighPosition( m_vSites[ N4 - 2 ],  Site::WEST );
-    m_vSites[ N5 ]->set1stNeibors(0, m_vSites[ N3 + 1 ] );
+    m_vSites[ N5 ]->set1stNeighbors(0, m_vSites[ N3 + 1 ] );
     m_vSites[ N5 ]->setNeighPosition( m_vSites[ N3 + 1 ],  Site::NORTH );
-    m_vSites[ N5 ]->set1stNeibors(0, m_vSites[ N5 + m_iSizeX ] );
+    m_vSites[ N5 ]->set1stNeighbors(0, m_vSites[ N5 + m_iSizeX ] );
     m_vSites[ N5 ]->setNeighPosition( m_vSites[ N5 + m_iSizeX  ],  Site::SOUTH );
-    m_vSites[ N5 ]->set1stNeibors( -1, m_vSites[ N5 - 1 ] );
+    m_vSites[ N5 ]->set1stNeighbors( -1, m_vSites[ N5 - 1 ] );
     m_vSites[ N5 ]->setNeighPosition( m_vSites[ N5 - 1 ],  Site::WEST_UP );
-    m_vSites[ N5 ]->set1stNeibors( -1, m_vSites[ N2 + 1 ] );
+    m_vSites[ N5 ]->set1stNeighbors( -1, m_vSites[ N2 + 1 ] );
     m_vSites[ N5 ]->setNeighPosition( m_vSites[ N2 + 1 ],  Site::WEST_DOWN );
-    m_vSites[ N5 ]->set1stNeibors( -1, m_vSites[ N5 + 1 ] );
+    m_vSites[ N5 ]->set1stNeighbors( -1, m_vSites[ N5 + 1 ] );
     m_vSites[ N5 ]->setNeighPosition( m_vSites[ N5 + 1 ],  Site::EAST_UP );
-    m_vSites[ N5 ]->set1stNeibors( -1, m_vSites[ N5 + m_iSizeX + 1] );
+    m_vSites[ N5 ]->set1stNeighbors( -1, m_vSites[ N5 + m_iSizeX + 1] );
     m_vSites[ N5 ]->setNeighPosition( m_vSites[ N5 + m_iSizeX + 1 ],  Site::EAST_DOWN );
 
     //N6
-    m_vSites[ N6 ]->set1stNeibors(0, m_vSites[ N1 ] );
+    m_vSites[ N6 ]->set1stNeighbors(0, m_vSites[ N1 ] );
     m_vSites[ N6 ]->setNeighPosition( m_vSites[ N1 ],  Site::EAST );
-    m_vSites[ N6 ]->set1stNeibors(0, m_vSites[ N6 - 2 ] );
+    m_vSites[ N6 ]->set1stNeighbors(0, m_vSites[ N6 - 2 ] );
     m_vSites[ N6 ]->setNeighPosition( m_vSites[ N6 - 2 ],  Site::WEST );
-    m_vSites[ N6 ]->set1stNeibors(0, m_vSites[ N7 ] );
+    m_vSites[ N6 ]->set1stNeighbors(0, m_vSites[ N7 ] );
     m_vSites[ N6 ]->setNeighPosition( m_vSites[ N7 ],  Site::NORTH );
-    m_vSites[ N6 ]->set1stNeibors(0, m_vSites[ N6 + m_iSizeX ] );
+    m_vSites[ N6 ]->set1stNeighbors(0, m_vSites[ N6 + m_iSizeX ] );
     m_vSites[ N6 ]->setNeighPosition( m_vSites[ N6 + m_iSizeX  ],  Site::SOUTH );
-    m_vSites[ N6 ]->set1stNeibors( -1, m_vSites[ N7 - 1 ] );
+    m_vSites[ N6 ]->set1stNeighbors( -1, m_vSites[ N7 - 1 ] );
     m_vSites[ N6 ]->setNeighPosition( m_vSites[ N7 - 1 ],  Site::WEST_UP );
-    m_vSites[ N6 ]->set1stNeibors( -1, m_vSites[ N6 - 1 ] );
+    m_vSites[ N6 ]->set1stNeighbors( -1, m_vSites[ N6 - 1 ] );
     m_vSites[ N6 ]->setNeighPosition( m_vSites[ N6 - 1 ],  Site::WEST_DOWN );
-    m_vSites[ N6 ]->set1stNeibors( -1, m_vSites[ N4 ] );
+    m_vSites[ N6 ]->set1stNeighbors( -1, m_vSites[ N4 ] );
     m_vSites[ N6 ]->setNeighPosition( m_vSites[ N4 ],  Site::EAST_UP );
-    m_vSites[ N6 ]->set1stNeibors( -1, m_vSites[ N2 ] );
+    m_vSites[ N6 ]->set1stNeighbors( -1, m_vSites[ N2 ] );
     m_vSites[ N6 ]->setNeighPosition( m_vSites[ N2 ],  Site::EAST_DOWN );
 
     //N7
-    m_vSites[ N7 ]->set1stNeibors(0, m_vSites[ N3 ] );
+    m_vSites[ N7 ]->set1stNeighbors(0, m_vSites[ N3 ] );
     m_vSites[ N7 ]->setNeighPosition( m_vSites[ N3 ],  Site::EAST );
-    m_vSites[ N7 ]->set1stNeibors(0, m_vSites[ N7 - 2 ] );
+    m_vSites[ N7 ]->set1stNeighbors(0, m_vSites[ N7 - 2 ] );
     m_vSites[ N7 ]->setNeighPosition( m_vSites[ N7 - 2 ],  Site::WEST );
-    m_vSites[ N7 ]->set1stNeibors(0, m_vSites[ N7 - m_iSizeX ] );
+    m_vSites[ N7 ]->set1stNeighbors(0, m_vSites[ N7 - m_iSizeX ] );
     m_vSites[ N7 ]->setNeighPosition( m_vSites[ N7 - m_iSizeX ],  Site::NORTH );
-    m_vSites[ N7 ]->set1stNeibors(0, m_vSites[ N6 ] );
+    m_vSites[ N7 ]->set1stNeighbors(0, m_vSites[ N6 ] );
     m_vSites[ N7 ]->setNeighPosition( m_vSites[ N6  ],  Site::SOUTH );
-    m_vSites[ N7 ]->set1stNeibors( -1, m_vSites[ N7 - m_iSizeX - 1 ] );
+    m_vSites[ N7 ]->set1stNeighbors( -1, m_vSites[ N7 - m_iSizeX - 1 ] );
     m_vSites[ N7 ]->setNeighPosition( m_vSites[ N7 - m_iSizeX - 1 ],  Site::WEST_UP );
-    m_vSites[ N7 ]->set1stNeibors( -1, m_vSites[ N7 - 1 ] );
+    m_vSites[ N7 ]->set1stNeighbors( -1, m_vSites[ N7 - 1 ] );
     m_vSites[ N7 ]->setNeighPosition( m_vSites[ N7 - 1 ],  Site::WEST_DOWN );
-    m_vSites[ N7 ]->set1stNeibors( -1, m_vSites[ N7 - m_iSizeX + 1  ] );
+    m_vSites[ N7 ]->set1stNeighbors( -1, m_vSites[ N7 - m_iSizeX + 1  ] );
     m_vSites[ N7 ]->setNeighPosition( m_vSites[ N7 - m_iSizeX + 1  ],  Site::EAST_UP );
-    m_vSites[ N7 ]->set1stNeibors( -1, m_vSites[ N7 + 1 ] );
+    m_vSites[ N7 ]->set1stNeighbors( -1, m_vSites[ N7 + 1 ] );
     m_vSites[ N7 ]->setNeighPosition( m_vSites[ N7 + 1 ],  Site::EAST_DOWN );
 
     //N8
-    m_vSites[ N8 ]->set1stNeibors(0, m_vSites[ N8 + 2 ] );
+    m_vSites[ N8 ]->set1stNeighbors(0, m_vSites[ N8 + 2 ] );
     m_vSites[ N8 ]->setNeighPosition( m_vSites[ N8 + 2 ],  Site::EAST );
-    m_vSites[ N8 ]->set1stNeibors(0, m_vSites[ N4 ] );
+    m_vSites[ N8 ]->set1stNeighbors(0, m_vSites[ N4 ] );
     m_vSites[ N8 ]->setNeighPosition( m_vSites[ N4 ],  Site::WEST );
-    m_vSites[ N8 ]->set1stNeibors(0, m_vSites[ N8 - m_iSizeX ] );
+    m_vSites[ N8 ]->set1stNeighbors(0, m_vSites[ N8 - m_iSizeX ] );
     m_vSites[ N8 ]->setNeighPosition( m_vSites[ N8 - m_iSizeX ],  Site::NORTH );
-    m_vSites[ N8 ]->set1stNeibors(0, m_vSites[ N5 ] );
+    m_vSites[ N8 ]->set1stNeighbors(0, m_vSites[ N5 ] );
     m_vSites[ N8 ]->setNeighPosition( m_vSites[ N5  ],  Site::SOUTH );
-    m_vSites[ N8 ]->set1stNeibors( -1, m_vSites[ N8 - 1 ] );
+    m_vSites[ N8 ]->set1stNeighbors( -1, m_vSites[ N8 - 1 ] );
     m_vSites[ N8 ]->setNeighPosition( m_vSites[ N8 - 1 ],  Site::WEST_UP );
-    m_vSites[ N8 ]->set1stNeibors( -1, m_vSites[ N1 ] );
+    m_vSites[ N8 ]->set1stNeighbors( -1, m_vSites[ N1 ] );
     m_vSites[ N8 ]->setNeighPosition( m_vSites[ N1 ],  Site::WEST_DOWN );
-    m_vSites[ N8 ]->set1stNeibors( -1, m_vSites[ N8 + 1  ] );
+    m_vSites[ N8 ]->set1stNeighbors( -1, m_vSites[ N8 + 1  ] );
     m_vSites[ N8 ]->setNeighPosition( m_vSites[ N8 + 1  ],  Site::EAST_UP );
-    m_vSites[ N8 ]->set1stNeibors( -1, m_vSites[ N5 + 1 ] );
+    m_vSites[ N8 ]->set1stNeighbors( -1, m_vSites[ N5 + 1 ] );
     m_vSites[ N8 ]->setNeighPosition( m_vSites[ N5 + 1 ],  Site::EAST_DOWN );
 
 
     //first line
     for (int i = 2; i < m_iSizeX-2; i++){
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i - 2 ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i - 2 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - 2 ],  Site::WEST );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i + 2 ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i + 2 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + 2 ],  Site::EAST );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i + m_iSizeX ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i + m_iSizeX ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + m_iSizeX ],  Site::SOUTH );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ N3 + i ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ N3 + i ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ N3 + i ],  Site::NORTH );
 
         if ( i%2 == 0){
-            m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i - 1 ] );
+            m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i - 1 ] );
             m_vSites[ i ]->setNeighPosition( m_vSites[ i - 1 ],  Site::WEST_DOWN );
-            m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i + 1 ] );
+            m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i + 1 ] );
             m_vSites[ i ]->setNeighPosition( m_vSites[ i + 1 ],  Site::EAST_DOWN );
-            m_vSites[ i ]->set1stNeibors( -1, m_vSites[ N3 + i - 1] );
+            m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ N3 + i - 1] );
             m_vSites[ i ]->setNeighPosition( m_vSites[ N3 + i - 1 ],  Site::WEST_UP );
-            m_vSites[ i ]->set1stNeibors( -1, m_vSites[ N3 + i + 1] );
+            m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ N3 + i + 1] );
             m_vSites[ i ]->setNeighPosition( m_vSites[ N3 + i + 1 ],  Site::EAST_UP );
         }
         else {
-            m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i - 1 ] );
+            m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i - 1 ] );
             m_vSites[ i ]->setNeighPosition( m_vSites[ i - 1 ],  Site::WEST_UP );
-            m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i + 1 ] );
+            m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i + 1 ] );
             m_vSites[ i ]->setNeighPosition( m_vSites[ i + 1 ],  Site::EAST_UP );
-            m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i + m_iSizeX - 1 ] );
+            m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i + m_iSizeX - 1 ] );
             m_vSites[ i ]->setNeighPosition( m_vSites[ i + m_iSizeX - 1  ],  Site::WEST_DOWN );
-            m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i + m_iSizeX + 1] );
+            m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i + m_iSizeX + 1] );
             m_vSites[ i ]->setNeighPosition( m_vSites[ i + m_iSizeX + 1 ],  Site::EAST_UP );
         }
     }
 
     //last line
     for (int i = (N8+1), iCount = 2; i < N7;  i++, iCount++){
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i - 2 ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i - 2 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - 2 ],  Site::WEST );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i + 2 ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i + 2 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + 2 ],  Site::EAST );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ N1 + iCount ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ N1 + iCount ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ N1 + iCount  ],  Site::SOUTH );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i - m_iSizeX ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i - m_iSizeX ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - m_iSizeX ],  Site::NORTH );
 
         if ( i%2 == 0){
-            m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i - 1 ] );
+            m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i - 1 ] );
             m_vSites[ i ]->setNeighPosition( m_vSites[ i - 1 ],  Site::WEST_DOWN );
-            m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i + 1 ] );
+            m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i + 1 ] );
             m_vSites[ i ]->setNeighPosition( m_vSites[ i + 1 ],  Site::EAST_DOWN );
-            m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i - m_iSizeX - 1 ] );
+            m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i - m_iSizeX - 1 ] );
             m_vSites[ i ]->setNeighPosition( m_vSites[ i - m_iSizeX - 1 ],  Site::WEST_UP );
-            m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i - m_iSizeX + 1 ] );
+            m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i - m_iSizeX + 1 ] );
             m_vSites[ i ]->setNeighPosition( m_vSites[ i - m_iSizeX + 1 ],  Site::EAST_UP );
         }
         else {
-            m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i - 1 ] );
+            m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i - 1 ] );
             m_vSites[ i ]->setNeighPosition( m_vSites[ i - 1 ],  Site::WEST_UP );
-            m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i + 1 ] );
+            m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i + 1 ] );
             m_vSites[ i ]->setNeighPosition( m_vSites[ i + 1 ],  Site::EAST_UP );
-            m_vSites[ i ]->set1stNeibors( -1, m_vSites[ iCount + 1 ] );
+            m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ iCount + 1 ] );
             m_vSites[ i ]->setNeighPosition( m_vSites[ iCount + 1  ],  Site::WEST_DOWN );
-            m_vSites[ i ]->set1stNeibors( -1, m_vSites[ iCount - 1 ] );
+            m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ iCount - 1 ] );
             m_vSites[ i ]->setNeighPosition( m_vSites[ iCount - 1 ],  Site::EAST_UP );
         }
     }
@@ -419,93 +419,93 @@ void FCC::mf_neigh_110()
 
     //First column
     for (int i = ( N1 + m_iSizeX ); i < N3;  i += m_iSizeX ){
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i + m_iSizeX - 2 ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i + m_iSizeX - 2 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + m_iSizeX - 2 ],  Site::WEST );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i + 2 ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i + 2 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + 2 ],  Site::EAST );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i + m_iSizeX ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i + m_iSizeX ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + m_iSizeX  ],  Site::SOUTH );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i - m_iSizeX ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i - m_iSizeX ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - m_iSizeX ],  Site::NORTH );
-        m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i - m_iSizeX + 1 ] );
+        m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i - m_iSizeX + 1 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - m_iSizeX + 1 ],  Site::EAST_UP );
-        m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i + 1 ] );
+        m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i + 1 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + 1 ],  Site::EAST_DOWN );
-        m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i  - 1 ] );
+        m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i  - 1 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - 1 ],  Site::WEST_UP );
-        m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i + m_iSizeX - 1 ] );
+        m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i + m_iSizeX - 1 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + m_iSizeX - 1 ],  Site::WEST_DOWN );
     }
 
     //Second column
     for (int i = ( N5 + m_iSizeX ); i < N8;  i += m_iSizeX ){
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i + m_iSizeX  - 2 ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i + m_iSizeX  - 2 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + m_iSizeX  - 2 ],  Site::WEST );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i + 2 ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i + 2 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + 2 ],  Site::EAST );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i + m_iSizeX ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i + m_iSizeX ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + m_iSizeX  ],  Site::SOUTH );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i - m_iSizeX ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i - m_iSizeX ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - m_iSizeX ],  Site::NORTH );
-        m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i + 1 ] );
+        m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i + 1 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + 1 ],  Site::EAST_UP );
-        m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i + m_iSizeX + 1 ] );
+        m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i + m_iSizeX + 1 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + m_iSizeX + 1 ],  Site::EAST_DOWN );
-        m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i - 1 ] );
+        m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i - 1 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - 1 ],  Site::WEST_UP );
-        m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i + m_iSizeX - 1 ] );
+        m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i + m_iSizeX - 1 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + m_iSizeX - 1 ],  Site::WEST_DOWN );
     }
 
 
     //Last column
     for ( int i = (N2 + m_iSizeX); i < (getSize() - m_iSizeX); i+=m_iSizeX ){
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i - 2 ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i - 2 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - 2 ],  Site::WEST );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i - m_iSizeX + 2 ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i - m_iSizeX + 2 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - m_iSizeX + 2 ],  Site::EAST );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i + m_iSizeX ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i + m_iSizeX ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + m_iSizeX  ],  Site::SOUTH );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i - m_iSizeX ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i - m_iSizeX ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - m_iSizeX ],  Site::NORTH );
-        m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i - 1 ] );
+        m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i - 1 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - 1 ],  Site::WEST_UP );
-        m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i + m_iSizeX - 1 ] );
+        m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i + m_iSizeX - 1 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + m_iSizeX - 1 ],  Site::WEST_DOWN );
-        m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i + 1 ] );
+        m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i + 1 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + 1 ],  Site::EAST_UP );
-        m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i - m_iSizeX + 1 ] );
+        m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i - m_iSizeX + 1 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - m_iSizeX + 1 ],  Site::EAST_DOWN );
      }
 
     //Last column - 1
     for ( int i = (N6 + m_iSizeX); i < N7; i+=m_iSizeX ){
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i - 2 ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i - 2 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - 2 ],  Site::WEST );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i - m_iSizeX + 2 ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i - m_iSizeX + 2 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - m_iSizeX + 2 ],  Site::EAST );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i + m_iSizeX ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i + m_iSizeX ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + m_iSizeX  ],  Site::SOUTH );
-        m_vSites[ i ]->set1stNeibors( 0, m_vSites[ i - m_iSizeX ] );
+        m_vSites[ i ]->set1stNeighbors( 0, m_vSites[ i - m_iSizeX ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - m_iSizeX ],  Site::NORTH );
-        m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i - m_iSizeX - 1 ] );
+        m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i - m_iSizeX - 1 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - m_iSizeX - 1 ],  Site::WEST_UP );
-        m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i - 1 ] );
+        m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i - 1 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - 1 ],  Site::WEST_DOWN );
-        m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i - m_iSizeX + 1 ] );
+        m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i - m_iSizeX + 1 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i - m_iSizeX + 1 ],  Site::EAST_UP );
-        m_vSites[ i ]->set1stNeibors( -1, m_vSites[ i + 1 ] );
+        m_vSites[ i ]->set1stNeighbors( -1, m_vSites[ i + 1 ] );
         m_vSites[ i ]->setNeighPosition( m_vSites[ i + 1 ],  Site::EAST_DOWN );
     }
 
     //A very simple test that all neighs have been defined at least in number
     for ( int i = 0; i < getSize(); i++){
-        if ( m_vSites[ i ]->get1stNeihbors()[ 0 ].size() != 4 ){
+        if ( m_vSites[ i ]->get1stNeighbors()[ 0 ].size() != 4 ){
             cout << "Check level 0 neighs in site: " << i << endl;
             EXIT;
         }
 
-        if ( m_vSites[ i ]->get1stNeihbors()[ 0 ].size() != 4 ){
+        if ( m_vSites[ i ]->get1stNeighbors()[ 0 ].size() != 4 ){
             cout << "Check level 0 neighs in site: " << i << endl;
             EXIT;
         }

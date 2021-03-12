@@ -48,6 +48,9 @@ class Lattice: public Pointers
     /// Constructor
     Lattice(Apothesis* apothesis);
 
+    /// Constructor including steps variable
+    Lattice(Apothesis* apothesis, bool hasSteps);
+
     /// Distructor.
     virtual ~Lattice();
 
@@ -143,9 +146,9 @@ class Lattice: public Pointers
 //    virtual void mf_neigh() = 0;
 
     /// True if the lattice has steps (comes from the input file if the Step keyword is found).
-    bool m_bHasSteps;
+    bool m_hasSteps;
 
-    ///Build the steps id m_bHasSteps is true.
+    ///Build the steps id m_hasSteps is true.
     void mf_buildSteps();
 
     //The info for the step surface i.e. [1 20 10]
