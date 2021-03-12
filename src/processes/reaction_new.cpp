@@ -1,5 +1,4 @@
 #include "reaction_new.h"
-// #include "species_new.cpp"
 
 reaction_new::reaction_new(){}
 reaction_new::~reaction_new(){}
@@ -19,6 +18,10 @@ void reaction_new::addProducts( const double coeff, species_new* species ){
     m_vpProducts.push_back( data );
 }
 
+void reaction_new::perform( int siteID  ) 
+{
+    m_pLattice->react(siteID);   
+}
 
 void reaction_new::print()
 {

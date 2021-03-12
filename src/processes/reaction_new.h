@@ -28,6 +28,8 @@ public:
 
     void print();
 
+    void perform( int siteID  ) override;
+
 private:
     /// The reactants participating in this reaction
     vector< pair< double, species_new* > > m_vpReactants;
