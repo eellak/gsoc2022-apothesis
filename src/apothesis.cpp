@@ -27,7 +27,6 @@
 #include "process.h"
 #include "species.h"
 #include "string.h"
-#include "reaction_new.h"
 #include "aux/random_generator.h"
 #include <bits/stdc++.h>
 
@@ -45,7 +44,6 @@ typedef rapidjson::SizeType SizeType;
 
 Apothesis::Apothesis(int argc, char *argv[])
     : pLattice(0),
-      pRead(0),
       m_dProcTime(0.0),
       m_dRTot(0.0),
       m_dProcRate(0.0),
@@ -109,11 +107,15 @@ void Apothesis::init()
 
     // ----- For validating with the case of Lam & Vlachos ------
 
+    // Get access to document file
+    Document &doc = pRead->getDoc();
+
     //To Deifilia: This must be created for each process in order to pass
     //the parameters from the input file to the porcess
     map<string, any> params;
-    params.insert( {"T", 500.} );
-    params.insert( {"P", 101325.} );
+    params.insert( {"T", pParameters->getTemperature()} );
+    params.insert( {"P", pParameters->getPressure()} );
+    
     params.insert( {"f", 2.0e-3} );
     params.insert( {"C_tot", 1.0e+19} );
     params.insert( {"s0", 0.1} );

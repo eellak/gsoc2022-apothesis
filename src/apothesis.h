@@ -37,7 +37,7 @@ using namespace std;
 
 namespace Utils{ class ErrorHandler; class Parameters; class Properties; }
 namespace SurfaceTiles{ class Site; }
-namespace MicroProcesses { class Process; class Adsorption; class Desorption; class Diffusion; class SurfaceReaction; }
+namespace MicroProcesses { class Process; class Adsorption; class Desorption; class Diffusion; class Reaction; }
 namespace RandomGen { class RandomGenerator; }
 
 class Lattice;

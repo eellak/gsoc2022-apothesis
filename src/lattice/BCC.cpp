@@ -36,7 +36,7 @@ void BCC::buildSteps(int iSize, int jSize, int kSize)
 {
     //e.g. Step 20 1 0
     if ( m_vSites.size()%iSize != 0){
-        cout << "Cannot create  stepped surface because it cannot be divided exaclty." << endl;
+        cout << "Cannot create stepped surface because it cannot be divided exactly." << endl;
         EXIT;
     }
 

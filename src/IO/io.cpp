@@ -430,7 +430,7 @@ void IO::writeLatticeInfo()
 
 void IO::writeLatticeHeights( double time, int timeStep )
 {
-    std::string name="Lattice_" + std::to_string( timeStep ) + ".data";
+    std::string name="data/Lattice_" + std::to_string( timeStep ) + ".data";
     std::ofstream file(name);
 
     file << "Time (s): " << time << endl;

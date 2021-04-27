@@ -24,7 +24,7 @@ set(header_files
     processes/desorption.h
     processes/desorption_simple_cubic.h
     processes/abstract_process.h
-    processes/reaction_new.h
+    processes/reaction.h
     error/errorhandler.h
     processes/parameters.h
     IO/read.h
@@ -58,8 +58,8 @@ set(process_files
     processes/desorption_simple_cubic.cpp
     processes/process.cpp
     processes/abstract_process.cpp
-    processes/reaction_new.h
-    processes/reaction_new.cpp
+    processes/reaction.h
+    processes/reaction.cpp
 )
 set(error_files
     error/errorhandler.cpp 

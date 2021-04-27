@@ -15,8 +15,8 @@
 //    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //============================================================================
 
-#ifndef REACTION_NEW_H
-#define REACTION_NEW_H
+#ifndef REACTION_H
+#define REACTION_H
 
 #include <iostream>
 #include <string>
@@ -27,21 +27,32 @@
 
 using namespace std;
 
-class reaction_new: public Process
+namespace MicroProcesses
+{
+
+class Reaction: public Process
 {
 public:
-    reaction_new();
-    ~reaction_new();
+    Reaction();
+    ~Reaction();
 
+    // Getters for reactants and products
     inline vector< pair < double, species_new* > > getReactants(){ return m_vpReactants; }
-    inline vector< pair < double, species_new* > > getproducts(){ return m_vpProducts; }
+    inline vector< pair < double, species_new* > > getProducts(){ return m_vpProducts; }
 
+    // Set reactants and products
     void addReactants( const double coeff, species_new* species );
     void addProducts( const double coeff, species_new* species );
 
+    // Getters and setters for activation energy and pre-exponential factors
     inline void setActivationEnergy( double Ea) { m_dEa = Ea; }
+    inline double getActivationEnergy() { return m_dEa; }
     inline void setPreExpFactor( double k0 ){ m_dK0 = k0; }
+    inline double getPreExpFactor(){ return m_dK0; }
 
+    double getProbability();
+    bool rules ( Site* );
+    void perform( Site* );
     void print();
 
 private:
@@ -56,6 +67,9 @@ private:
 
     /// The pre-exponential factors for this reaction
     double m_dK0;
-};
 
-#endif // REACTION_NEW_H
+    REGISTER_PROCESS(Reaction)
+};    
+}
+
+#endif // REACTION_H
