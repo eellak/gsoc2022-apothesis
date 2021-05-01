@@ -82,6 +82,9 @@ public:
 
     inline void setUncoAccepted( bool isUncoAccepted) { m_bUncoAccept = isUncoAccepted; }
     inline bool isUncoAccepted() { return m_bUncoAccept; }
+    
+    inline void setSpecies (species_new* species) { m_species = species; }
+    inline species_new* getSpecies () { return m_species; }
 
 protected:
     /** Pointer to the lattice of the process */
@@ -109,6 +112,10 @@ private:
 
     /// Counts the times that this processes happened
     int m_iHappened;
+
+    /// species
+    species_new* m_species;
+
 };
 }
 

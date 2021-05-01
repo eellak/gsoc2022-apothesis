@@ -29,10 +29,9 @@
 #include "string.h"
 #include "aux/random_generator.h"
 #include <bits/stdc++.h>
-
 #include "factory_process.h"
-
 #include <numeric>
+#include "adsorption_simple_cubic.h"
 
 using namespace MicroProcesses;
 
@@ -130,9 +129,18 @@ void Apothesis::init()
     params.insert( {"E_m", Em } );
 
     set< Site* > emptySet;
-//    set< Site* > tempSet;
-//    for ( Site* s:pLattice->getSites() )
- //       tempSet.insert( s );
+
+    species_new* sCuAMD = new species_new();
+    sCuAMD->setChemFormula("CuAMD");
+    sCuAMD->setID(0);
+    sCuAMD->setMaxReacCoreff(-1);
+
+    species_new* sHAMD = new species_new();
+    sHAMD->setChemFormula("HAMD");
+    sHAMD->setID(1);
+    sHAMD->setMaxReacCoreff(1);
+
+    //AdsorptionSimpleCubic* adsSimpleCubic = FactoryProcess::createProcess("AdsorptionSimpleCubic");
 
     auto pos = m_processMap.insert( { FactoryProcess::createProcess("AdsorptionSimpleCubic"), emptySet } );
     pos.first->first->setName("Adsorption");
@@ -140,6 +148,7 @@ void Apothesis::init()
     pos.first->first->setParams( params );
     pos.first->first->setLattice( pLattice );
     pos.first->first->setRandomGen( pRandomGen );
+    pos.first->first->setSpecies( sCuAMD );
 
     for ( Site* s:pLattice->getSites() ){
         if ( pos.first->first->rules( s ) )

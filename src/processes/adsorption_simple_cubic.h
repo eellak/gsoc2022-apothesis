@@ -41,8 +41,8 @@ public:
     inline void setTargetSite( Site* site ){ m_Site = site;}
     inline Site* getTargetSite(){ return m_Site; }
 
-    inline void setSpecies( species_new* s ){ m_Species = s; }
-    inline species_new* getSpecies(){ return m_Species; }
+//    inline void setSpecies( species_new* s ){ m_Species = s; }
+//    inline species_new* getSpecies(){ return m_Species; }
 
 
 private:
@@ -60,7 +60,7 @@ private:
     Site* m_Site;
 
     ///The species that must adsopt
-    species_new* m_Species;
+//    species_new* m_Species;
 
     /// A member function to calculate the neighbors of a given site
     int mf_calculateNeighbors(Site*);

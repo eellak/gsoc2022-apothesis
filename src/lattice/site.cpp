@@ -31,56 +31,58 @@ namespace SurfaceTiles
 
   Site::~Site() {}
 
-  void Site::addSpecies(Species *s)
+  void Site::addSpecies(species_new *s, int stoich)
   {
-    m_species.push_back(s);
-    m_mapSpecies[s->getId()]++;
+    for (int num = 0; num < stoich; ++num)
+    {
+      m_vSpecies.push_back(s);
+    }
+    m_mapSpecies[s->getID()]+=stoich;
   }
 
-  void Site::removeSpecies(Species *s)
+  void Site::removeSpecies(species_new *s, int stoich)
   {
     // TODO: Is this better to do by species pointer or by string?. I think pointer is easier
     // Search through species list until we've found the specific one to remove
 
     // Store previous state to ensure that we remove the desired species
     int numIter = 0;
-    int m_species_prevSize = m_species.size();
+    int m_species_prevSize = m_vSpecies.size();
 
-    int numOfSpecies = m_mapSpecies[s->getId()];
-
-    if (numOfSpecies > 0)
+    for (int num = 0; num < stoich; ++num)
     {
-      for (vector<Species *>::iterator itr = m_species.begin(); itr != m_species.end(); ++itr)
+      int numOfSpecies = m_mapSpecies[s->getID()];
+
+      if (numOfSpecies > 0)
       {
-        if (*itr == s)
+        for (vector<species_new *>::iterator itr = m_vSpecies.begin(); itr != m_vSpecies.end(); ++itr)
         {
-          m_species.erase(itr);
-          break;
+          if (*itr == s)
+          {
+            m_vSpecies.erase(itr);
+            break;
+          }
+          ++numIter;
         }
-        ++numIter;
+
       }
-      // Decrement number of said species
-      m_mapSpecies[s->getId()]--;
+      
+      // Output warning message if we didn't remove anything
+      if (numOfSpecies < 1)
+      {
+        cout << "Warning: did not find an instance of " << s->getChemFormula() << "in site " << getID() << endl;
+      }
     }
-
-    // Output warning message if we didn't remove anything
-    if (numOfSpecies < 1)
-    {
-      cout << "Warning: did not find an instance of " << s->getName() << "in site " << getID() << endl;
-    }
-  }
-
-  vector<Species *> Site::getSpecies()
-  {
-    return m_species;
+    // Decrement number of said species
+    m_mapSpecies[s->getID()]-=stoich;
   }
 
   vector<string> Site::getSpeciesName()
   {
     vector<string> names;
-    for (vector<Species *>::iterator itr = m_species.begin(); itr != m_species.end(); ++itr)
+    for (vector<species_new *>::iterator itr = m_vSpecies.begin(); itr != m_vSpecies.end(); ++itr)
     {
-      names.push_back((*itr)->getName());
+      names.push_back((*itr)->getChemFormula());
     }
     return names;
   }

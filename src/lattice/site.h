@@ -25,7 +25,7 @@
 #include <valarray>
 
 #include "process.h"
-#include "species.h"
+#include "species_new.h"
 
 using namespace std;
 using namespace MicroProcesses;
@@ -111,12 +111,10 @@ public:
     /// This will holds all the elements that can interact with the surfaces.
     /// Important when we talk about surface reactions.
     /// Element class has not implement yet for that we use forward decleration.
-    void addSpecies( Species* s);
+    void addSpecies( species_new* s, int stoich);
 
     /// Remove the species from the site
-    void removeSpecies( Species* s);
-
-    vector<Species*> getSpecies();
+    void removeSpecies( species_new* s, int stoich);
 
     vector<string> getSpeciesName();
 
@@ -146,6 +144,9 @@ public:
 
     /// Returns true if is in higher step (used in the step case only)
     bool isHigherStep() { return m_isHigherStep; }
+
+    // returns map of species
+    inline map<int, int> getSpeciesMap() const { return m_mapSpecies; }
 
 protected:
     //The lattice type that this site belongs to
@@ -185,8 +186,6 @@ protected:
 
     /// The list of processes that this site can participate in.
     list< Process* > m_lProcs;
-
-    vector<Species* > m_species;
 
     bool m_phantom;
 

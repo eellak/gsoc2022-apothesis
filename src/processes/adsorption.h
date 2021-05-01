@@ -55,7 +55,7 @@ private:
     ///The site that adsorption will be performed
     Site* m_Site;
 
-    ///The species that must adsopt
+    ///The species that must adsorb
     species_new* m_Species;
 
     REGISTER_PROCESS(Adsorption)

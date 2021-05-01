@@ -47,15 +47,36 @@ namespace MicroProcesses
         return 0;
     }
 
-    bool Reaction::rules(Site *)
+    bool Reaction::rules(Site* s)
     {
-        //TODO
-        return false;
+        // For all species in the reaction
+        for (pair<double, species_new*> reactant:m_vpReactants)
+        {
+            // If the species map contains enough of the reactant
+            if (s->getSpeciesMap()[reactant.second->getID()] >= reactant.first)
+            {
+                continue;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
-    void Reaction::perform(Site*)
+    void Reaction::perform(Site* s)
     {
-        //TODO
+        for (pair<double, species_new*> reactant:m_vpReactants)
+        {
+            // If the species map contains enough of the reactant
+            s->removeSpecies(reactant.second, reactant.first);
+        }
+        for (pair<double, species_new*> product:m_vpProducts)
+        {
+            s->addSpecies(product.second, product.first);
+            
+        }
     }
 
     void Reaction::print()

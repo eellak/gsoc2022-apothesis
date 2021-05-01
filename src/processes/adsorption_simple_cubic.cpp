@@ -21,7 +21,8 @@ namespace MicroProcesses
 
 REGISTER_PROCESS_IMPL( AdsorptionSimpleCubic )
 
-AdsorptionSimpleCubic::AdsorptionSimpleCubic():m_Species(0){}
+//AdsorptionSimpleCubic::AdsorptionSimpleCubic():m_Species(0){}
+AdsorptionSimpleCubic::AdsorptionSimpleCubic(){}
 
 AdsorptionSimpleCubic::~AdsorptionSimpleCubic(){}
 
@@ -35,6 +36,7 @@ void AdsorptionSimpleCubic::perform( Site* s )
 {
     //For PVD results
     s->increaseHeight( 1 );
+    s->addSpecies(getSpecies(), 1);   // Add species to current map
     mf_calculateNeighbors( s );
     m_seAffectedSites.insert( s ) ;
 
