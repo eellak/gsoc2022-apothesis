@@ -32,19 +32,6 @@ public:
     bool rules( Site* ) override;
     void perform( Site* ) override;
 
-    inline void setActivationEnergy( double nrg ){ m_dActNrg = nrg; }
-    inline double getActivationEnergy(){ return m_dActNrg; }
-
-    inline void setMolFrac( double val ){ m_dMolFrac = val; }
-    inline double getMolFrac(){ return m_dMolFrac; }
-
-    inline void setTargetSite( Site* site ){ m_Site = site;}
-    inline Site* getTargetSite(){ return m_Site; }
-
-//    inline void setSpecies( species_new* s ){ m_Species = s; }
-//    inline species_new* getSpecies(){ return m_Species; }
-
-
 private:
 
     bool mf_isInLowerStep( Site* s );
@@ -55,9 +42,6 @@ private:
 
     ///The mole fraction of the AdsorptionSimpleCubic process
     double m_dMolFrac;
-
-    ///The site that AdsorptionSimpleCubic will be performed
-    Site* m_Site;
 
     ///The species that must adsopt
 //    species_new* m_Species;

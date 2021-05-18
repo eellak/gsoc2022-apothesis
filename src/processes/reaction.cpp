@@ -26,9 +26,10 @@ namespace MicroProcesses
     Reaction::Reaction() {}
     Reaction::~Reaction() {}
 
+    // move to process.h class
     void Reaction::addReactants(const double coeff, species_new *species)
     {
-        pair<double, species_new *> data;
+        pair<int, species_new *> data;
         data.first = coeff;
         data.second = species;
         m_vpReactants.push_back(data);
@@ -36,7 +37,7 @@ namespace MicroProcesses
 
     void Reaction::addProducts(const double coeff, species_new *species)
     {
-        pair<double, species_new *> data;
+        pair<int, species_new *> data;
         data.first = coeff;
         data.second = species;
         m_vpProducts.push_back(data);
@@ -44,16 +45,21 @@ namespace MicroProcesses
 
     double Reaction::getProbability()
     {
-        return 0;
+        // Initialize class once
+        // Rules for case # 1 and # 2 are the same
+        // For all species in the reaction
+        //auto v_reactants = (vector<pair<int, species_new*>>) m_mParams["reactants"];
+        double T = any_cast<double>(getParameter("T"));
+        double R = any_cast<double>(getParameter("R"));
+        return m_dK0*exp(-m_dActNrg/T/R); // Need the number of sites that can perform a given reaction
     }
 
-    bool Reaction::rules(Site* s)
+    bool Reaction::rules(Site* site)
     {
-        // For all species in the reaction
-        for (pair<double, species_new*> reactant:m_vpReactants)
+        for (pair<int, species_new*> reactant:m_vpReactants)
         {
             // If the species map contains enough of the reactant
-            if (s->getSpeciesMap()[reactant.second->getID()] >= reactant.first)
+            if (site->getSpeciesMap()[reactant.second->getID()] >= reactant.first)
             {
                 continue;
             }
@@ -67,22 +73,30 @@ namespace MicroProcesses
 
     void Reaction::perform(Site* s)
     {
-        for (pair<double, species_new*> reactant:m_vpReactants)
+        cout<<"Reacting"<<endl;
+        for (pair<int, species_new*> reactant:m_vpReactants)
         {
             // If the species map contains enough of the reactant
             s->removeSpecies(reactant.second, reactant.first);
         }
-        for (pair<double, species_new*> product:m_vpProducts)
+        
+        if (getApothesis()->getCaseStudy() == 1)
         {
-            s->addSpecies(product.second, product.first);
-            
+            s->increaseHeight(1);
         }
+        else if (getApothesis()->getCaseStudy() == 2)
+        {
+            for (pair<int, species_new*> product:m_vpProducts)
+            {
+                s->addSpecies(product.second, product.first);   
+            }
+        }       
     }
 
     void Reaction::print()
     {
         int iCount = 0;
-        for (pair<double, species_new *> &p : m_vpReactants)
+        for (pair<int, species_new *> &p : m_vpReactants)
         {
             if (iCount != m_vpReactants.size() - 1)
                 if (p.first != 1)
@@ -100,7 +114,7 @@ namespace MicroProcesses
         cout << " = ";
 
         iCount = 0;
-        for (pair<double, species_new *> &p : m_vpProducts)
+        for (pair<int, species_new *> &p : m_vpProducts)
         {
             if (iCount != m_vpProducts.size() - 1)
                 if (p.first != 1)

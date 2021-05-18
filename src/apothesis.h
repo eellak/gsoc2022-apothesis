@@ -83,10 +83,10 @@ public:
     void logSuccessfulRead(bool read, string parameter);
 
     /// Return access to list of species
-    map<string, Species*> getAllSpecies();
+    map<int, species_new*> getAllSpecies();
 
     // Return species
-    Species* getSpecies(string species);
+    species_new* getSpecies(int speciesID);
 
     /// Return normalized probabilities of each process
     vector<double> calculateProbabilities(vector<MicroProcesses::Process*>);
@@ -97,9 +97,13 @@ public:
     inline void setDebugMode(bool ifDebug) { m_debugMode = ifDebug;}
     bool getDebugMode() { return m_debugMode; }
 
+    /// get case study number
+    inline int getCaseStudy() { return m_caseStudy; }
+    inline void setCaseStudy( int caseNum ) { m_caseStudy = caseNum; }
+
 private:
     /// The process map which holds all the processes and the sites that each can be performed.
-    map< MicroProcesses::Process*, set< SurfaceTiles::Site* > > m_processMap;
+    map< MicroProcesses::Process*, set< SurfaceTiles::Site* > > m_processMap; 
 
     //This holds the process and the list of sites that can be performed.
     //This should replace m_processMap.
@@ -158,6 +162,9 @@ private:
     double m_dSum; // = 0.0;
     int m_iSiteNum; // = 0;
     int n;
+
+    // TEMP! Case study number
+    int m_caseStudy; 
 
 };
 

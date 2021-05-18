@@ -26,6 +26,8 @@ DesorptionSimpleCubic::~DesorptionSimpleCubic(){}
 
 bool DesorptionSimpleCubic::rules( Site* s)
 {
+    if (s->getSpeciesMap()[getSpecies()->getID()] == 0)
+        return false;
     if ( mf_calculateNeighbors( s ) == any_cast<int>(m_mParams["neighs"] ) )
         return true;
     return false;

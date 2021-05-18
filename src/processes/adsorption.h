@@ -46,12 +46,6 @@ public:
     inline species_new* getSpecies(){ return m_Species; }
 
 private:
-    ///The activation energy of the adsoprtion process
-    double m_dActNrg;
-
-    ///The mole fraction of the adsorption process
-    double m_dMolFrac;
-
     ///The site that adsorption will be performed
     Site* m_Site;
 

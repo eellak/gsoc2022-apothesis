@@ -37,18 +37,12 @@ public:
     ~Reaction();
 
     // Getters for reactants and products
-    inline vector< pair < double, species_new* > > getReactants(){ return m_vpReactants; }
-    inline vector< pair < double, species_new* > > getProducts(){ return m_vpProducts; }
+    inline vector< pair < int, species_new* > > getReactants(){ return m_vpReactants; }
+    inline vector< pair < int, species_new* > > getProducts(){ return m_vpProducts; }
 
     // Set reactants and products
     void addReactants( const double coeff, species_new* species );
     void addProducts( const double coeff, species_new* species );
-
-    // Getters and setters for activation energy and pre-exponential factors
-    inline void setActivationEnergy( double Ea) { m_dEa = Ea; }
-    inline double getActivationEnergy() { return m_dEa; }
-    inline void setPreExpFactor( double k0 ){ m_dK0 = k0; }
-    inline double getPreExpFactor(){ return m_dK0; }
 
     double getProbability();
     bool rules ( Site* );
@@ -56,18 +50,6 @@ public:
     void print();
 
 private:
-    /// The reactants participating in this reaction
-    vector< pair< double, species_new* > > m_vpReactants;
-
-    /// The products formed by this reaction
-    vector< pair< double, species_new* > > m_vpProducts;
-
-    /// The activation energy of this reaction
-    double m_dEa;
-
-    /// The pre-exponential factors for this reaction
-    double m_dK0;
-
     REGISTER_PROCESS(Reaction)
 };    
 }

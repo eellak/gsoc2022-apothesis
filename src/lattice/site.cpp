@@ -33,7 +33,7 @@ namespace SurfaceTiles
 
   void Site::addSpecies(species_new *s, int stoich)
   {
-    for (int num = 0; num < stoich; ++num)
+    for (int num = 0; num < std::abs(stoich); ++num)
     {
       m_vSpecies.push_back(s);
     }

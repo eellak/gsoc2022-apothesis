@@ -17,7 +17,9 @@ CTestTestfile.cmake
 _deps
 build/
 *.data
-
+processing/
+testRough
+output*
 # Prerequisites
 *.d
 

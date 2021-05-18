@@ -109,12 +109,19 @@ void Apothesis::init()
     // Get access to document file
     Document &doc = pRead->getDoc();
 
+    // --------------------------- set case number ---------------------------- //
+    // Note to Nikos: 
+    // Case 0 = Simple cubic, only CuAMD is adsorbed. Desorption of CuAMD. No reaction or diffusion. Low temperature regime.
+    // Case 1 = Simple cubic, CuAMD is adsorbed, reacts to HAMD, which is then desorbed.
+    // Case 2 = Simple cubic, CuAMD and H2 are both adsorbed, reacts, wait for HAMD desorption.
+    setCaseStudy(1);
+
     //To Deifilia: This must be created for each process in order to pass
     //the parameters from the input file to the porcess
     map<string, any> params;
     params.insert( {"T", pParameters->getTemperature()} );
     params.insert( {"P", pParameters->getPressure()} );
-    
+    params.insert( {"R", 8.3145 });
     params.insert( {"f", 2.0e-3} );
     params.insert( {"C_tot", 1.0e+19} );
     params.insert( {"s0", 0.1} );
@@ -134,21 +141,44 @@ void Apothesis::init()
     sCuAMD->setChemFormula("CuAMD");
     sCuAMD->setID(0);
     sCuAMD->setMaxReacCoreff(-1);
+    m_speciesMap[sCuAMD->getID()] = sCuAMD;
 
     species_new* sHAMD = new species_new();
-    sHAMD->setChemFormula("HAMD");
-    sHAMD->setID(1);
-    sHAMD->setMaxReacCoreff(1);
+    
+    if (getCaseStudy() == 1 || getCaseStudy() == 2)
+    {
+        sHAMD->setChemFormula("HAMD");
+        sHAMD->setID(1);
+        sHAMD->setMaxReacCoreff(1);
+        m_speciesMap[sHAMD->getID()] = sHAMD;
+    }
+
+    species_new* sH2 = new species_new();
+    
+    // Only require H2 adsorption if we are in case 2
+    if (getCaseStudy() == 2)
+    {
+        sH2->setChemFormula("H2");
+        sH2->setID(2);
+        sH2->setMaxReacCoreff(-1);
+        sHAMD->setMaxReacCoreff(1);
+        sH2->setMaxReacCoreff(-1);
+        m_speciesMap[sH2->getID()] = sH2;
+    }
 
     //AdsorptionSimpleCubic* adsSimpleCubic = FactoryProcess::createProcess("AdsorptionSimpleCubic");
 
     auto pos = m_processMap.insert( { FactoryProcess::createProcess("AdsorptionSimpleCubic"), emptySet } );
     pos.first->first->setName("Adsorption");
     pos.first->first->setUncoAccepted( true );
+    params.insert({"ActivationEnergy", 12.0});
     pos.first->first->setParams( params );
     pos.first->first->setLattice( pLattice );
     pos.first->first->setRandomGen( pRandomGen );
     pos.first->first->setSpecies( sCuAMD );
+    pos.first->first->setApothesis(this);
+    pos.first->first->getParameter("ActivationEnergy");
+    //setActivationEnergy(12.);
 
     for ( Site* s:pLattice->getSites() ){
         if ( pos.first->first->rules( s ) )
@@ -159,86 +189,116 @@ void Apothesis::init()
     params.insert( {"E", 1.0e+13} );
 
     params.insert( {"neighs", 1} );
-    pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionSimpleCubic"), emptySet } );
-    pos.first->first->setName("Desorption1N");
-    pos.first->first->setParams( params );
-    pos.first->first->setLattice( pLattice );
-    pos.first->first->setRandomGen( pRandomGen );
 
-    for ( Site* s:pLattice->getSites() ){
-        if ( pos.first->first->rules( s ) )
-            pos.first->second.insert( s );
+    if (getCaseStudy() == 1 || getCaseStudy() == 2)
+    {
+        pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionSimpleCubic"), emptySet } );
+        pos.first->first->setName("Desorption1N");
+        pos.first->first->setParams( params );
+        pos.first->first->setLattice( pLattice );
+        pos.first->first->setRandomGen( pRandomGen );
+        pos.first->first->setSpecies( sHAMD );
+
+        for ( Site* s:pLattice->getSites() ){
+            if ( pos.first->first->rules( s ) )
+                pos.first->second.insert( s );
+        }
+
+        params.erase("neighs");
+        params.insert( {"neighs", 2} );
+        pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionSimpleCubic"), emptySet } );
+        pos.first->first->setName("Desorption2N");
+        pos.first->first->setParams( params );
+        pos.first->first->setLattice( pLattice );
+        pos.first->first->setRandomGen( pRandomGen );
+        pos.first->first->setSpecies( sHAMD );
+
+        for ( Site* s:pLattice->getSites() ){
+            if ( pos.first->first->rules( s ) )
+                pos.first->second.insert( s );
+        }
+
+        params.erase("neighs");
+        params.insert( {"neighs", 3} );
+        pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionSimpleCubic"), emptySet } );
+        pos.first->first->setName("Desorption3N");
+        pos.first->first->setParams( params );
+        pos.first->first->setLattice( pLattice );
+        pos.first->first->setRandomGen( pRandomGen );
+        pos.first->first->setSpecies( sHAMD );
+
+
+        for ( Site* s:pLattice->getSites() ){
+            if ( pos.first->first->rules( s ) )
+                pos.first->second.insert( s );
+        }
+
+        params.erase("neighs");
+        params.insert( {"neighs", 4} );
+
+        pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionSimpleCubic"), emptySet } );
+        pos.first->first->setName("Desorption4N");
+        pos.first->first->setParams( params );
+        pos.first->first->setLattice( pLattice );
+        pos.first->first->setRandomGen( pRandomGen );
+        pos.first->first->setSpecies( sHAMD );
+
+        for ( Site* s:pLattice->getSites() ){
+            if ( pos.first->first->rules( s ) )
+                pos.first->second.insert( s );
+        }
+    
+        params.erase("neighs");
+        params.insert( {"neighs", 5} );
+        pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionSimpleCubic"), emptySet } );
+        pos.first->first->setName("Desorption5N");
+        pos.first->first->setParams( params );
+        pos.first->first->setLattice( pLattice );
+        pos.first->first->setRandomGen( pRandomGen );
+        pos.first->first->setSpecies( sHAMD );
+
+        for ( Site* s:pLattice->getSites() ){
+            if ( pos.first->first->rules( s ) )
+                pos.first->second.insert( s );
+        }
     }
-
-
-/*    pos = m_processMap.insert( { FactoryProcess::createProcess("DiffusionSimpleCubic"), emptySet } );
-    pos.first->first->setName("Diffusion1N");
-    pos.first->first->setParams( params );
-    pos.first->first->setLattice( pLattice );
-    pos.first->first->setRandomGen( pRandomGen );*/
-
-    params.erase("neighs");
-    params.insert( {"neighs", 2} );
-    pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionSimpleCubic"), emptySet } );
-    pos.first->first->setName("Desorption2N");
-    pos.first->first->setParams( params );
-    pos.first->first->setLattice( pLattice );
-    pos.first->first->setRandomGen( pRandomGen );
-
-    for ( Site* s:pLattice->getSites() ){
-        if ( pos.first->first->rules( s ) )
-            pos.first->second.insert( s );
+    
+    // Reaction* reac = new Reaction(); TODO: this allows us to explicitly access the functions within react
+    // Automatically casts to process when inserted into the process map
+    pos = m_processMap.insert( { FactoryProcess::createProcess("Reaction"), emptySet } );
+    pos.first->first->setName("Reaction");
+    pos.first->first->setActivationEnergy(12.);
+    pos.first->first->setPreExpFactor(1e13);
+    vector<pair<int, species_new*>> reactants;
+    vector<pair<int, species_new*>> products;
+    // Case 0 = Simple cubic, only CuAMD is adsorbed. No reaction or diffusion. Low temperature regime. No desorption.
+    // Case 1 = Simple cubic, CuAMD is adsorbed, reacts to HAMD, which is then desorbed.
+    // Case 2 = Simple cubic, CuAMD and H2 are both adsorbed, reacts, wait for HAMD desorption.
+    if (getCaseStudy() == 1)
+    {
+        reactants.push_back(make_pair(1, sCuAMD));
+        products.push_back(make_pair(1, sHAMD));
+        params.insert({"reactants", reactants});
+        params.insert({"products", products});
     }
-
-/*    pos = m_processMap.insert( { FactoryProcess::createProcess("DiffusionSimpleCubic"), emptySet } );
-    pos.first->first->setName("Diffusion2N");
-    pos.first->first->setParams( params );
-    pos.first->first->setLattice( pLattice );
-    pos.first->first->setRandomGen( pRandomGen );*/
-
-    params.erase("neighs");
-    params.insert( {"neighs", 3} );
-    pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionSimpleCubic"), emptySet } );
-    pos.first->first->setName("Desorption3N");
-    pos.first->first->setParams( params );
-    pos.first->first->setLattice( pLattice );
-    pos.first->first->setRandomGen( pRandomGen );
-
-    for ( Site* s:pLattice->getSites() ){
-        if ( pos.first->first->rules( s ) )
-            pos.first->second.insert( s );
+    else if (getCaseStudy() == 2)
+    {
+        reactants.push_back(make_pair(1, sH2));    // 2 CuAMD + 1 H2 -> 2 Cu + 2 HAMD
+                                                   // 1 CuAMD + 1 H -> 1 Cu + 1 HAMD
+                                                   // Sticking coeff & mass fraction will likely change
+                                                   // Will need to check adsorption/growth on neighbouring sites (2 CuAMD req to ads)
+        reactants.push_back(make_pair(1, sCuAMD)); // Set 0.5*activation energy for this case
+        products.push_back(make_pair(2, sHAMD));
+        params.insert({"reactants", reactants});
+        params.insert({"products", products});
     }
-
-/*    pos = m_processMap.insert( { FactoryProcess::createProcess("DiffusionSimpleCubic"), emptySet } );
-    pos.first->first->setName("Diffusion3N");
-    pos.first->first->setParams( params );
-    pos.first->first->setLattice( pLattice );
-    pos.first->first->setRandomGen( pRandomGen );*/
-
-    params.erase("neighs");
-    params.insert( {"neighs", 4} );
-
-    pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionSimpleCubic"), emptySet } );
-    pos.first->first->setName("Desorption4N");
-    pos.first->first->setParams( params );
-    pos.first->first->setLattice( pLattice );
-    pos.first->first->setRandomGen( pRandomGen );
-
-    for ( Site* s:pLattice->getSites() ){
-        if ( pos.first->first->rules( s ) )
-            pos.first->second.insert( s );
+    
+    if (getCaseStudy() == 1 || getCaseStudy() == 2)
+    {
+        pos.first->first->setReactants(reactants);
+        pos.first->first->setProducts(products);
     }
-
-/*    pos = m_processMap.insert( { FactoryProcess::createProcess("DiffusionSimpleCubic"), emptySet } );
-    pos.first->first->setName("Diffusion4N");
-    pos.first->first->setParams( params );
-    pos.first->first->setLattice( pLattice );
-    pos.first->first->setRandomGen( pRandomGen );*/
-
-    params.erase("neighs");
-    params.insert( {"neighs", 5} );
-    pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionSimpleCubic"), emptySet } );
-    pos.first->first->setName("Desorption5N");
+    // How to initialize the values within reaction?
     pos.first->first->setParams( params );
     pos.first->first->setLattice( pLattice );
     pos.first->first->setRandomGen( pRandomGen );
@@ -342,10 +402,10 @@ void Apothesis::exec()
         m_dSum = 0.0;
         m_dRandom = pRandomGen->getDoubleRandom();
 
-        for ( auto &p:m_processMap){
+        for ( auto &p:m_processMap){ // TODO Why is this a nested loop?
             m_dProcRate = p.first->getProbability()*p.second.size();
             m_dSum += m_dProcRate/m_dRTot;
-
+    
             //2. Pick a process according to the rates
             if ( m_dRandom <= m_dSum ){
                 //Get a random number which is the ID of the site where this process can performed
@@ -421,14 +481,14 @@ void Apothesis::logSuccessfulRead(bool read, string parameter)
          : pErrorHandler->error_simple_msg("No " + parameter + " found in input file");
 }
 
-map<string, Species *> Apothesis::getAllSpecies()
+map<int, species_new*> Apothesis::getAllSpecies()
 {
-    return m_species;
+    return m_speciesMap;
 }
 
-Species *Apothesis::getSpecies(string species)
+species_new *Apothesis::getSpecies(int speciesID)
 {
-    return m_species[species];
+    return m_speciesMap[speciesID];
 }
 
 

@@ -86,6 +86,29 @@ public:
     inline void setSpecies (species_new* species) { m_species = species; }
     inline species_new* getSpecies () { return m_species; }
 
+    inline void setApothesis (Apothesis* pApothesis) { m_apothesis = pApothesis; }
+    inline Apothesis* getApothesis() { return m_apothesis; }
+
+    /// Getters and setters for Adsorption simple cubic
+    inline void setActivationEnergy( double nrg ){ m_dActNrg = nrg; }
+    inline double getActivationEnergy(){ return m_dActNrg; }
+
+    inline void setMolFrac( double val ){ m_dMolFrac = val; }
+    inline double getMolFrac(){ return m_dMolFrac; }
+
+    inline void setTargetSite( Site* site ){ m_Site = site;}
+    inline Site* getTargetSite(){ return m_Site; }
+
+
+    /// Getters and setters for reaction
+    /// Activation energy and pre-exponential factors
+    inline void setPreExpFactor( double k0 ){ m_dK0 = k0; }
+    inline double getPreExpFactor(){ return m_dK0; }
+    inline void setReactants (vector< pair< int, species_new*>> reactants) { m_vpReactants = reactants; }
+    inline vector<pair<int, species_new*>> getReactants () { return m_vpReactants; }
+    inline void setProducts (vector< pair< int, species_new* >> products) { m_vpProducts = products; }
+    inline vector<pair<int, species_new*>> getProducts () { return m_vpProducts; }
+
 protected:
     /** Pointer to the lattice of the process */
     Lattice* m_pLattice;
@@ -99,6 +122,29 @@ protected:
     RandomGen::RandomGenerator* m_pRandomGen;
 
     bool m_bUncoAccept;
+
+    /// Member variables of adsorption class
+    /// The mole fraction of the adsorption process
+    double m_dMolFrac;
+    
+    ///The site that AdsorptionSimpleCubic will be performed
+    Site* m_Site;
+
+     /// The activation energy of the adsorption process
+    double m_dActNrg;
+
+     /// Member variables for reaction class
+    /// The activation energy of this reaction
+    double m_dEa;
+
+    /// The pre-exponential factors for this reaction
+    double m_dK0;
+
+     /// The reactants participating in this reaction
+    vector< pair< int, species_new* > > m_vpReactants;
+
+    /// The products formed by this reaction
+    vector< pair< int, species_new* > > m_vpProducts;
 
 private:
     /// The name of this prcess
@@ -116,7 +162,9 @@ private:
     /// species
     species_new* m_species;
 
-};
+    /// reference to main apothesis parameters
+    Apothesis* m_apothesis;
+   };
 }
 
 #endif // Process_H
