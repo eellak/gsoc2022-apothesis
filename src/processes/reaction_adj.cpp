@@ -42,24 +42,40 @@ namespace MicroProcesses
         return true;
     }
 
-    void ReactionAdj::perform(Site* s)
+    void ReactionAdj::perform(vector<Site*> sites) // This will perform when a vector is provided (rather than single site)
     {
-        cout<<"Reacting"<<endl;
         for (pair<int, species_new*> reactant:m_vpReactants)
         {
-            // If the species map contains enough of the reactant
-            s->removeSpecies(reactant.second, reactant.first);
+            // Keep track of the number of species needed to be removed from each site.
+            // Assume each site can only hold 1 of an individual species
+            int stoichCoeff = reactant.first;
+            for (Site* site:sites)
+            {
+                // If the species map contains enough of the reactant
+                if (site->getSpeciesMap()[reactant.first] > 1 && stoichCoeff > 0)
+                {
+                    site->removeSpecies(reactant.second, reactant.first);
+                    // decrement stoichiometric coefficient
+                    stoichCoeff--;
+                }
+            }
         }
         
         if (getApothesis()->getCaseStudy() == 1)
         {
-            s->increaseHeight(1);
+            for (Site* site:sites)
+            {
+                site->increaseHeight(1);
+            }
         }
         else if (getApothesis()->getCaseStudy() == 2)
         {
-            for (pair<int, species_new*> product:m_vpProducts)
+            for (Site* site:sites)
             {
-                s->addSpecies(product.second, product.first);   
+                for (pair<int, species_new*> product:m_vpProducts)
+                {
+                    site->addSpecies(product.second, product.first);   
+                }
             }
         }       
     }

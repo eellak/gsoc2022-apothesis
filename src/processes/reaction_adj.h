@@ -37,7 +37,7 @@ public:
     ~ReactionAdj();
 
     bool rules ( Site* );
-    void perform( Site* );
+    void perform( vector<Site*> );
     
 private:
     REGISTER_PROCESS(ReactionAdj)
