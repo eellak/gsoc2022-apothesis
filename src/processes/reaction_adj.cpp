@@ -25,34 +25,6 @@ namespace MicroProcesses
     ReactionAdj::ReactionAdj() {}
     ReactionAdj::~ReactionAdj() {}
 
-    // move to process.h class
-    void ReactionAdj::addReactants(const double coeff, species_new *species)
-    {
-        pair<int, species_new *> data;
-        data.first = coeff;
-        data.second = species;
-        m_vpReactants.push_back(data);
-    }
-
-    void ReactionAdj::addProducts(const double coeff, species_new *species)
-    {
-        pair<int, species_new *> data;
-        data.first = coeff;
-        data.second = species;
-        m_vpProducts.push_back(data);
-    }
-
-    double ReactionAdj::getProbability()
-    {
-        // Initialize class once
-        // Rules for case # 1 and # 2 are the same
-        // For all species in the reaction
-        //auto v_reactants = (vector<pair<int, species_new*>>) m_mParams["reactants"];
-        double T = any_cast<double>(getParameter("T"));
-        double R = any_cast<double>(getParameter("R"));
-        return m_dK0*exp(-m_dActNrg/T/R); // Need the number of sites that can perform a given Reaction
-    }
-
     bool ReactionAdj::rules(Site* site)
     {
         for (pair<int, species_new*> reactant:m_vpReactants)
@@ -90,45 +62,6 @@ namespace MicroProcesses
                 s->addSpecies(product.second, product.first);   
             }
         }       
-    }
-
-    void ReactionAdj::print()
-    {
-        int iCount = 0;
-        for (pair<int, species_new *> &p : m_vpReactants)
-        {
-            if (iCount != m_vpReactants.size() - 1)
-                if (p.first != 1)
-                    cout << p.first << " " << p.second->getChemFormula() << " + ";
-                else
-                    cout << p.second->getChemFormula() << " + ";
-            else if (p.first != 1)
-                cout << p.first << " " << p.second->getChemFormula();
-            else
-                cout << p.second->getChemFormula();
-
-            iCount++;
-        }
-
-        cout << " = ";
-
-        iCount = 0;
-        for (pair<int, species_new *> &p : m_vpProducts)
-        {
-            if (iCount != m_vpProducts.size() - 1)
-                if (p.first != 1)
-                    cout << p.first << " " << p.second->getChemFormula() << " + ";
-                else
-                    cout << p.second->getChemFormula() << " + ";
-            else if (p.first != 1)
-                cout << p.first << " " << p.second->getChemFormula();
-            else
-                cout << p.second->getChemFormula();
-
-            iCount++;
-        }
-
-        cout << endl;
     }
 
 }

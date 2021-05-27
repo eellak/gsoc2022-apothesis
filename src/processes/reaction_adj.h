@@ -23,32 +23,22 @@
 #include <vector>
 
 #include "process.h"
+#include "reaction.h"
 
 using namespace std;
 
 namespace MicroProcesses
 {
 
-class ReactionAdj: public Process
+class ReactionAdj: public Reaction
 {
 public:
     ReactionAdj();
     ~ReactionAdj();
 
-    // Getters for reactants and products
-    inline vector< pair < int, species_new* > > getReactants(){ return m_vpReactants; }
-    inline vector< pair < int, species_new* > > getProducts(){ return m_vpProducts; }
-
-    // Set reactants and products
-    void addReactants( const double coeff, species_new* species );
-    void addProducts( const double coeff, species_new* species );
-
-    double getProbability();
     bool rules ( Site* );
     void perform( Site* );
     
-    void print();
-
 private:
     REGISTER_PROCESS(ReactionAdj)
 };    
