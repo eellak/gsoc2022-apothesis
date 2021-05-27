@@ -15,26 +15,25 @@
 //    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //============================================================================
 
-#ifndef REACTION_H
-#define REACTION_H
+#ifndef REACTION_ADJ_H
+#define REACTION_ADJ_H
 
 #include <iostream>
 #include <string>
 #include <vector>
 
 #include "process.h"
-#include "species_new.h"
 
 using namespace std;
 
 namespace MicroProcesses
 {
 
-class Reaction: public Process
+class ReactionAdj: public Process
 {
 public:
-    Reaction();
-    ~Reaction();
+    ReactionAdj();
+    ~ReactionAdj();
 
     // Getters for reactants and products
     inline vector< pair < int, species_new* > > getReactants(){ return m_vpReactants; }
@@ -47,10 +46,11 @@ public:
     double getProbability();
     bool rules ( Site* );
     void perform( Site* );
+    
     void print();
 
 private:
-    REGISTER_PROCESS(Reaction)
+    REGISTER_PROCESS(ReactionAdj)
 };    
 }
 

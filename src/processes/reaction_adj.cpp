@@ -15,19 +15,18 @@
 //    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //============================================================================
 
-#include "reaction.h"
-//#include "species_new.cpp"
+#include "reaction_adj.h"
 
 namespace MicroProcesses
 {
 
-    REGISTER_PROCESS_IMPL ( Reaction )
+    REGISTER_PROCESS_IMPL ( ReactionAdj )
 
-    Reaction::Reaction() {}
-    Reaction::~Reaction() {}
+    ReactionAdj::ReactionAdj() {}
+    ReactionAdj::~ReactionAdj() {}
 
     // move to process.h class
-    void Reaction::addReactants(const double coeff, species_new *species)
+    void ReactionAdj::addReactants(const double coeff, species_new *species)
     {
         pair<int, species_new *> data;
         data.first = coeff;
@@ -35,7 +34,7 @@ namespace MicroProcesses
         m_vpReactants.push_back(data);
     }
 
-    void Reaction::addProducts(const double coeff, species_new *species)
+    void ReactionAdj::addProducts(const double coeff, species_new *species)
     {
         pair<int, species_new *> data;
         data.first = coeff;
@@ -43,7 +42,7 @@ namespace MicroProcesses
         m_vpProducts.push_back(data);
     }
 
-    double Reaction::getProbability()
+    double ReactionAdj::getProbability()
     {
         // Initialize class once
         // Rules for case # 1 and # 2 are the same
@@ -51,10 +50,10 @@ namespace MicroProcesses
         //auto v_reactants = (vector<pair<int, species_new*>>) m_mParams["reactants"];
         double T = any_cast<double>(getParameter("T"));
         double R = any_cast<double>(getParameter("R"));
-        return m_dK0*exp(-m_dActNrg/T/R); // Need the number of sites that can perform a given reaction
+        return m_dK0*exp(-m_dActNrg/T/R); // Need the number of sites that can perform a given Reaction
     }
 
-    bool Reaction::rules(Site* site)
+    bool ReactionAdj::rules(Site* site)
     {
         for (pair<int, species_new*> reactant:m_vpReactants)
         {
@@ -71,7 +70,7 @@ namespace MicroProcesses
         return true;
     }
 
-    void Reaction::perform(Site* s)
+    void ReactionAdj::perform(Site* s)
     {
         cout<<"Reacting"<<endl;
         for (pair<int, species_new*> reactant:m_vpReactants)
@@ -93,7 +92,7 @@ namespace MicroProcesses
         }       
     }
 
-    void Reaction::print()
+    void ReactionAdj::print()
     {
         int iCount = 0;
         for (pair<int, species_new *> &p : m_vpReactants)
