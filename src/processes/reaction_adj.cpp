@@ -29,10 +29,21 @@ namespace MicroProcesses
     {
         for (pair<int, species_new*> reactant:m_vpReactants)
         {
-            // If the species map contains enough of the reactant
-            if (site->getSpeciesMap()[reactant.second->getID()] >= reactant.first)
+            int stoichiometry = reactant.first;
+            // if site has at least one
+            if (site->getSpeciesMap()[reactant.second->getID()] == 1)
             {
-                continue;
+                stoichiometry--;
+                // what are the levels?
+                for (Site* s:site->get1stNeighbors()[0])
+                {
+                    if (s->getSpeciesMap()[reactant.second->getID()] > 0)
+                        stoichiometry--;
+                    if (stoichiometry < 1)
+                        return true;
+                }
+                if (stoichiometry > 1)
+                    return false;
             }
             else
             {

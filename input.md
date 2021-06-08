@@ -188,3 +188,30 @@ The json parser is quite strict about comma placement. For instance, the extra c
 ```
 
 ## Usage of [] vs individual elements
+
+```json
+"Adsorption":
+{
+    "Interactions":
+    {
+        "Type": Positive,
+        // This means that only 1 H2 species can adsorb on 1 site at a time
+        "Pairs": [["Cu", "Cu"], ["Cu", "H2"]]
+    }
+}
+```
+
+
+
+```json
+"Adsorption":
+{
+    "Interactions":
+    {
+        "Type": Negative,
+        // This means that an infinite number of H2s can adsorb onto 1 site, but no other combination.
+        "Pairs": [["Cu", "Cu"], ["Cu", "H2"]]
+    }
+}
+```
+

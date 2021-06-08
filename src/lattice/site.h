@@ -131,7 +131,7 @@ public:
     void set1stNeibors(int level, Site* s) { m_m1stNeighs.at( level ).push_back( s ); }
 
     /// Returns the 1st neigbors
-    inline map<int, vector<Site* > > get1stNeihbors() const { return m_m1stNeighs; }
+    inline map<int, vector<Site* > > get1stNeighbors() const { return m_m1stNeighs; }
 
     /// Returns true if is in lower step (used in the step case only)
     void setLowerStep( bool b){ m_isLowerStep = b; }

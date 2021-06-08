@@ -499,12 +499,12 @@ void FCC::mf_neigh_110()
 
     //A very simple test that all neighs have been defined at least in number
     for ( int i = 0; i < getSize(); i++){
-        if ( m_vSites[ i ]->get1stNeihbors()[ 0 ].size() != 4 ){
+        if ( m_vSites[ i ]->get1stNeighbors()[ 0 ].size() != 4 ){
             cout << "Check level 0 neighs in site: " << i << endl;
             EXIT;
         }
 
-        if ( m_vSites[ i ]->get1stNeihbors()[ 0 ].size() != 4 ){
+        if ( m_vSites[ i ]->get1stNeighbors()[ 0 ].size() != 4 ){
             cout << "Check level 0 neighs in site: " << i << endl;
             EXIT;
         }
@@ -974,7 +974,7 @@ void FCC::mf_neigh_111()
 int FCC::calculateNeighNum( int id,  const int level )
 {
     int neighs = 0;
-    vector<Site* > sites = m_vSites[ id ]->get1stNeihbors()[ level ];
+    vector<Site* > sites = m_vSites[ id ]->get1stNeighbors()[ level ];
 
     switch (level){
     case -1:

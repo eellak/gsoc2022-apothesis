@@ -93,14 +93,14 @@ void Lattice::printNeighs( int ID )
 
     if ( ID < getSize() ){
         cout << "Level 0 neighs: ";
-        for ( int i = 0; i< m_vSites[ ID ]->get1stNeihbors()[ 0 ].size(); i++ )
-            cout << m_vSites[ ID ]->get1stNeihbors()[ 0 ].at( i )->getID() << " ";
+        for ( int i = 0; i< m_vSites[ ID ]->get1stNeighbors()[ 0 ].size(); i++ )
+            cout << m_vSites[ ID ]->get1stNeighbors()[ 0 ].at( i )->getID() << " ";
 
         cout << endl;
 
         cout << "Level -1 neighs: ";
-        for ( int i = 0; i< m_vSites[ ID ]->get1stNeihbors()[ -1 ].size(); i++ )
-            cout << m_vSites[ ID ]->get1stNeihbors()[ -1 ].at( i )->getID() << " ";
+        for ( int i = 0; i< m_vSites[ ID ]->get1stNeighbors()[ -1 ].size(); i++ )
+            cout << m_vSites[ ID ]->get1stNeighbors()[ -1 ].at( i )->getID() << " ";
 
         cout << endl;
 
