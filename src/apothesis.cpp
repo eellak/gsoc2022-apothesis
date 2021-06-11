@@ -87,14 +87,16 @@ Apothesis::~Apothesis()
 
 void Apothesis::init()
 {
+                
+
     cout << "Opening output file" << endl;
     /// The output file name will come from the user and will have the extenstion .log
     /// This would come as a parameter from the user from the args (also the input).
     /// Now both are hard copied.
 
+
     if (!pIO->outputOpen())
         pIO->openOutputFile("Output");
-
     // Initialize Random generator.
     pRandomGen->init( 213212 );
     //Give initial height for lattice. This is for FCC(110).
@@ -124,147 +126,163 @@ void Apothesis::init()
     set< Site* > emptySet;
 
     pIO->writeLogOutput("Initializing instances of species");
-    
+
+
     vector<double> mws = pRead->getMWs();
     vector<string> names = pRead->getSpeciesNames();
-
-    for (int i = 0; i < mws.size(); ++i)
-    {
-      species_new *s = new species_new(); //Species(names[i], mws[i], m_nSpecies);
-      s->setChemFormula(names[i]);
-      s->setID(i);
-      m_nSpecies++;
-      m_speciesMap[i] = s;
-    }
+//
+    //for (int i = 0; i < mws.size(); ++i)
+    //{
+    //  species_new *s = new species_new(); //Species(names[i], mws[i], m_nSpecies);
+    //  s->setChemFormula(names[i]);
+    //  s->setID(i);
+    //  m_nSpecies++;
+    //  m_speciesMap[i] = s;
+    //}
   
-     // Read parameters for Reaction
-    Value& pRxn = doc["Process"]["Reaction"];
-    int specCounter = 0;
-    for (Value::ConstMemberIterator itr = pRxn.MemberBegin(); itr != pRxn.MemberEnd(); ++itr)
+
+    // Read parameters for Reaction
+    Value& pProc = doc["Process"];
+
+    for (Value::ConstMemberIterator itr = pProc.MemberBegin(); itr != pProc.MemberEnd(); ++itr)
     {
-        const char *rxnName = itr->name.GetString();
-        Value &vSpecies = pRxn[rxnName]["Species"];
-        Value &vStoich = pRxn[rxnName]["Stoichiometry"];
-        Value &vEnergy = pRxn[rxnName]["Energy"];
-        Value &vPreExp = pRxn[rxnName]["PreExp"];
-
-        auto pos = m_processMap.insert( { FactoryProcess::createProcess("Reaction"), emptySet } );
-        pos.first->first->setName(rxnName);
-        pos.first->first->setActivationEnergy(vEnergy.GetDouble());
-        pos.first->first->setPreExpFactor(vStoich.GetDouble());
-        vector<pair<int, species_new*>> reactants;
-        vector<pair<int, species_new*>> products;
-
-        for (SizeType counter = 0; counter < vSpecies.Size(); ++counter)
+        string rxnName = itr->name.GetString();
+        if (rxnName.compare("Reaction") == 0)
         {
-            species_new* spec = new species_new();
-            spec->setChemFormula(vSpecies[counter].GetString());
-            spec->setID(specCounter);
-            spec->setMaxReacCoreff(vStoich.GetDouble());
-            m_speciesMap[specCounter] = spec;
-            ++specCounter;
+            Value& pRxn = doc["Process"]["Reaction"];
+            int specCounter = 0;
+            for (Value::ConstMemberIterator itr = pRxn.MemberBegin(); itr != pRxn.MemberEnd(); ++itr)
+            {
+                const char *rxnName = itr->name.GetString();
+                Value &vSpecies = pRxn[rxnName]["Species"];
+                Value &vStoich = pRxn[rxnName]["Stoichiometry"];
+                Value &vEnergy = pRxn[rxnName]["Energy"];
+                Value &vPreExp = pRxn[rxnName]["PreExp"];
 
-            if (vStoich.GetDouble() < 0)
-            {
-                reactants.push_back(make_pair(-1*vStoich.GetDouble(), spec));
+                auto pos = m_processMap.insert( { FactoryProcess::createProcess("Reaction"), emptySet } );
+                pos.first->first->setName(rxnName);
+                pos.first->first->setActivationEnergy(vEnergy.GetDouble());
+                pos.first->first->setPreExpFactor(vStoich.GetDouble());
+                vector<pair<int, species_new*>> reactants;
+                vector<pair<int, species_new*>> products;
+
+                for (SizeType counter = 0; counter < vSpecies.Size(); ++counter)
+                {
+                    species_new* spec = new species_new();
+                    spec->setChemFormula(vSpecies[counter].GetString());
+                    spec->setID(specCounter);
+                    spec->setMaxReacCoreff(vStoich.GetDouble());
+                    m_speciesMap[specCounter] = spec;
+                    ++specCounter;
+
+                    if (vStoich.GetDouble() < 0)
+                    {
+                        reactants.push_back(make_pair(-1*vStoich.GetDouble(), spec));
+                    }
+                    else
+                    {
+                        products.push_back(make_pair(-1*vStoich.GetDouble(), spec));
+                    }
+
+                }
+                params.insert({"reactants", reactants});
+                params.insert({"products", products});
+
             }
-            else
-            {
-                products.push_back(make_pair(-1*vStoich.GetDouble(), spec));
-            }
-            
         }
-        params.insert({"reactants", reactants});
-        params.insert({"products", products});
+        else if (rxnName.compare("Adsorption") == 0)
+        {
+                    cout<<rxnName<<endl;
+
+            // Read parameters for Adsorption
+            Value &specie = doc["Process"]["Adsorption"]["Species"];
+            Value &stick = doc["Process"]["Adsorption"]["Sticking"];
+            Value &mFrac = doc["Process"]["Adsorption"]["MolFraction"];
+            Value &ctot = doc["Process"]["Adsorption"]["C_tot"];
+            Value &ads = doc["Process"]["Adsorption"];
+
+            // Verify presence of each parameter in input file
+            logSuccessfulRead(specie.IsArray(), "Adsorption species");
+            logSuccessfulRead(stick.IsArray(), "Adsorption sticking coefficients");
+            logSuccessfulRead(mFrac.IsArray(), "Adsorption mass fraction");
+            logSuccessfulRead(ctot.IsDouble(), "Site density");
+
+            params.insert( {"R", 8.3145 });
+            params.insert( {"k", 1.3806503e-23} );
+            params.insert( {"Na", 6.0221417930e+23} );    
+
+            for (SizeType spec = 0; spec < specie.Size(); ++spec)
+            {
+                string f = "f_";
+                f.append(specie[spec].GetString());
+                params.insert( {f, mFrac[spec].GetDouble()} );
+                params.insert( {"C_tot", ctot.GetDouble()} );
+                params.insert( {"s0", stick[spec].GetDouble()} );
+
+                auto pos = m_processMap.insert( { FactoryProcess::createProcess("AdsorptionSimpleCubic"), emptySet } );
+                pos.first->first->setName("Adsorption");
+                pos.first->first->setUncoAccepted( true );
+                params.insert({"ActivationEnergy", 12.0});
+                pos.first->first->setParams( params );
+                pos.first->first->setLattice( pLattice );
+                pos.first->first->setRandomGen( pRandomGen );
+                pos.first->first->setSpecies( m_speciesMap[spec] );
+                pos.first->first->setApothesis(this);
+                pos.first->first->getParameter("ActivationEnergy");
+            }
+        }
+        else if (rxnName.compare("Desorption") == 0)
+        {
         
-    }
+            // Read parameters for Desorption
+            Value &vSpecie = doc["Process"]["Desorption"]["Species"];
+            Value &vEd = doc["Process"]["Desorption"]["Ed"];
+            Value &vEm = doc["Process"]["Desorption"]["Em"];
+            Value &vFreq = doc["Process"]["Desorption"]["Frequency"];
+            Value &vNeigh = doc["Process"]["Desorption"]["n_neigh"];
 
-      // Read parameters for Adsorption
-    Value &specie = doc["Process"]["Adsorption"]["Species"];
-    Value &stick = doc["Process"]["Adsorption"]["Sticking"];
-    Value &mFrac = doc["Process"]["Adsorption"]["MassFraction"];
-    Value &ctot = doc["Process"]["Adsorption"]["C_tot"];
-    Value &ads = doc["Process"]["Adsorption"];
+            // Verify presence of each parameter in input file
+            logSuccessfulRead(vSpecie.IsArray(), "Desorption species");
+            logSuccessfulRead(vEd.IsArray(), "Desorption energy");
+            logSuccessfulRead(vFreq.IsArray(), "Desorption frequency");
+            logSuccessfulRead(vNeigh.IsArray(), "Number of neighbours");
+            
+            params.insert( {"Na", 6.0221417930e+23} );
+            for (SizeType spec = 0; spec < vSpecie.Size(); ++spec)
+            {
+                params.insert( {"Species" + spec, vSpecie[spec].GetString()} );
+                params.insert( {"E_d", vEd[spec].GetDouble()/6.0221417930e+23 } );
+                params.insert( {"E_m", vEm[spec].GetDouble()/6.0221417930e+23 } );
+                params.insert( {"Freq", vFreq[spec].GetDouble()/6.0221417930e+23 } );
 
-    // Verify presence of each parameter in input file
-    logSuccessfulRead(specie.IsArray(), "Adsorption species");
-    logSuccessfulRead(stick.IsArray(), "Adsorption sticking coefficients");
-    logSuccessfulRead(mFrac.IsArray(), "Adsorption mass fraction");
-    logSuccessfulRead(ctot.IsDouble(), "Site density");
+                for (int i = 0; i < vNeigh.GetInt(); ++i)
+                {
+                    auto pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionSimpleCubic"), emptySet } );
+                    string name = "Desorption" ;
+                    name.append(to_string(i)).append("N");
+                    pos.first->first->setName(name);
+                    pos.first->first->setParams( params );
+                    pos.first->first->setLattice( pLattice );
+                    pos.first->first->setRandomGen( pRandomGen );
+                    pos.first->first->setSpecies( m_speciesMap[spec] );
 
-    params.insert( {"R", 8.3145 });
-    params.insert( {"k", 1.3806503e-23} );
-    params.insert( {"Na", 6.0221417930e+23} );    
-
-    for (SizeType spec = 0; spec < specie.Size(); ++spec)
-    {
-        string f = "f_";
-        f.append(specie[spec].GetString());
-        params.insert( {f, mFrac[spec].GetDouble()} );
-        params.insert( {"C_tot", ctot.GetDouble()} );
-        params.insert( {"s0", stick[spec].GetDouble()} );
-
-        auto pos = m_processMap.insert( { FactoryProcess::createProcess("AdsorptionSimpleCubic"), emptySet } );
-        pos.first->first->setName("Adsorption");
-        pos.first->first->setUncoAccepted( true );
-        params.insert({"ActivationEnergy", 12.0});
-        pos.first->first->setParams( params );
-        pos.first->first->setLattice( pLattice );
-        pos.first->first->setRandomGen( pRandomGen );
-        pos.first->first->setSpecies( m_speciesMap[spec] );
-        pos.first->first->setApothesis(this);
-        pos.first->first->getParameter("ActivationEnergy");
-    }
-    
-    // Read parameters for Desorption
-    Value &vSpecie = doc["Process"]["Desorption"]["Species"];
-    Value &vEd = doc["Process"]["Desorption"]["Ed"];
-    Value &vEm = doc["Process"]["Desorption"]["Em"];
-    Value &vFreq = doc["Process"]["Desorption"]["Frequency"];
-    Value &vNeigh = doc["Process"]["Desorption"]["n_neigh"];
-
-    // Verify presence of each parameter in input file
-    logSuccessfulRead(vSpecie.IsArray(), "Desorption species");
-    logSuccessfulRead(vEd.IsArray(), "Desorption energy");
-    logSuccessfulRead(vFreq.IsArray(), "Desorption frequency");
-    logSuccessfulRead(vNeigh.IsArray(), "Number of neighbours");
-    
-    params.insert( {"Na", 6.0221417930e+23} );
-    for (SizeType spec = 0; spec < vSpecie.Size(); ++spec)
-    {
-        params.insert( {"Species" + spec, vSpecie[spec].GetString()} );
-        params.insert( {"E_d", vEd[spec].GetDouble()/6.0221417930e+23 } );
-        params.insert( {"E_m", vEm[spec].GetDouble()/6.0221417930e+23 } );
-        params.insert( {"Freq", vFreq[spec].GetDouble()/6.0221417930e+23 } );
-
-        for (int i = 0; i < vNeigh.GetInt(); ++i)
-        {
-            auto pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionSimpleCubic"), emptySet } );
-            string name = "Desorption" ;
-            name.append(to_string(i)).append("N");
-            pos.first->first->setName(name);
-            pos.first->first->setParams( params );
-            pos.first->first->setLattice( pLattice );
-            pos.first->first->setRandomGen( pRandomGen );
-            pos.first->first->setSpecies( m_speciesMap[spec] );
-
-            for ( Site* s:pLattice->getSites() ){
-                if ( pos.first->first->rules( s ) )
-                    pos.first->second.insert( s );
+                    for ( Site* s:pLattice->getSites() ){
+                        if ( pos.first->first->rules( s ) )
+                            pos.first->second.insert( s );
+                    }
+                }
             }
         }
     }
+    
+
+    
+        
+        
    
     
     
-    // Reaction* reac = new Reaction(); TODO: this allows us to explicitly access the functions within react
-    // Automatically casts to process when inserted into the process map
-    auto pos = m_processMap.insert( { FactoryProcess::createProcess("Reaction"), emptySet } );
-    pos.first->first->setName("Reaction");
-    pos.first->first->setActivationEnergy(12.);
-    pos.first->first->setPreExpFactor(1e13);
-    vector<pair<int, species_new*>> reactants;
-    vector<pair<int, species_new*>> products;
+   
     
 
 /*    pos = m_processMap.insert( { FactoryProcess::createProcess("DiffusionSimpleCubic"), tempSet } );
