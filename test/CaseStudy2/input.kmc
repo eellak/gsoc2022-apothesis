@@ -34,7 +34,9 @@
     "Desorption":
     {
       "Species": ["HAMD"],
-      "Energy": [71128],
+      "Ed": [71128],
+      "Em": [4.28e4],
+      "n_neigh": [4],
       "Frequency": [1e13]
     },
     "Reaction":

@@ -29,16 +29,21 @@
     },
     "Desorption":
     {
-      "Species": ["Cu"],
-      "Energy": [71128],
+      "Species": ["HAMD"],
+      "Ed": [71128],
+      "Em": [4.28e4],
+      "n_neigh": [4],
       "Frequency": [1e13]
     },
-    "Diffusion":
+    "Reaction":
     {
-      "Species": ["Cu"],
-      "E_d": [71128],
-      "E_m": [4.28e4],
-      "Frequency": [1e13]
+      {
+        "rxn_name": "rx1",
+        "Species": ["Cu", "H2", "HAMD],
+        "Stoichiometry": [-2, -1, 2],
+        "Energy": 66,
+        "PreExp": 1e-10
+      }
     }
   },
   "config":
