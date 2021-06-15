@@ -143,15 +143,16 @@ bool AdsorptionSimpleCubic::mf_isInHigherStep(Site* s)
 double AdsorptionSimpleCubic::getProbability(){
 
     //These must trenafered in the global definitions
-    double Na = 6.0221417930e+23;		// Avogadro's number [1/mol]
-    double P = 101325;					// [Pa]
+    double Na = any_cast<double>(m_mParams["Na"]);		// Avogadro's number [1/mol]
+    double P = any_cast<double>(m_mParams["P"]);					// [Pa]
     double T = any_cast<double>(m_mParams["T"]); //500;						// [K]
     double k = any_cast<double>(m_mParams["k"]); // 1.3806503e-23;			// Boltzmann's constant [j/K]
     double s0 = any_cast<double>(m_mParams["s0"]); //0.1;
     double C_tot = any_cast<double>(m_mParams["C_tot"]);			// [sites/m^2] Vlachos code says [moles sites/m^2]
-    double m = 32e-3/Na;				// [kg/mol] this is the molecular wei
-    double y = 2.0e-4;					// Mole fraction of the precursor on the wafer
-
+    double m = any_cast<double>(m_mParams["mass"])/Na;				// [kg/mol] this is the molecular wei
+    string yParam = "f_";
+    yParam.append(getSpecies()->getChemFormula());
+    double y = any_cast<double>(m_mParams[yParam]);					// Mole fraction of the precursor on the wafer
     double probability = s0*y*P/(C_tot*sqrt(2.0e0*3.14159265*m*k*T) );
     return probability;
 }

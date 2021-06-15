@@ -198,6 +198,7 @@ void Apothesis::init()
             Value &stick = doc["Process"]["Adsorption"]["Sticking"];
             Value &mFrac = doc["Process"]["Adsorption"]["MolFraction"];
             Value &ctot = doc["Process"]["Adsorption"]["C_tot"];
+            Value &mass = doc["Process"]["Adsorption"]["Mass"];
             Value &ads = doc["Process"]["Adsorption"];
 
             // Verify presence of each parameter in input file
@@ -205,6 +206,7 @@ void Apothesis::init()
             logSuccessfulRead(stick.IsArray(), "Adsorption sticking coefficients");
             logSuccessfulRead(mFrac.IsArray(), "Adsorption mass fraction");
             logSuccessfulRead(ctot.IsDouble(), "Site density");
+            logSuccessfulRead(mass.IsDouble(), "Mass");
 
             params.insert( {"R", 8.3145 });
             params.insert( {"k", 1.3806503e-23} );
@@ -217,6 +219,7 @@ void Apothesis::init()
                 params.insert( {f, mFrac[spec].GetDouble()} );
                 params.insert( {"C_tot", ctot.GetDouble()} );
                 params.insert( {"s0", stick[spec].GetDouble()} );
+                params.insert( {"mass", mass.GetDouble()} );
 
                 auto pos = m_processMap.insert( { FactoryProcess::createProcess("AdsorptionSimpleCubic"), emptySet } );
                 pos.first->first->setName("Adsorption");
