@@ -152,7 +152,8 @@ double AdsorptionSimpleCubic::getProbability(){
     double m = 32e-3/Na;				// [kg/mol] this is the molecular wei
     double y = 2.0e-4;					// Mole fraction of the precursor on the wafer
 
-    return s0*y*P/(C_tot*sqrt(2.0e0*3.14159265*m*k*T) );
+    double probability = s0*y*P/(C_tot*sqrt(2.0e0*3.14159265*m*k*T) );
+    return probability;
 }
 
 }

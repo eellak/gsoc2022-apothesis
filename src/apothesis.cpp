@@ -131,14 +131,14 @@ void Apothesis::init()
     vector<double> mws = pRead->getMWs();
     vector<string> names = pRead->getSpeciesNames();
 //
-    //for (int i = 0; i < mws.size(); ++i)
-    //{
-    //  species_new *s = new species_new(); //Species(names[i], mws[i], m_nSpecies);
-    //  s->setChemFormula(names[i]);
-    //  s->setID(i);
-    //  m_nSpecies++;
-    //  m_speciesMap[i] = s;
-    //}
+    for (int i = 0; i < mws.size(); ++i)
+    {
+      species_new *s = new species_new(); //Species(names[i], mws[i], m_nSpecies);
+      s->setChemFormula(names[i]);
+      s->setID(i);
+      m_nSpecies++;
+      m_speciesMap[i] = s;
+    }
   
 
     // Read parameters for Reaction
@@ -162,7 +162,7 @@ void Apothesis::init()
                 auto pos = m_processMap.insert( { FactoryProcess::createProcess("Reaction"), emptySet } );
                 pos.first->first->setName(rxnName);
                 pos.first->first->setActivationEnergy(vEnergy.GetDouble());
-                pos.first->first->setPreExpFactor(vStoich.GetDouble());
+                pos.first->first->setPreExpFactor(vPreExp.GetDouble());
                 vector<pair<int, species_new*>> reactants;
                 vector<pair<int, species_new*>> products;
 
@@ -171,29 +171,28 @@ void Apothesis::init()
                     species_new* spec = new species_new();
                     spec->setChemFormula(vSpecies[counter].GetString());
                     spec->setID(specCounter);
-                    spec->setMaxReacCoreff(vStoich.GetDouble());
+                    spec->setMaxReacCoreff(vStoich[counter].GetDouble());
                     m_speciesMap[specCounter] = spec;
                     ++specCounter;
 
-                    if (vStoich.GetDouble() < 0)
+                    if (vStoich[counter].GetDouble() < 0)
                     {
-                        reactants.push_back(make_pair(-1*vStoich.GetDouble(), spec));
+                        reactants.push_back(make_pair(-1*vStoich[counter].GetDouble(), spec));
                     }
                     else
                     {
-                        products.push_back(make_pair(-1*vStoich.GetDouble(), spec));
+                        products.push_back(make_pair(1*vStoich[counter].GetDouble(), spec));
                     }
 
                 }
                 params.insert({"reactants", reactants});
                 params.insert({"products", products});
-
+                pos.first->first->setParams( params );
             }
+
         }
         else if (rxnName.compare("Adsorption") == 0)
         {
-                    cout<<rxnName<<endl;
-
             // Read parameters for Adsorption
             Value &specie = doc["Process"]["Adsorption"]["Species"];
             Value &stick = doc["Process"]["Adsorption"]["Sticking"];
@@ -254,8 +253,9 @@ void Apothesis::init()
                 params.insert( {"E_d", vEd[spec].GetDouble()/6.0221417930e+23 } );
                 params.insert( {"E_m", vEm[spec].GetDouble()/6.0221417930e+23 } );
                 params.insert( {"Freq", vFreq[spec].GetDouble()/6.0221417930e+23 } );
+                params.insert ( {"neighs", vNeigh[spec].GetInt()});
 
-                for (int i = 0; i < vNeigh.GetInt(); ++i)
+                for (int i = 0; i < vNeigh[spec].GetInt(); ++i)
                 {
                     auto pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionSimpleCubic"), emptySet } );
                     string name = "Desorption" ;
