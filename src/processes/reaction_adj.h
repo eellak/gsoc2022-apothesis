@@ -40,6 +40,7 @@ public:
     void perform( vector<Site*> );
     
 private:
+    int mf_calculateNeighbors(Site* s);
     REGISTER_PROCESS(ReactionAdj)
 };    
 }

@@ -71,15 +71,8 @@ namespace MicroProcesses
                 }
             }
         }
-        
-        if (getApothesis()->getCaseStudy() == 1)
-        {
-            for (Site* site:sites)
-            {
-                site->increaseHeight(1);
-            }
-        }
-        else if (getApothesis()->getCaseStudy() == 2)
+        // Add products if we have any
+        if (m_vpProducts.size() > 0)
         {
             for (Site* site:sites)
             {
@@ -88,7 +81,48 @@ namespace MicroProcesses
                     site->addSpecies(product.second, product.first);   
                 }
             }
-        }       
+        }
+        else // Else simply increase the height
+        {
+            
+            for (Site* site:sites)
+            {
+                site->increaseHeight(1);
+            }
+        }
+        
+        for (Site* site:sites)
+        {
+            m_seAffectedSites.insert(site);
+            for ( Site* neigh:site->getNeighs() ) 
+            {
+                mf_calculateNeighbors( neigh );
+                m_seAffectedSites.insert( neigh );
+            }
+
+        } 
+    }
+
+    int ReactionAdj::mf_calculateNeighbors(Site* s)
+    {
+        int neighs = 1;
+        for ( Site* neigh:s->getNeighs() ) {
+            if ( s->isLowerStep() && neigh->isHigherStep() ){
+                if ( neigh->getHeight() >= s->getHeight() + m_pLattice->getStepDiff() + 1 )
+                    neighs++;
+            }
+            else if ( neigh->isLowerStep() && s->isHigherStep() ){
+                if ( neigh->getHeight() >= s->getHeight() - m_pLattice->getStepDiff() + 1 )
+                    neighs++;
+            }
+            else {
+                if ( neigh->getHeight() >= s->getHeight() )
+                    neighs++;
+            }
+        }
+
+        s->setNeighsNum( neighs );
+        return neighs;
     }
 
 }

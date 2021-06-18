@@ -427,7 +427,7 @@ void Apothesis::exec()
         //6. advance time: time += dt;
         m_dProcTime += m_dt;
         timeToWrite += m_dt;
-
+        cout.precision(17);
         cout << m_dProcTime << endl;
 
         //Write the lattice heights
