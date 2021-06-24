@@ -231,6 +231,11 @@ void Apothesis::init()
                 pos.first->first->setSpecies( m_speciesMap[spec] );
                 pos.first->first->setApothesis(this);
                 pos.first->first->getParameter("ActivationEnergy");
+                
+                for ( Site* s:pLattice->getSites() ){
+                        if ( pos.first->first->rules( s ) )
+                            pos.first->second.insert( s );
+                    }
             }
         }
         else if (rxnName.compare("Desorption") == 0)
@@ -382,8 +387,8 @@ void Apothesis::exec()
         m_dSum = 0.0;
         m_dRandom = pRandomGen->getDoubleRandom();
 
-        for ( auto &p:m_processMap){ // TODO Why is this a nested loop?
-            m_dProcRate = p.first->getProbability()*p.second.size();
+        for ( auto &p:m_processMap){
+            m_dProcRate = p.first->getProbability()*p.second.size(); //TODO: verify getProbabitliy() != 0
             m_dSum += m_dProcRate/m_dRTot;
     
             //2. Pick a process according to the rates
