@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 2.9)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 
-find_package(RapidJSON)
-
+#find_package(RapidJSON)
+include("${CMAKE_SOURCE_DIR}/build/vendor/rapidjson.cmake")
 project(Apothesis)
 
 set(header_files
@@ -77,6 +77,9 @@ set(species_files
     species/species.cpp
     species/species_new.cpp
 )
+include_directories(
+    ${RAPIDJSON_INCLUDE_DIR}
+)
 add_executable(${PROJECT_NAME} "main.cpp"
     ${header_files}
     ${process_files}
@@ -87,6 +90,7 @@ add_executable(${PROJECT_NAME} "main.cpp"
     ${aux_files}
     ${essential_src_files}
 )
+add_dependencies(${PROJECT_NAME} rapidjson)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     .
