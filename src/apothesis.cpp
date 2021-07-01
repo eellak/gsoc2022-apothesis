@@ -64,13 +64,12 @@ Apothesis::Apothesis(int argc, char *argv[])
     vector<string> pName = pRead->getSpeciesNames();
 
     // Build the lattice. This should always follow the read input
-
     std::cout << "Building the lattice" << std::endl;
-//    pLattice->setOrientation("110");
+    pLattice->setOrientation("110");
     pLattice->build();
 
-    //For building with steps surface
-    pLattice->buildSteps( 20, 1, 0);
+    //For building with steps surface. Works only for simple cubic
+    //pLattice->buildSteps( 20, 1, 0);
 
     std::cout << "Finished building the lattice" << std::endl;
 
@@ -99,14 +98,6 @@ void Apothesis::init()
         pIO->openOutputFile("Output");
     // Initialize Random generator.
     pRandomGen->init( 213212 );
-    //Give initial height for lattice. This is for FCC(110).
-//    for ( Site* s:pLattice->getSites() )
- //       if ( s->getID()%2 != 0)
-  //          s->setHeight( 9 );
-   //     else
-    //        s->setHeight( 10 );
-
-    // ----- For validating with the case of Lam & Vlachos ------
 
     // Get access to document file
     Document &doc = pRead->getDoc();
@@ -124,6 +115,7 @@ void Apothesis::init()
     
       
     set< Site* > emptySet;
+<<<<<<< HEAD
 
     pIO->writeLogOutput("Initializing instances of species");
 
@@ -292,61 +284,47 @@ void Apothesis::init()
     
    
     
+=======
+    //    set< Site* > tempSet;
+    //    for ( Site* s:pLattice->getSites() )
+    //       tempSet.insert( s );
 
-/*    pos = m_processMap.insert( { FactoryProcess::createProcess("DiffusionSimpleCubic"), tempSet } );
-    pos.first->first->setName("Diffusion5N");
-    pos.first->first->setParams( params );
+    auto pos = m_processMap.insert( { FactoryProcess::createProcess("AdsortpionFCC1102SMulti"), emptySet } );
+    pos.first->first->setName("AdsortpionFCC1102SMulti");
+    pos.first->first->init( params );
     pos.first->first->setLattice( pLattice );
-    pos.first->first->setRandomGen( pRandomGen );*/
-   pLattice->printNeighNum();
+    pos.first->first->setRandomGen( pRandomGen );
+    pos.first->first->init( params );
+
+/*    for (int i = 4; i < 9; i++){
+        auto des = m_processMap.insert( { FactoryProcess::createProcess("DesorptionFCC110Multi"), emptySet } );
+        string name = "Desortpion " + std::to_string( i );
+        des.first->first->setName( name );
+        params.insert( {"neighs", i } );
+        cout << any_cast<int>(params["neighs"]) << endl;
+        des.first->first->init( params );
+        params.erase( "neighs" );
+    }*/
+
+    for ( auto &p:m_processMap){
+        for ( Site* s:pLattice->getSites() ){
+            s->addSpeciesLabel("NA"); // For not occupied species
+            if ( p.first->rules( s ) )
+                p.second.insert( s );
+        }
+    }
+>>>>>>> Apothesis-reaction
+
+//    pLattice->print();
+    cout << " Lets see! " << endl;
 }
 
 void Apothesis::exec()
 {
-    //-------------------- This is an example for FCC(110) lattice  ------------------//
-
-    /*    Process* adsosption = FactoryProcess::createProcess("Adsorption");
-    //    Adsorption* adsosption = new Adsorption_new();
-    adsosption->setName("Simple_FCC_110");
-    adsosption->setID( 0 );
-
-    pair<string, set<int> > p;
-    p.first = adsosption->getName();
-    set< int > ids;
-
-    m_procMap.insert(  p );
-    //    procPool->addProcess( adsosption->getName(), adsosption );
-    //   procPool->addProcess( adsosption->getID(),  adsosption);
-
-    //We always start from the even numbers in FCC 110
-    for (Site* s:pLattice->getSites() )
-        if ( s->getID()%2 == 0)
-            m_procMap[ adsosption->getName() ].insert( s->getID() );
-
-    // Here we set the process map to the lattice in order for the lattice to be able to modified according to the structural properties of the lattice.
-    //(must be transferred to init)
-    pLattice->setProcMap( &m_procMap );
-
-    adsosption->perform( 15 );
-
-    EXIT; */
-
+    Site* tempSite = 0;
     //--------------- Open files for writting ---------------------->
     pIO->openRoughnessFile( "testRough" );
-
-    // Here we set the process map to the lattice in order for the lattice to be able to modified according to the structural properties of the lattice.
-    //(must be transferred to init)
-    //    pLattice->setProcMap( &m_procMap );
-
-    //Perform the number of KMC steps read from the input.
-//    m_dEndTime = pParameters->getEndTime();
-
-//    if (m_dEndTime == 0.0){
- //       pErrorHandler->error_simple_msg("Zero iterations found.");
-  //      exit(0);
-   // }
-    //else
-        pIO->writeLogOutput("Running " + to_string( m_dEndTime ) + " sec");
+    pIO->writeLogOutput("Running " + to_string( m_dEndTime ) + " sec");
 
     //Calculate first time the total probability (R) --------------------------//
     m_dRTot = 0.0;
@@ -366,12 +344,10 @@ void Apothesis::exec()
         output += "Coverage " + p.first->getName() + '\t';
     pIO->writeInOutput( output );
 
-//    pIO->writeInOutput( )
-
     int iTimeStep = 0;
     pIO->writeLatticeHeights( m_dProcTime, iTimeStep );
 
-    double writeLatHeigsEvery = 1e-5; //in s
+    double writeLatHeigsEvery = 1e-3; //in s
     double timeToWrite = 0.0;
 
     output = std::to_string(m_dProcTime) + '\t' + std::to_string( pProperties->getMicroroughness() ) + '\t' + std::to_string( pProperties->getRMS() )  + '\t' ;
@@ -381,6 +357,9 @@ void Apothesis::exec()
     for ( auto &p:m_processMap)
         output += std::to_string( (double)p.second.size()/(double)pLattice->getSize() ) + '\t';
     pIO->writeInOutput( output );
+
+
+    pLattice->writeXYZ( "lattice.xyz" );
 
     while ( m_dProcTime <= m_dEndTime ){
         //1. Get a random numbers
@@ -400,12 +379,13 @@ void Apothesis::exec()
                 Site* s = *next( p.second.begin(), m_iSiteNum );
 
                 p.first->perform( s );
+                tempSite = s;
                 //Count the event for this class
                 p.first->eventHappened();
 
                 // Check if an affected site must enter to a class or not
-                for (Site* affectedSite:p.first->getAffectedSites() ){                   
-                    //Erase the affected site from the proces
+                for (Site* affectedSite:p.first->getAffectedSites() ){
+                    //Erase the affected site from the processes
                     for (auto &p2:m_processMap){
                         if ( !p2.first->isUncoAccepted() ) {
                             //Added if it obeys the rules of this process
@@ -415,9 +395,16 @@ void Apothesis::exec()
                             }
                             else
                                 p2.second.erase( affectedSite );
+
+                            if ( p2.second.empty() && p2.first->getName() == "AdsorptionFCC1102SSimple") {
+                                cout << "No place to adsorb! " << endl;
+                                exit(0);
+                            }
+
                         }
                     }
                 }
+
 
                 //4. Re-compute the processes rates and re-compute Rtot (see ppt).
                 m_dRTot = 0.0;
@@ -429,14 +416,23 @@ void Apothesis::exec()
                 break;
             }
         }
+
         //6. advance time: time += dt;
         m_dProcTime += m_dt;
         timeToWrite += m_dt;
         cout.precision(17);
         cout << m_dProcTime << endl;
 
+        pLattice->writeXYZ( "test.xzy" );
+
         //Write the lattice heights
         iTimeStep++;
+
+//        cout << "******************" << endl;
+//        cout <<" Site " << tempSite->getID() << endl;
+//        cout << "******************" << endl;
+//        pLattice->print();
+//        cout << "******************" << endl;
 
         if ( timeToWrite >= writeLatHeigsEvery ) {
             pIO->writeLatticeHeights( m_dProcTime, iTimeStep );
@@ -451,7 +447,6 @@ void Apothesis::exec()
 
             timeToWrite = 0.0;
         }
-
     }
 }
 

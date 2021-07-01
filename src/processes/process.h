@@ -52,11 +52,12 @@ public:
     /// The rules for this type of process e.g. the neighbour of site Site.
     virtual bool rules( Site* ) = 0;
 
+    /// Initialization for this process (e.g. temperature, pressure, mole fraction etc.)
+    /// This must be for every process
+    void init( map<string, any> params ){ m_mParams = params; }
+
     /// Returns the sites that are affected by this process including the site that this process is performed.
     inline set<Site*> getAffectedSites() { return m_seAffectedSites; }
-
-    /// Sets the parameters for this process (e.g. temperature, pressure, mole fraction etc.)
-    void setParams( map<string, any> params ){ m_mParams = params; }
 
     inline void setName( string procName ){ m_sProcName = procName; }
     inline string getName(){ return  m_sProcName; }
@@ -73,6 +74,9 @@ public:
 
     /// Returns how many times this process happens
     int getNumEventHappened(){ return m_iHappened; }
+
+    /// Insert a parameter for this process
+    inline void setParameter( string str, any val ) { m_mParams[ str ] = val; }
 
     /// Return a parameter of this process
     any getParameter( string str ) { return m_mParams[ str ]; }
