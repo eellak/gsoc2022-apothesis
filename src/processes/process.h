@@ -59,6 +59,8 @@ public:
     /// Returns the sites that are affected by this process including the site that this process is performed.
     inline set<Site*> getAffectedSites() { return m_seAffectedSites; }
 
+    void setParams( map<string, any> params ){ m_mParams = params; }
+
     inline void setName( string procName ){ m_sProcName = procName; }
     inline string getName(){ return  m_sProcName; }
 

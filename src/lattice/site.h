@@ -110,21 +110,15 @@ public:
 
     /// This will holds all the elements that can interact with the surfaces.
     /// Important when we talk about surface reactions.
-<<<<<<< HEAD
-    /// Element class has not implement yet for that we use forward decleration.
-    void addSpecies( species_new* s, int stoich);
+    void addSpecies( species_new* s);
 
-    /// Remove the species from the site
-    void removeSpecies( species_new* s, int stoich);
-=======
-    void addSpecies( Species* s);
+    void addSpecies ( species_new* s, int stoich);
 
     /// Remove a species from the site
-    void removeSpecies( Species* s);
+    void removeSpecies(species_new *s, int stoich);
 
     /// Get the species currently in the site
     vector<Species*> getSpecies();
->>>>>>> Apothesis-reaction
 
     vector<string> getSpeciesName();
 
@@ -155,10 +149,6 @@ public:
     /// Returns true if is in higher step (used in the step case only)
     bool isHigherStep() { return m_isHigherStep; }
 
-<<<<<<< HEAD
-    // returns map of species
-    inline map<int, int> getSpeciesMap() const { return m_mapSpecies; }
-=======
     /// Testing: adding species formula
     inline void addSpeciesLabel( string formula ){ m_sLabel = formula; }
 
@@ -170,7 +160,8 @@ public:
 
     /// Get the couple site of this site
     inline Site* getCoupledSite(){ return  m_cSite;}
->>>>>>> Apothesis-reaction
+
+    map<int, int> getSpeciesMap();
 
 protected:
     //The lattice type that this site belongs to
