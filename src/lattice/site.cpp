@@ -87,6 +87,11 @@ namespace SurfaceTiles
     return names;
   }
 
+  map<int, int> Site::getSpeciesMap()
+  {
+    return m_mapSpecies;
+  }
+
 } // namespace SurfaceTiles
 
 #endif

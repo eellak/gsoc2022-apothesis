@@ -107,7 +107,11 @@ void Apothesis::init()
     // Case 0 = Simple cubic, only CuAMD is adsorbed. Desorption of CuAMD. No reaction or diffusion. Low temperature regime.
     // Case 1 = Simple cubic, CuAMD is adsorbed, reacts to HAMD, which is then desorbed.
     // Case 2 = Simple cubic, CuAMD and H2 are both adsorbed, reacts, wait for HAMD desorption.
+    
     setCaseStudy(0);
+
+    // Set end time
+    m_dEndTime = pParameters->getEndTime();
 
     map<string, any> params;
     params.insert( {"T", pParameters->getTemperature()} );
@@ -299,8 +303,6 @@ void Apothesis::exec()
     m_dRTot = 0.0;
     for (pair<Process*, set< Site* > > p:m_processMap)
         m_dRTot += p.first->getProbability()*(double)p.second.size();
-
-    m_dEndTime = 0.01;
 
     pIO->writeInOutput( "\n" );
     pIO->writeInOutput( "********************************************************************" );
