@@ -115,7 +115,6 @@ void Apothesis::init()
     
       
     set< Site* > emptySet;
-<<<<<<< HEAD
 
     pIO->writeLogOutput("Initializing instances of species");
 
@@ -284,36 +283,6 @@ void Apothesis::init()
     
    
     
-=======
-    //    set< Site* > tempSet;
-    //    for ( Site* s:pLattice->getSites() )
-    //       tempSet.insert( s );
-
-    auto pos = m_processMap.insert( { FactoryProcess::createProcess("AdsortpionFCC1102SMulti"), emptySet } );
-    pos.first->first->setName("AdsortpionFCC1102SMulti");
-    pos.first->first->init( params );
-    pos.first->first->setLattice( pLattice );
-    pos.first->first->setRandomGen( pRandomGen );
-    pos.first->first->init( params );
-
-/*    for (int i = 4; i < 9; i++){
-        auto des = m_processMap.insert( { FactoryProcess::createProcess("DesorptionFCC110Multi"), emptySet } );
-        string name = "Desortpion " + std::to_string( i );
-        des.first->first->setName( name );
-        params.insert( {"neighs", i } );
-        cout << any_cast<int>(params["neighs"]) << endl;
-        des.first->first->init( params );
-        params.erase( "neighs" );
-    }*/
-
-    for ( auto &p:m_processMap){
-        for ( Site* s:pLattice->getSites() ){
-            s->addSpeciesLabel("NA"); // For not occupied species
-            if ( p.first->rules( s ) )
-                p.second.insert( s );
-        }
-    }
->>>>>>> Apothesis-reaction
 
 //    pLattice->print();
     cout << " Lets see! " << endl;
