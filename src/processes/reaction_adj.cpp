@@ -84,7 +84,6 @@ namespace MicroProcesses
         }
         else // Else simply increase the height
         {
-            
             for (Site* site:sites)
             {
                 site->increaseHeight(1);
@@ -103,7 +102,7 @@ namespace MicroProcesses
         } 
     }
 
-    int ReactionAdj::mf_calculateNeighbors(Site* s)
+    int ReactionAdj::mf_calculateNeighbors(Site* s) //TODO migrate to lattice class
     {
         int neighs = 1;
         for ( Site* neigh:s->getNeighs() ) {
