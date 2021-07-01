@@ -69,7 +69,7 @@ Apothesis::Apothesis(int argc, char *argv[])
     pLattice->build();
 
     //For building with steps surface. Works only for simple cubic
-    //pLattice->buildSteps( 20, 1, 0);
+    pLattice->buildSteps( 20, 1, 0);
 
     std::cout << "Finished building the lattice" << std::endl;
 
