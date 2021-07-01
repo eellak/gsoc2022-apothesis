@@ -110,11 +110,21 @@ public:
 
     /// This will holds all the elements that can interact with the surfaces.
     /// Important when we talk about surface reactions.
+<<<<<<< HEAD
     /// Element class has not implement yet for that we use forward decleration.
     void addSpecies( species_new* s, int stoich);
 
     /// Remove the species from the site
     void removeSpecies( species_new* s, int stoich);
+=======
+    void addSpecies( Species* s);
+
+    /// Remove a species from the site
+    void removeSpecies( Species* s);
+
+    /// Get the species currently in the site
+    vector<Species*> getSpecies();
+>>>>>>> Apothesis-reaction
 
     vector<string> getSpeciesName();
 
@@ -128,7 +138,7 @@ public:
     inline void decreaseHeight( int i ){ m_iHeight -= i; }
 
     /// Set the first negihbors of this site
-    void set1stNeibors(int level, Site* s) { m_m1stNeighs.at( level ).push_back( s ); }
+    void set1stNeibors( int level, Site* s) { m_m1stNeighs.at( level ).push_back( s ); }
 
     /// Returns the 1st neigbors
     inline map<int, vector<Site* > > get1stNeighbors() const { return m_m1stNeighs; }
@@ -145,8 +155,22 @@ public:
     /// Returns true if is in higher step (used in the step case only)
     bool isHigherStep() { return m_isHigherStep; }
 
+<<<<<<< HEAD
     // returns map of species
     inline map<int, int> getSpeciesMap() const { return m_mapSpecies; }
+=======
+    /// Testing: adding species formula
+    inline void addSpeciesLabel( string formula ){ m_sLabel = formula; }
+
+    /// Testing: geting species formula
+    inline string getSpeciesLabel(){ return m_sLabel; }
+
+    /// This site is coupled with another one (for dimmer formation)
+    inline void setCoupledSite(Site* s){ m_cSite = s; }
+
+    /// Get the couple site of this site
+    inline Site* getCoupledSite(){ return  m_cSite;}
+>>>>>>> Apothesis-reaction
 
 protected:
     //The lattice type that this site belongs to
@@ -198,6 +222,12 @@ protected:
 
     /// The number of second neighs
     int m_iSecondNeighs;
+
+    /// Test ...
+    string m_sLabel;
+
+    /// Coupled site
+    Site* m_cSite;
 
 private:
     /// Orientation of the lattice

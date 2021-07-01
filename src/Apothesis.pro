@@ -22,11 +22,16 @@ INCLUDEPATH += . \
 HEADERS += apothesis.h \
            IO/io.h \
            processes/adsorption.h \
+           processes/adsorption_2sites.h \
+           processes/adsorption_fcc1102s_multi.h \
+           processes/adsorption_fcc1102s_simple.h \
+           processes/adsorption_fcc110_simple.h \
            processes/adsorption_simple_cubic.h \
            aux/random_generator.h \
            aux/randomc.h \
-           lattice/adsorption_fcc_110.h \
            pointers.h \
+           processes/desorption_fcc110_multi.h \
+           processes/desorption_fcc110_simple.h \
            processes/desorption_simple_cubic.h \
            processes/diffusion_simple_cubic.h \
            processes/reaction.h \
@@ -50,13 +55,18 @@ HEADERS += apothesis.h \
 
 SOURCES += apothesis.cpp \
            IO/io.cpp \
+           processes/adsorption_2sites.cpp \
+           processes/adsorption_fcc1102s_multi.cpp \
+           processes/adsorption_fcc1102s_simple.cpp \
+           processes/adsorption_fcc110_simple.cpp \
            processes/adsorption_simple_cubic.cpp \
            aux/mersenne.cpp \
            aux/random_generator.cpp \
-           lattice/adsorption_fcc_110.cpp \
            lattice/lattice.cpp \
            main.cpp \
            processes/abstract_process.cpp \
+           processes/desorption_fcc110_multi.cpp \
+           processes/desorption_fcc110_simple.cpp \
            processes/desorption_simple_cubic.cpp \
            processes/diffusion_simple_cubic.cpp \
            processes/reaction.cpp \
