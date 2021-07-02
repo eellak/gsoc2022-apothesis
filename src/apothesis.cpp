@@ -258,7 +258,7 @@ void Apothesis::init()
                 params.insert( {"Freq", vFreq[spec].GetDouble()/6.0221417930e+23 } );
                 params.insert ( {"neighs", vNeigh[spec].GetInt()});
 
-                for (int i = 0; i < vNeigh[spec].GetInt(); ++i)
+                for (int i = 1; i <= vNeigh[spec].GetInt(); ++i)
                 {
                     auto pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionSimpleCubic"), emptySet } );
                     string name = "Desorption" ;
@@ -318,7 +318,7 @@ void Apothesis::exec()
     int iTimeStep = 0;
     pIO->writeLatticeHeights( m_dProcTime, iTimeStep );
 
-    double writeLatHeigsEvery = 1e-3; //in s
+    double writeLatHeigsEvery = 1e-4; //in s
     double timeToWrite = 0.0;
 
     output = std::to_string(m_dProcTime) + '\t' + std::to_string( pProperties->getMicroroughness() ) + '\t' + std::to_string( pProperties->getRMS() )  + '\t' ;
