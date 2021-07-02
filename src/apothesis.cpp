@@ -318,7 +318,7 @@ void Apothesis::exec()
     int iTimeStep = 0;
     pIO->writeLatticeHeights( m_dProcTime, iTimeStep );
 
-    double writeLatHeigsEvery = 1e-3; //in s
+    double writeLatHeigsEvery = 1e-4; //in s
     double timeToWrite = 0.0;
 
     output = std::to_string(m_dProcTime) + '\t' + std::to_string( pProperties->getMicroroughness() ) + '\t' + std::to_string( pProperties->getRMS() )  + '\t' ;
