@@ -149,9 +149,9 @@ double DesorptionSimpleCubic::getProbability(){
     double Na = 6.0221417930e+23;				// Avogadro's number [1/mol]
     double T = any_cast<double>(m_mParams["T"]); //500;						// [K]
     double k = any_cast<double>(m_mParams["k"]); // 1.3806503e-23;			// Boltzmann's constant [j/K]
-    double E_d = (7.14e+4)/Na;			// [j]
-    double E = 71128/Na; //any_cast<double>(m_mParams["E"]); //71128/Na;   //(7.14e+4)/Na;			// [j] -> 17 kcal
-    double v0 = 1.0e+13;				// [s^-1]
+    double E_d = any_cast<double>(m_mParams["E_d"]);			// [j]
+    double E = any_cast<double>(m_mParams["E_m"]); //any_cast<double>(m_mParams["E"]); //71128/Na;   //(7.14e+4)/Na;			// [j] -> 17 kcal
+    double v0 = any_cast<double>(m_mParams["Freq"]);				// [s^-1]
     /*--------------------------------------------------*/
 
     return v0*exp(-(double)any_cast<int>(m_mParams["neighs"])*E/(k*T));			//DesorptionSimpleCubic 1 neigh
