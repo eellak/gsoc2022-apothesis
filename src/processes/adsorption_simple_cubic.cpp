@@ -148,6 +148,14 @@ double AdsorptionSimpleCubic::getProbability(){
     yParam.append(getSpecies()->getChemFormula());
     double y = any_cast<double>(m_mParams[yParam]);					// Mole fraction of the precursor on the wafer
     double probability = s0*y*P/(C_tot*sqrt(2.0e0*3.14159265*m*k*T) );
+
+    //cout<<"s0: "<<s0
+    //    <<"y: "<<y
+    //    <<"P: "<<P
+    //    <<"C_tot: "<<C_tot
+    //    <<"m: "<<m
+    //    <<"k: "<<k
+    //    <<"T: "<<T;
     return probability;
 }
 

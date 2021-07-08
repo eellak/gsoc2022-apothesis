@@ -255,7 +255,7 @@ void Apothesis::init()
                 params.insert( {"Species" + spec, vSpecie[spec].GetString()} );
                 params.insert( {"E_d", vEd[spec].GetDouble()/6.0221417930e+23 } );
                 params.insert( {"E_m", vEm[spec].GetDouble()/6.0221417930e+23 } );
-                params.insert( {"Freq", vFreq[spec].GetDouble()/6.0221417930e+23 } );
+                params.insert( {"Freq", vFreq[spec].GetDouble() } );
                 params.insert ( {"neighs", vNeigh[spec].GetInt()});
 
                 for (int i = 1; i <= vNeigh[spec].GetInt(); ++i)
