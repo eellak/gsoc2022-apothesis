@@ -1,0 +1,30 @@
+{
+  "Lattice":
+  {
+    "Type": "BCC",
+    "dims": [160, 120, 10]
+  },
+  "Time": 0.001,
+  "Temperature": 400,
+  "Pressure": 101325,
+  "Species":
+  {
+    "CuAMD":
+    {
+      "mw": 145
+    }
+  },
+  "Process":
+  {
+    "Adsorption":
+    {
+      "Species": ["CuAMD"],
+      "Sticking": [0.2],
+      "MassFraction": [1.0]
+    }
+  },
+  "config":
+  {
+    "debug": "Off"
+  }
+}
