@@ -263,6 +263,7 @@ void Apothesis::init()
                     auto pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionSimpleCubic"), emptySet } );
                     string name = "Desorption" ;
                     name.append(to_string(i)).append("N");
+                    params.insert( {"neigh", i});
                     pos.first->first->setName(name);
                     pos.first->first->setParams( params );
                     pos.first->first->setLattice( pLattice );
