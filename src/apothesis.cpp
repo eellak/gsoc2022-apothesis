@@ -65,7 +65,7 @@ Apothesis::Apothesis(int argc, char *argv[])
 
     // Build the lattice. This should always follow the read input
     std::cout << "Building the lattice" << std::endl;
-    pLattice->setOrientation("110");
+    //pLattice->setOrientation("110");
     pLattice->build();
 
     //For building with steps surface. Works only for simple cubic
@@ -269,6 +269,7 @@ void Apothesis::init()
                     pos.first->first->setLattice( pLattice );
                     pos.first->first->setRandomGen( pRandomGen );
                     pos.first->first->setSpecies( m_speciesMap[spec] );
+                    params.erase("neigh");
 
                     for ( Site* s:pLattice->getSites() ){
                         if ( pos.first->first->rules( s ) )
@@ -319,7 +320,7 @@ void Apothesis::exec()
     int iTimeStep = 0;
     pIO->writeLatticeHeights( m_dProcTime, iTimeStep );
 
-    double writeLatHeigsEvery = 1e-5; //in s
+    double writeLatHeigsEvery = 1e-4; //in s
     double timeToWrite = 0.0;
 
     output = std::to_string(m_dProcTime) + '\t' + std::to_string( pProperties->getMicroroughness() ) + '\t' + std::to_string( pProperties->getRMS() )  + '\t' ;
@@ -351,7 +352,6 @@ void Apothesis::exec()
                 Site* s = *next( p.second.begin(), m_iSiteNum );
 
                 p.first->perform( s );
-                tempSite = s;
                 //Count the event for this class
                 p.first->eventHappened();
 
@@ -368,10 +368,6 @@ void Apothesis::exec()
                             else
                                 p2.second.erase( affectedSite );
 
-                            if ( p2.second.empty() && p2.first->getName() == "AdsorptionFCC1102SSimple") {
-                                cout << "No place to adsorb! " << endl;
-                                exit(0);
-                            }
 
                         }
                     }

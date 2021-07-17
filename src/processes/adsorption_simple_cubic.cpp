@@ -29,8 +29,6 @@ AdsorptionSimpleCubic::~AdsorptionSimpleCubic(){}
 bool AdsorptionSimpleCubic::rules( Site* s )
 {
     //You can always adsorb in simple cubic lattices
-    if (s->getSpeciesMap()[getSpecies()->getID()] > 0) // If there is already an existing species here, ew cannot adsorb more
-        return false;
     return true;
 }
 

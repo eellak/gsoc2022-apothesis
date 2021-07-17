@@ -27,8 +27,6 @@ DesorptionSimpleCubic::~DesorptionSimpleCubic(){}
 
 bool DesorptionSimpleCubic::rules( Site* s)
 {
-    if (s->getSpeciesMap()[Process::getSpecies()->getID()] == 0)
-        return false;
     if ( mf_calculateNeighbors( s ) == any_cast<int>(m_mParams["neigh"] ) )
         return true;
     return false;
@@ -154,7 +152,8 @@ double DesorptionSimpleCubic::getProbability(){
     double v0 = any_cast<double>(m_mParams["Freq"]);				// [s^-1]
     /*--------------------------------------------------*/
 
-    return v0*exp(-(double)any_cast<int>(m_mParams["neigh"])*E/(k*T));			//DesorptionSimpleCubic 1 neigh
+    double probability = v0*exp(-(double)any_cast<int>(m_mParams["neigh"])*E/(k*T));
+    return probability;			//DesorptionSimpleCubic 1 neigh
 }
 
 }
