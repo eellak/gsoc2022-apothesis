@@ -22,7 +22,10 @@ namespace MicroProcesses
 REGISTER_PROCESS_IMPL( AdsorptionSimpleCubic )
 
 //AdsorptionSimpleCubic::AdsorptionSimpleCubic():m_Species(0){}
-AdsorptionSimpleCubic::AdsorptionSimpleCubic(){}
+AdsorptionSimpleCubic::AdsorptionSimpleCubic()
+{
+    this->setUncoAccepted(false);
+}
 
 AdsorptionSimpleCubic::~AdsorptionSimpleCubic(){}
 
