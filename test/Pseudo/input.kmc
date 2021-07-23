@@ -1,0 +1,48 @@
+{
+  "Lattice":
+  {
+    "Type": "FCC",
+    "dims": [120, 160, 10],
+    "Step": [20, 0, 1]
+  },
+  "Time": 0.05,
+  "Temperature": 1100,
+  "Pressure": 101325,
+  "Iterations": 10000,
+  "Species":
+  {
+    "CuAMD":
+    {
+      "mw": 145
+    },
+    "HAMD":
+    {
+      "mw": 2
+    }
+  },
+  "Process":
+  {
+    "Adsorption":
+    {
+      "ASpecies": ["CuAMD"],
+      "DSpecies": ["HAMD"],
+      "Sticking": [0.1],
+      "Energy": [12.0],
+      "MolFraction": [2.0e-4],
+      "C_tot": 1.0e19,
+      "Mass": 32e-3
+    },
+    "Desorption":
+    {
+      "Species": ["HAMD"],
+      "Ed": [71128],
+      "Em": [4.28e4],
+      "n_neigh": [5],
+      "Frequency": [1e13]
+    }
+  },
+  "config":
+  {
+    "debug": "On"
+  }
+}
