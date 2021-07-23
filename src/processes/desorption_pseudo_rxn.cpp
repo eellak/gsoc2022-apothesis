@@ -33,9 +33,12 @@ bool DesorptionPseudoRxn::rules( Site* s)
         {
             return false;
         }
+        else if ( mf_calculateNeighbors( s ) == any_cast<int>(m_mParams["neigh"] ) )
+        {
+            return true;
+        }
     }
-    if ( mf_calculateNeighbors( s ) == any_cast<int>(m_mParams["neigh"] ) )
-        return true;
+    
     return false;
 }
 
