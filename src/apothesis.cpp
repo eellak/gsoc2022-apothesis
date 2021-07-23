@@ -134,6 +134,15 @@ void Apothesis::init()
       m_nSpecies++;
       m_speciesMap[i] = s;
     }
+    for ( Site* s:pLattice->getSites() )
+    {
+        s->setLattice(pLattice);
+    }
+
+    // TODO: convert this step into input file 
+    species_new* latticeSpecies = new species_new();
+    latticeSpecies->setChemFormula("Cu"); // NOTE: Lattice species does not have an ID or count in m_nSpecies or in species map yet
+    pLattice->setLatticeSpecies(latticeSpecies);
   
 
     // Read parameters for Reaction
@@ -189,7 +198,8 @@ void Apothesis::init()
         else if (rxnName.compare("Adsorption") == 0)
         {
             // Read parameters for Adsorption
-            Value &specie = doc["Process"]["Adsorption"]["Species"];
+            Value &specieA = doc["Process"]["Adsorption"]["ASpecies"];
+            Value &specieD = doc["Process"]["Adsorption"]["DSpecies"];
             Value &stick = doc["Process"]["Adsorption"]["Sticking"];
             Value &mFrac = doc["Process"]["Adsorption"]["MolFraction"];
             Value &ctot = doc["Process"]["Adsorption"]["C_tot"];
@@ -197,7 +207,8 @@ void Apothesis::init()
             Value &ads = doc["Process"]["Adsorption"];
 
             // Verify presence of each parameter in input file
-            logSuccessfulRead(specie.IsArray(), "Adsorption species");
+            logSuccessfulRead(specieA.IsArray(), "Adsorption species");
+            logSuccessfulRead(specieD.IsArray(), "Desorption species");
             logSuccessfulRead(stick.IsArray(), "Adsorption sticking coefficients");
             logSuccessfulRead(mFrac.IsArray(), "Adsorption mass fraction");
             logSuccessfulRead(ctot.IsDouble(), "Site density");
@@ -207,19 +218,29 @@ void Apothesis::init()
             params.insert( {"k", 1.3806503e-23} );
             params.insert( {"Na", 6.0221417930e+23} );    
 
-            for (SizeType spec = 0; spec < specie.Size(); ++spec)
+            for (SizeType spec = 0; spec < specieA.Size(); ++spec)
             {
                 string f = "f_";
-                f.append(specie[spec].GetString());
+                f.append(specieA[spec].GetString());
                 params.insert( {f, mFrac[spec].GetDouble()} );
                 params.insert( {"C_tot", ctot.GetDouble()} );
                 params.insert( {"s0", stick[spec].GetDouble()} );
                 params.insert( {"mass", mass.GetDouble()} );
 
-                auto pos = m_processMap.insert( { FactoryProcess::createProcess("AdsorptionSimpleCubic"), emptySet } );
+                auto pos = m_processMap.insert( { FactoryProcess::createProcess("AdsorptionPseudoRxn"), emptySet } );
+                // create adsorption species
+                species_new* adsSpecies = new species_new();
+                adsSpecies->setChemFormula(specieA[spec].GetString());
+                
+                species_new* desSpecies = new species_new();
+                desSpecies->setChemFormula(specieD[spec].GetString());
+                params.insert({"aSpecies", adsSpecies});
+                params.insert({"dSpecies", desSpecies});
+
                 pos.first->first->setName("Adsorption");
                 pos.first->first->setUncoAccepted( true );
                 params.insert({"ActivationEnergy", 12.0});
+                
                 pos.first->first->setParams( params );
                 pos.first->first->setLattice( pLattice );
                 pos.first->first->setRandomGen( pRandomGen );
@@ -260,7 +281,7 @@ void Apothesis::init()
 
                 for (int i = 1; i <= vNeigh[spec].GetInt(); ++i)
                 {
-                    auto pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionSimpleCubic"), emptySet } );
+                    auto pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionPseudoRxn"), emptySet } );
                     string name = "Desorption" ;
                     name.append(to_string(i)).append("N");
                     params.insert( {"neigh", i});
@@ -271,10 +292,10 @@ void Apothesis::init()
                     pos.first->first->setSpecies( m_speciesMap[spec] );
                     params.erase("neigh");
 
-                    for ( Site* s:pLattice->getSites() ){
-                        if ( pos.first->first->rules( s ) )
-                            pos.first->second.insert( s );
-                    }
+                    //for ( Site* s:pLattice->getSites() ){
+                    //    if ( pos.first->first->rules( s ) )
+                    //        pos.first->second.insert( s );
+                    //}
                 }
             }
         }

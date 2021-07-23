@@ -26,6 +26,7 @@
 
 #include "process.h"
 #include "species_new.h"
+#include "lattice.h"
 
 using namespace std;
 using namespace MicroProcesses;
@@ -163,6 +164,13 @@ public:
 
     map<int, int> getSpeciesMap();
 
+    void setLattice(Lattice* lattice) { m_lattice = lattice; }
+
+    Lattice* getLattice() { return m_lattice; }
+
+    vector<species_new*> getSpeciesVec() { return m_vSpecies; }
+
+
 protected:
     //The lattice type that this site belongs to
     //LatticeType m_LatticeType;
@@ -244,6 +252,9 @@ private:
 
     /// if the site belong to the higher step storing vaious info
     bool m_isHigherStep;
+
+    /// Get pointer to lattice
+    Lattice* m_lattice;
 };
 
 }

@@ -26,6 +26,8 @@ set(header_files
     processes/abstract_process.h
     processes/reaction.h
     processes/reaction_adj.h
+    processes/adsorption_pseudo_rxn.h
+    processes/desorption_pseudo_rxn.h
     error/errorhandler.h
     processes/parameters.h
     IO/read.h
@@ -61,6 +63,8 @@ set(process_files
     processes/abstract_process.cpp
     processes/reaction.cpp
     processes/reaction_adj.cpp
+    processes/adsorption_pseudo_rxn.cpp
+    processes/desorption_pseudo_rxn.cpp
 )
 set(error_files
     error/errorhandler.cpp 

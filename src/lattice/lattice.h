@@ -119,6 +119,12 @@ class Lattice: public Pointers
     /// Write the lattice in XYZ format in a filename
     virtual void writeXYZ( string filename );
 
+    /// Set species for lattice
+    void setLatticeSpecies( species_new* species ) { m_latticeSpecies = species; }
+
+    /// Get species for lattice
+    species_new* getLatticeSpecies() { return m_latticeSpecies; }
+
   protected:
     /// The size of the lattice in the x-dimension.
     int m_iSizeX;
@@ -150,6 +156,9 @@ class Lattice: public Pointers
 
     /// The height differences between the first and last step
     int m_iStepDiff;
+
+    /// Species that comprises the lattice
+    species_new* m_latticeSpecies;
   };
 
 #endif // LATTICE_H
