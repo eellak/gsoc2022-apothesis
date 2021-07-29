@@ -18,6 +18,7 @@
 #include "pointers.h"
 #include "apothesis.h"
 #include "desorption_pseudo_rxn.h"
+#include "adsorption_pseudo_rxn.h"
 #include "lattice/lattice.h"
 #include "FCC.h"
 #include "io.h"
@@ -228,18 +229,21 @@ void Apothesis::init()
                 params.insert( {"s0", stick[spec].GetDouble()} );
                 params.insert( {"mass", mass.GetDouble()} );
 
-                auto pos = m_processMap.insert( { FactoryProcess::createProcess("AdsorptionPseudoRxn"), emptySet } );
                 // create adsorption species
                 species_new* adsSpecies = new species_new();
                 adsSpecies->setChemFormula(specieA[spec].GetString());
-                
+                // create desorption species         
                 species_new* desSpecies = new species_new();
                 desSpecies->setChemFormula(specieD[spec].GetString());
-                params.insert({"aSpecies", adsSpecies});
-                params.insert({"dSpecies", desSpecies});
+       
+                AdsorptionPseudoRxn* pAds = new AdsorptionPseudoRxn();
+                pAds->setAdsorptionSpecies(m_speciesMap[0]);
+                pAds->setDesorptionSpecies(m_speciesMap[1]);
 
+                auto pos = m_processMap.insert( { pAds, emptySet } );
+                
                 pos.first->first->setName("Adsorption");
-                pos.first->first->setUncoAccepted( true );
+                pos.first->first->setUncoAccepted( false );
                 params.insert({"ActivationEnergy", 12.0});
                 
                 pos.first->first->setParams( params );

@@ -31,9 +31,7 @@ AdsorptionPseudoRxn::~AdsorptionPseudoRxn(){}
 
 bool AdsorptionPseudoRxn::rules( Site* s )
 {
-    setAdsorptionSpecies(any_cast<species_new*> (m_mParams["aSpecies"]));
-    setDesorptionSpecies(any_cast<species_new*> (m_mParams["dSpecies"]));
-    //You can always adsorb in simple cubic lattices
+    //You can adsorb if there is nothing else
     if (s->getSpeciesVec().size() == 0)
         return true;
     else
@@ -43,7 +41,7 @@ bool AdsorptionPseudoRxn::rules( Site* s )
 void AdsorptionPseudoRxn::perform( Site* s )
 {
     //For PVD results
-    s->increaseHeight( 1 );
+    s->increaseHeight( 2 );
     s->addSpecies(getDesorptionSpecies(), 1);   // Add species to current map
     mf_calculateNeighbors( s );
     m_seAffectedSites.insert( s ) ;
@@ -52,6 +50,7 @@ void AdsorptionPseudoRxn::perform( Site* s )
         mf_calculateNeighbors( neigh );
         m_seAffectedSites.insert( neigh ) ;
     }
+    
 }
 
 int AdsorptionPseudoRxn::mf_calculateNeighbors(Site* s)

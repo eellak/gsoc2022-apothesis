@@ -47,6 +47,7 @@ private:
 
     bool mf_isInLowerStep( Site* s );
     bool mf_isInHigherStep( Site* s );
+    int mf_countNeighs( Site* s);
 
     species_new* getLatticeSpecies(Site* s);
 

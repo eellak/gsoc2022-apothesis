@@ -119,7 +119,6 @@ public:
     void removeSpecies(species_new *s, int stoich);
 
     /// Get the species currently in the site
-    vector<Species*> getSpecies();
 
     vector<string> getSpeciesName();
 

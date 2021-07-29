@@ -27,9 +27,9 @@ DesorptionPseudoRxn::~DesorptionPseudoRxn(){}
 
 bool DesorptionPseudoRxn::rules( Site* s)
 {
-    if (s->getSpeciesVec().size() == 1)
+    if (s->getSpeciesVec().size() == 1 && (mf_calculateNeighbors(s) == m_iNeigh))
     {
-        if (s->getSpeciesVec()[0]->getChemFormula() == getSpecies()->getChemFormula())
+        if (s->getSpeciesVec()[0]->getChemFormula().compare(getSpecies()->getChemFormula()) == 0)
         {
             return true;
         }
