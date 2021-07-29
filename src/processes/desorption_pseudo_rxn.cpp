@@ -31,7 +31,7 @@ bool DesorptionPseudoRxn::rules( Site* s)
     {
         if (s->getSpeciesVec()[0]->getChemFormula() == getSpecies()->getChemFormula())
         {
-            return false;
+            return true;
         }
     }
     

@@ -17,6 +17,7 @@
 
 #include "pointers.h"
 #include "apothesis.h"
+#include "desorption_pseudo_rxn.h"
 #include "lattice/lattice.h"
 #include "FCC.h"
 #include "io.h"
@@ -176,7 +177,7 @@ void Apothesis::init()
                     spec->setChemFormula(vSpecies[counter].GetString());
                     spec->setID(specCounter);
                     spec->setMaxReacCoreff(vStoich[counter].GetDouble());
-                    m_speciesMap[specCounter] = spec;
+                    m_speciesMap[1] = spec;
                     ++specCounter;
 
                     if (vStoich[counter].GetDouble() < 0)
@@ -281,7 +282,10 @@ void Apothesis::init()
 
                 for (int i = 1; i <= vNeigh[spec].GetInt(); ++i)
                 {
-                    auto pos = m_processMap.insert( { FactoryProcess::createProcess("DesorptionPseudoRxn"), emptySet } );
+                    DesorptionPseudoRxn* dPtr = new DesorptionPseudoRxn();
+                    dPtr->setSpecies(m_speciesMap[1]);
+                    dPtr->setNumNeigh(i);
+                    auto pos = m_processMap.insert( { dPtr, emptySet } );
                     string name = "Desorption" ;
                     name.append(to_string(i)).append("N");
                     params.insert( {"neigh", i});
@@ -289,7 +293,6 @@ void Apothesis::init()
                     pos.first->first->setParams( params );
                     pos.first->first->setLattice( pLattice );
                     pos.first->first->setRandomGen( pRandomGen );
-                    pos.first->first->setSpecies( m_speciesMap[spec] );
                     params.erase("neigh");
 
                     //for ( Site* s:pLattice->getSites() ){
