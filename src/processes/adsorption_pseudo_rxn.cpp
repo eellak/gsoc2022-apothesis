@@ -41,7 +41,7 @@ bool AdsorptionPseudoRxn::rules( Site* s )
 void AdsorptionPseudoRxn::perform( Site* s )
 {
     //For PVD results
-    s->increaseHeight( 2 );
+    s->increaseHeight( 1 );
     s->addSpecies(getDesorptionSpecies(), 1);   // Add species to current map
     mf_calculateNeighbors( s );
     m_seAffectedSites.insert( s ) ;

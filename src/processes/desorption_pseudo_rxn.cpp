@@ -27,12 +27,13 @@ DesorptionPseudoRxn::~DesorptionPseudoRxn(){}
 
 bool DesorptionPseudoRxn::rules( Site* s)
 {
-    if (s->getSpeciesVec().size() == 1 && (mf_calculateNeighbors(s) == m_iNeigh))
+    if ((s->getSpeciesVec().size()) == 1 && (mf_calculateNeighbors(s) == any_cast<int>(m_mParams["neigh"] ))
     {
         if (s->getSpeciesVec()[0]->getChemFormula().compare(getSpecies()->getChemFormula()) == 0)
         {
             return true;
         }
+        return true;
     }
     
     return false;
