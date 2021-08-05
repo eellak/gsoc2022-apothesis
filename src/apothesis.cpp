@@ -19,6 +19,7 @@
 #include "apothesis.h"
 #include "desorption_pseudo_rxn.h"
 #include "adsorption_pseudo_rxn.h"
+#include "adsorption_2site_pseudo.h"
 #include "lattice/lattice.h"
 #include "FCC.h"
 #include "io.h"
@@ -236,7 +237,7 @@ void Apothesis::init()
                 species_new* desSpecies = new species_new();
                 desSpecies->setChemFormula(specieD[spec].GetString());
        
-                AdsorptionPseudoRxn* pAds = new AdsorptionPseudoRxn();
+                AdsorptionPseudo2Sites* pAds = new AdsorptionPseudo2Sites();
                 pAds->setAdsorptionSpecies(m_speciesMap[0]);
                 pAds->setDesorptionSpecies(m_speciesMap[1]);
 

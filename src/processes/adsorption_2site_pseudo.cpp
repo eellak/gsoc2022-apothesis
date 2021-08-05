@@ -14,59 +14,67 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //============================================================================
-#include "desorption_pseudo_rxn.h"
+#include "adsorption_2site_pseudo.h"
 
 namespace MicroProcesses
 {
 
-REGISTER_PROCESS_IMPL(DesorptionPseudoRxn);
+REGISTER_PROCESS_IMPL( AdsorptionPseudo2Sites )
 
-DesorptionPseudoRxn::DesorptionPseudoRxn():m_iNeigh(0){}
-DesorptionPseudoRxn::~DesorptionPseudoRxn(){}
-
-
-bool DesorptionPseudoRxn::rules( Site* s)
+//AdsorptionPseudo2Sites::AdsorptionPseudo2Sites():m_Species(0){}
+AdsorptionPseudo2Sites::AdsorptionPseudo2Sites()
 {
-    if ((s->getSpeciesVec().size()) == 1 && (mf_calculateNeighbors(s) == any_cast<int>(m_mParams["neigh"] )))
+    this->setUncoAccepted(false);
+}
+
+AdsorptionPseudo2Sites::~AdsorptionPseudo2Sites(){}
+
+bool AdsorptionPseudo2Sites::rules( Site* s )
+{
+    //You can adsorb if there is nothing else
+    if (s->getSpeciesVec().size() == 0)
     {
-        if (s->getSpeciesVec()[0]->getChemFormula().compare(getSpecies()->getChemFormula()) == 0)
+        for (auto neigh:s->getNeighs())
         {
-            return true;
-        }
-        return true;
-    }
-    
-    return false;
-}
-
-void DesorptionPseudoRxn::perform( Site* s)
-{
-    //For PVD results
-    s->removeSpecies(getSpecies(), 1);
-    
-    mf_calculateNeighbors( s ) ;
-    m_seAffectedSites.insert( s );
-    for ( Site* neigh:s->getNeighs() ) {
-        mf_calculateNeighbors( neigh );
-        m_seAffectedSites.insert( neigh );
-
-        for ( Site* firstNeigh:neigh->getNeighs() ){
-            firstNeigh->setNeighsNum( mf_calculateNeighbors( firstNeigh ) );
-            m_seAffectedSites.insert( firstNeigh );
+            if ((neigh->getHeight() == s->getHeight()) & (neigh->getSpeciesVec().size() == 0))
+            {
+                return true;
+            }
         }
     }
 }
 
-species_new* DesorptionPseudoRxn::getLatticeSpecies(Site* site)
+void AdsorptionPseudo2Sites::perform( Site* s )
 {
-    return site->getLattice()->getLatticeSpecies();
+    Site* neigh_ = s;
+
+for (auto neigh:s->getNeighs())
+    {
+        if (neigh->getHeight() == s->getHeight())
+        {
+            neigh_ = neigh;
+            break;
+        }
+    }
+    for (auto site:vector<Site*> {s, neigh_})
+    {
+         //For PVD results
+        site->increaseHeight( 1 );
+        site->addSpecies(getDesorptionSpecies(), 1);   // Add species to current map
+        mf_calculateNeighbors( site );
+        m_seAffectedSites.insert( site ) ;
+
+        for ( Site* neigh:s->getNeighs() ) {
+            mf_calculateNeighbors( neigh );
+            m_seAffectedSites.insert( neigh ) ;
+        }
+    }
+   
+    
 }
 
-int DesorptionPseudoRxn::mf_calculateNeighbors(Site* s)
+int AdsorptionPseudo2Sites::mf_calculateNeighbors(Site* s)
 {
-
-    //We do not need to count the neighbours here!!!
-    //We need it only in the rules!
     int neighs = 1;
     for ( Site* neigh:s->getNeighs() ) {
         if ( s->isLowerStep() && neigh->isHigherStep() ){
@@ -84,7 +92,7 @@ int DesorptionPseudoRxn::mf_calculateNeighbors(Site* s)
     }
 
     s->setNeighsNum( neighs );
-    return neighs;
+    return neighs; // I do not know if we actual need this to be done here ...
 
     //For flat surfaces
 /*    int neighs = 1;
@@ -121,7 +129,7 @@ int DesorptionPseudoRxn::mf_calculateNeighbors(Site* s)
 
     s->setNeighsNum( neighs );
 
-    return neighs; */
+    return neighs;*/
 
   //For flat surfaces
 /*    int neighs = 1;
@@ -132,7 +140,7 @@ int DesorptionPseudoRxn::mf_calculateNeighbors(Site* s)
     return neighs;*/
 }
 
-bool DesorptionPseudoRxn::mf_isInLowerStep(Site* s)
+bool AdsorptionPseudo2Sites::mf_isInLowerStep(Site* s)
 {
     for (int j = 0; j < m_pLattice->getY(); j++)
         if ( s->getID() == m_pLattice->getSite( j, 0 )->getID() )
@@ -141,32 +149,32 @@ bool DesorptionPseudoRxn::mf_isInLowerStep(Site* s)
     return false;
 }
 
-bool DesorptionPseudoRxn::mf_isInHigherStep(Site* s)
+bool AdsorptionPseudo2Sites::mf_isInHigherStep(Site* s)
 {
-    for (int j = 0; j < m_pLattice->getY(); j++){
-   //     cout<< m_pLattice->getSite( j, m_pLattice->getX() - 1 )->getID() << endl;
-        if ( s->getID() == m_pLattice->getSite( j, m_pLattice->getX() - 1 )->getID() ){
+    for (int j = 0; j < m_pLattice->getY(); j++)
+        if ( s->getID() == s->getID() == m_pLattice->getSite( j, m_pLattice->getX() - 1 )->getID() )
             return true;
-        }
-    }
 
     return false;
 }
 
-double DesorptionPseudoRxn::getProbability(){
+
+double AdsorptionPseudo2Sites::getProbability(){
 
     //These must trenafered in the global definitions
-    /*--- Taken from  Lam and Vlachos (2000)PHYSICAL REVIEW B, VOLUME 64, 035401 - DOI: 10.1103/PhysRevB.64.035401 ---*/
-    double Na = 6.0221417930e+23;				// Avogadro's number [1/mol]
+    double Na = any_cast<double>(m_mParams["Na"]);		// Avogadro's number [1/mol]
+    double P = any_cast<double>(m_mParams["P"]);					// [Pa]
     double T = any_cast<double>(m_mParams["T"]); //500;						// [K]
     double k = any_cast<double>(m_mParams["k"]); // 1.3806503e-23;			// Boltzmann's constant [j/K]
-    double E_d = any_cast<double>(m_mParams["E_d"]);			// [j]
-    double E = any_cast<double>(m_mParams["E_m"]); //any_cast<double>(m_mParams["E"]); //71128/Na;   //(7.14e+4)/Na;			// [j] -> 17 kcal
-    double v0 = any_cast<double>(m_mParams["Freq"]);				// [s^-1]
-    /*--------------------------------------------------*/
+    double s0 = any_cast<double>(m_mParams["s0"]); //0.1;
+    double C_tot = any_cast<double>(m_mParams["C_tot"]);			// [sites/m^2] Vlachos code says [moles sites/m^2]
+    double m = any_cast<double>(m_mParams["mass"])/Na;				// [kg/mol] this is the molecular wei
+    string yParam = "f_";
+    yParam.append(getSpecies()->getChemFormula());
+    double y = any_cast<double>(m_mParams[yParam]);					// Mole fraction of the precursor on the wafer
+    double probability = s0*y*P/(C_tot*sqrt(2.0e0*3.14159265*m*k*T) );
 
-    double probability = v0*exp(-(double)any_cast<int>(m_mParams["neigh"])*E/(k*T));
-    return probability;			//DesorptionPseudoRxn 1 neigh
+    return probability;
 }
 
 }
