@@ -32,6 +32,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 # Input
 HEADERS += apothesis.h \
+           IO/cml_reader.h \
+           IO/txt_reader.h \
+           IO/xyz_reader.h \
            lattice/BCC.h \
            lattice/FCC.h \
            register.h \
@@ -52,6 +55,9 @@ HEADERS += apothesis.h \
            processes/io.h
 
 SOURCES += apothesis.cpp \
+           IO/cml_reader.cpp \
+           IO/txt_reader.cpp \
+           IO/xyz_reader.cpp \
            lattice/BCC.cpp \
            lattice/FCC.cpp \
            main.cpp \
