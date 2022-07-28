@@ -1,15 +1,30 @@
-build_lattice  BCC  10 10 10 #read_lattice file.xyz file.cml 
-nspecies 3 
-O2 32
-
-nprocesses 4
-O2 + * -> O2*, simple 0.1 1.0 1.0e+19
-O2* -> O2 + *, simple 1.0e+13 1.0e+13
-O2* -> O2*, simple 7.14e+4 7.14e+4
-
-#Settings
-time  0.001
-temperature 1000
-pressure 101325
-debug  On
-
+{
+  "Lattice":
+  {
+    "Type": "BCC",
+    "dims": [160, 120, 10]
+  },
+  "Time": 0.001,
+  "Temperature": 400,
+  "Pressure": 101325,
+  "Species":
+  {
+    "CuAMD":
+    {
+      "mw": 145
+    }
+  },
+  "Process":
+  {
+    "Adsorption":
+    {
+      "Species": ["CuAMD"],
+      "Sticking": [0.2],
+      "MassFraction": [1.0]
+    }
+  },
+  "config":
+  {
+    "debug": "On"
+  }
+}

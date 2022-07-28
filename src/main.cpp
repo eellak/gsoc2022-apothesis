@@ -47,11 +47,13 @@ using namespace MicroProcesses;
 int main( int argc, char* argv[] )
 {
 
+    cout << "input.kmc reader" <<endl;
+    TxtReader reader("./input.txt");
+    reader.parseFile();
+
     Apothesis* apothesis = new Apothesis( argc, argv );
 
-    cout << "input.kmc reader" <<endl;
-    TxtReader reader("./input.kmc");
-    reader.parseFile();
+
 
 
     cout << "Initiating Apothesis" << endl;
