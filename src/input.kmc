@@ -1,9 +1,8 @@
 build_lattice  BCC  10 10 10 #read_lattice file.xyz file.cml 
-
-nspecies 2 
+nspecies 3 
 O2 32
-N  10 
-nprocesses 3
+
+nprocesses 4
 O2 + * -> O2*, simple 0.1 1.0 1.0e+19
 O2* -> O2 + *, simple 1.0e+13 1.0e+13
 O2* -> O2*, simple 7.14e+4 7.14e+4

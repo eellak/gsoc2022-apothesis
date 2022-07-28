@@ -36,6 +36,8 @@
 #include "process.h"
 #include "apothesis.h"
 
+#include "txt_reader.h"
+
 /////////////////////////
 //#include "SurfaceReaction.h"
 /////////////////////////
@@ -46,6 +48,11 @@ int main( int argc, char* argv[] )
 {
 
     Apothesis* apothesis = new Apothesis( argc, argv );
+
+    cout << "input.kmc reader" <<endl;
+    TxtReader reader("./input.kmc");
+    reader.parseFile();
+
 
     cout << "Initiating Apothesis" << endl;
     apothesis->init();

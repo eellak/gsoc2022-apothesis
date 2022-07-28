@@ -1,16 +1,14 @@
 #ifndef TXTREADER_H
 #define TXTREADER_H
-
 #include <vector>
 #include <iostream>
-#include <string>
 #include <fstream>
-#include <map>
-#include <algorithm>
-
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
 #define EXIT { printf("Apothesis terminated. \n"); exit( EXIT_FAILURE ); }
-
 using namespace std;
+
 
 class TxtReader
 {
@@ -175,4 +173,4 @@ private:
 
 };
 
-#endif // TXTREADER_H
+#endif // TXTPARSER_H

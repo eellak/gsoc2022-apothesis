@@ -159,7 +159,7 @@ void TxtReader::m_fsetLattice(vector<string> vsTokens){
 
 void TxtReader::m_fsetSpecies(vector<string> lines){
 
-    for(string& line:lines){
+    foreach(string line,lines){
         vector<string> vsTokens;
         vsTokens = split(line, string(" "));
         if(vsTokens.size() < 2){
@@ -180,7 +180,7 @@ void TxtReader::m_fsetSpecies(vector<string> lines){
 
 void TxtReader::m_fsetProcesses(vector<string> lines){
     int procId=0;
-    for(string & line: lines){
+    foreach(string line,lines){
         cout << line << endl;
         m_fidentifyProcess(line,procId);
         procId++;
@@ -206,7 +206,7 @@ void TxtReader::m_fidentifyProcess(string processKey, int id){
     }else{
         procName="Reaction"+to_string(id);
         stoichiometry=m_fprocStoichiometry(reactants,products);
-        for(double& num :stoichiometry){
+        foreach (double num, stoichiometry){
             cout << num <<endl;
         }
     }
@@ -226,16 +226,16 @@ vector<string> TxtReader::m_fprocSpecies(vector<string> reactants, vector<string
     vector<string> species;
     for(const auto& [key,value]: m_mSpecies){
          //std::cout << key << '\n';
-         for(string& reactant: reactants){
+         foreach(string reactant, reactants){
             if(contains(reactant,key)){
-                if (find(species.begin(), species.end(), key) == species.end()) {
+                if (std::find(species.begin(), species.end(), key) == species.end()) {
                   species.push_back(key);
                 }
             }
          }
-         for(string& product: products){
+         foreach(string product, products){
             if(contains(product,key)){
-                if (find(species.begin(), species.end(), key) == species.end()) {
+                if (std::find(species.begin(), species.end(), key) == species.end()) {
                   species.push_back(key);
                 }
             }
@@ -250,7 +250,7 @@ vector<double> TxtReader::m_fprocStoichiometry(vector<string> reactants, vector<
 
     for(const auto& [key,value]: m_mSpecies){
          //std::cout << key << '\n';
-         for(string& reactant : reactants){
+         foreach(string reactant, reactants){
             if(contains(reactant,key)){
                 eraseSubstring(reactant, key);
                 cout << reactant << endl;
@@ -258,7 +258,7 @@ vector<double> TxtReader::m_fprocStoichiometry(vector<string> reactants, vector<
                     stoichiometry.push_back(toDouble(reactant));
             }
          }
-         for(string& product : products){
+         foreach(string product, products){
              if(contains(product,key)){
                 eraseSubstring(product, key);
                 cout << product << endl;
@@ -286,7 +286,7 @@ void TxtReader::eraseSubstring(string & mainStr, const string & toErase)
 vector<double> TxtReader::m_fprocEnergetics(string energeticsKey){
     vector<double> vdEnergetics;
     vector<string> vsEnergetics = split(energeticsKey, string(" "));
-    for(string& str: vsEnergetics) {
+    foreach (string str, vsEnergetics) {
         if (isNumber(str)){
             vdEnergetics.push_back(toDouble(str));
         }
