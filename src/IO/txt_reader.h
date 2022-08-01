@@ -17,6 +17,7 @@ class TxtReader
 public:
     enum CASE{ Sensitive, Insensitive };
 
+    TxtReader();
     explicit TxtReader(string inputPath);
     void parseFile();
 
@@ -47,6 +48,13 @@ public:
 
     /// Given a string returns a string with all the delimeters replaced. TODO: This should be transferred to a generic string class).
     string simplified( string );
+
+
+    /// Return vector<string> with map keys.
+    vector<string> mapKeys(map<string,double>);
+
+    /// Given a string and a vector<string> returns the longest match.
+    string lcMatch(string, vector<string>);
 
     /// Checks if a file exists.
     bool exists(const string& s);
@@ -99,6 +107,8 @@ private:
 
     /// Comment
     string m_sCommentLine;
+
+
 
     /// Input variables:
     /// Simulation temperature

@@ -206,9 +206,7 @@ void TxtReader::m_fidentifyProcess(string processKey, int id){
     }else{
         procName="Reaction"+to_string(id);
         stoichiometry=m_fprocStoichiometry(reactants,products);
-        for(double& num :stoichiometry){
-            cout << num <<endl;
-        }
+
     }
     m_fsetProcInfo(procName,species,energetics,stoichiometry);
 }
@@ -245,27 +243,34 @@ vector<string> TxtReader::m_fprocSpecies(vector<string> reactants, vector<string
     return species;
 }
 
+
+vector<string> TxtReader::mapKeys(map<string,double> inMap){
+
+    std::vector<string> vsKeys;
+
+    for(const auto& [key,value]: inMap){
+        vsKeys.push_back(key);
+    }
+    return vsKeys;
+}
+
 vector<double> TxtReader::m_fprocStoichiometry(vector<string> reactants, vector<string> products){
     vector<double> stoichiometry;
+    vector<string> speciesKeys=mapKeys(m_mSpecies);
 
-    for(const auto& [key,value]: m_mSpecies){
-         //std::cout << key << '\n';
-         for(string& reactant : reactants){
-            if(contains(reactant,key)){
-                eraseSubstring(reactant, key);
-                cout << reactant << endl;
-                if (isNumber(reactant))
-                    stoichiometry.push_back(toDouble(reactant));
-            }
-         }
-         for(string& product : products){
-             if(contains(product,key)){
-                eraseSubstring(product, key);
-                cout << product << endl;
-                if (isNumber(product))
-                    stoichiometry.push_back(toDouble(product));
-             }
-         }
+    //std::cout << key << '\n';
+    for(string& reactant : reactants){
+       string longestMatch=lcMatch(reactant,speciesKeys);
+       eraseSubstring(reactant, longestMatch);
+       if (isNumber(simplified(reactant)))
+            stoichiometry.push_back(toDouble(simplified(reactant)));
+
+    }
+    for(string& product : products){
+        string longestMatch=lcMatch(product,speciesKeys);
+        eraseSubstring(product, longestMatch);
+        if (isNumber(simplified(product)))
+            stoichiometry.push_back(toDouble(simplified(product)));
     }
 
     return stoichiometry;
@@ -312,6 +317,31 @@ bool TxtReader::m_bisDesorption(vector<string> products){
 bool TxtReader::m_bisDiffusion(vector<string> reactants, vector<string> products){
     return (reactants.size()==1 && products.size()==1 && contains(reactants[0],m_ssiteKey) && contains(products[0],m_ssiteKey)) ;
 }
+
+
+
+
+
+
+string TxtReader::lcMatch(string X, vector<string> vsY)
+{
+    map<int,string> mMatches;
+
+    for(string& str: vsY){
+        if(contains(X,str)){
+            mMatches.insert({str.size(),str});
+        }
+    }
+    int maxKey=0;
+    for(const auto& [key,value]: mMatches){
+        if(key > maxKey)
+            maxKey=key;
+    }
+
+    return mMatches[maxKey];
+
+}
+
 
 void TxtReader::m_fsetTime(string time){
     if (isNumber(time))
