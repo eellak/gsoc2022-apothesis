@@ -48,7 +48,6 @@
 #include <iostream>
 
 //Inlcude input.kmc reader header files
-#include "txt_reader.h"
 
 #if defined( _WIN32) || defined( _WIN64)
 #include <direct.h>

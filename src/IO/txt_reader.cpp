@@ -1,6 +1,7 @@
 #include "txt_reader.h"
 
-TxtReader::TxtReader(string inputPath):m_inputPath(inputPath),
+TxtReader::TxtReader(Apothesis *apothesis, string inputPath): Pointers(apothesis),
+                                       m_inputPath(inputPath),
                                        m_sBuildKey("build_lattice"),
                                        m_sReadKey("read_lattice"),
                                        m_sNSpeciesKey("nspecies"),

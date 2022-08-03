@@ -1,6 +1,7 @@
 #ifndef TXTREADER_H
 #define TXTREADER_H
 
+
 #include <vector>
 #include <iostream>
 #include <string>
@@ -8,17 +9,20 @@
 #include <map>
 #include <algorithm>
 
+#include "pointers.h"
+#include "apothesis.h"
+
 #define EXIT { printf("Apothesis terminated. \n"); exit( EXIT_FAILURE ); }
 
 using namespace std;
 
-class TxtReader
+class TxtReader: public Pointers
 {
 public:
     enum CASE{ Sensitive, Insensitive };
 
     TxtReader();
-    explicit TxtReader(string inputPath);
+    explicit TxtReader(Apothesis *apothesis, string inputPath);
     void parseFile();
 
     /// Opens the input file.
