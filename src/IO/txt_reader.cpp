@@ -15,9 +15,6 @@ TxtReader::TxtReader(Apothesis *apothesis, string inputPath): Pointers(apothesis
 
 void TxtReader::parseFile(){
 
-    //list<string> lKeywords{m_sBuildKey, m_sReadKey, m_sNSpeciesKey, m_sNProcKey, m_sPressureKey, m_sTemperatureKey, m_sTimeKey, m_sCommentLine};
-
-
     openInputFile(m_inputPath);
     vector<string> fLines=inputFileLines();
 
@@ -86,7 +83,7 @@ void TxtReader::openInputFile(string path){
 
     if (!m_inputFile.is_open())
     {
-      cout <<"Cannot open file input.kmc" <<endl;
+      m_errorHandler->error_simple_msg("Cannot open file input.kmc.");
       EXIT;
     }
 }
@@ -132,7 +129,7 @@ void TxtReader::m_fsetLattice(vector<string> vsTokens){
     }
     else
     {
-      std::cout << "The x dimension of lattice is not a number." << std::endl;
+      m_errorHandler->error_simple_msg("The x dimension of lattice is not a number.");
       EXIT;
     }
 
@@ -143,7 +140,7 @@ void TxtReader::m_fsetLattice(vector<string> vsTokens){
     }
     else
     {
-      std::cout <<"The y dimension of lattice is not a number."<< endl;
+      m_errorHandler->error_simple_msg("The y dimension of lattice is not a number.");
       EXIT;
     }
 
@@ -153,7 +150,7 @@ void TxtReader::m_fsetLattice(vector<string> vsTokens){
     }
     else
     {
-      std::cout<<"The height must be a  number." <<std::endl;
+      m_errorHandler->error_simple_msg("The height must be a number.");
       EXIT;
     }
 }
@@ -164,14 +161,14 @@ void TxtReader::m_fsetSpecies(vector<string> lines){
         vector<string> vsTokens;
         vsTokens = split(line, string(" "));
         if(vsTokens.size() < 2){
-             std::cout << "Missing input fields for species "<< vsTokens[0] << std::endl;
+            m_errorHandler->error_simple_msg("Missing input fields for species "+ vsTokens[0]);
         }
         else {
             if(isNumber(vsTokens[1])){
                 m_mSpecies.insert({vsTokens[0],toDouble(vsTokens[1])});
             }
             else{
-               std::cout << "Missing mw for species "<< vsTokens[0] << "is not a number"<< std::endl;
+                m_errorHandler->error_simple_msg("Missing mw for species "+ vsTokens[0] + "is not a number");
             }
         }
 
@@ -199,7 +196,7 @@ void TxtReader::m_fidentifyProcess(string processKey, int id){
 
     string procName;
     if(m_bisAdsorption(reactants)){
-        procName="Adsoption"+to_string(id);
+        procName="Adsorption"+to_string(id);
     }else if(m_bisDesorption(products)){
         procName="Desorption"+to_string(id);
     }else if(m_bisDiffusion(reactants,products)){
@@ -347,11 +344,12 @@ string TxtReader::lcMatch(string X, vector<string> vsY)
 void TxtReader::m_fsetTime(string time){
     if (isNumber(time))
     {
+      m_dTime=toDouble(time);
       std::cout << "Time "<<toDouble(time)<<std::endl;
     }
     else
     {
-      std::cout << "Could not read number of KMC simulation time from input file. Is it a number?"<<std::endl;
+      m_errorHandler->error_simple_msg("Could not read number of KMC simulation time from input file. Is it a number?");
       EXIT;
     }
 }
@@ -359,11 +357,12 @@ void TxtReader::m_fsetTime(string time){
 void TxtReader::m_fsetPressure(string pressure){
     if (isNumber(pressure))
     {
+      m_dPressure=toDouble(pressure);
       std::cout << "Pressure : "<<toDouble(pressure) << std::endl;
     }
     else
     {
-      std::cout << "Could not read pressure from input file. Is it a number?"<<std::endl ;
+      m_errorHandler->error_simple_msg("Could not read pressure from input file. Is it a number?");
       EXIT;
     }
 }
@@ -371,11 +370,12 @@ void TxtReader::m_fsetPressure(string pressure){
 void TxtReader::m_fsetTemperature(string temperature){
     if (isNumber(temperature))
     {
+      m_dTemperature=toDouble(temperature);
       std::cout << "Temperature : "<<toDouble(temperature) << std::endl;
     }
     else
     {
-      std::cout << "Could not read temperature from input file. Is it a number?"<<std::endl ;
+      m_errorHandler->error_simple_msg("Could not read temperature from input file. Is it a number?");
       EXIT;
     }
 }
@@ -384,11 +384,12 @@ void TxtReader::m_fsetDebugMode(string debugMode){
     cout << debugMode << endl;
     if (contains(debugMode,"on", Insensitive) || contains(debugMode,"off", Insensitive))
     {
-      std::cout << "Debug mode "<<debugMode<<std::endl;
+      m_sDebugMode=debugMode;
+      cout << "Debug mode: "<< debugMode<< endl;
     }
     else
     {
-      std::cout << "Could not read bebug mode."<<std::endl;
+      m_errorHandler->error_simple_msg("Could not read debug mode.");
       EXIT;
     }
 }
@@ -612,3 +613,39 @@ bool TxtReader::contains(string str1, string str2, CASE cas)
     return false;
   }
 }
+
+
+double TxtReader::getTemperature(){
+    return m_dTemperature;
+}
+
+double TxtReader::getPressure(){
+    return m_dPressure;
+}
+
+double TxtReader::getTime(){
+    return m_dTime;
+}
+
+string TxtReader::getDebugMode(){
+    return m_sDebugMode;
+}
+
+map<string,double> TxtReader::getSpecies(){
+    return m_mSpecies;
+}
+
+
+map<string,vector<string>> TxtReader::getProcSpecies(){
+    return m_mProcSpecies;
+}
+
+map<string,vector<double>> TxtReader::getProcEnergetics(){
+    return m_mProcEnergetics;
+}
+
+
+map<string,vector<double>> TxtReader::getProcStoichiometry(){
+    return m_mProcStoichiometry;
+}
+

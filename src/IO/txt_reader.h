@@ -11,6 +11,7 @@
 
 #include "pointers.h"
 #include "apothesis.h"
+#include "errorhandler.h"
 
 #define EXIT { printf("Apothesis terminated. \n"); exit( EXIT_FAILURE ); }
 
@@ -71,8 +72,30 @@ public:
         return false;
       }
 
+    ///Get functions
+    /// Returns simulation temperature
+    double getTemperature();
 
+    /// Returns simulation pressure
+    double getPressure();
 
+    /// Returns simulation time
+    double getTime();
+
+    ///retunrs simulation debug mode
+    string getDebugMode();
+
+    /// Returns species map species name and mw
+    map<string,double> getSpecies();
+
+    /// Returns map of species of process
+    map<string,vector<string>> getProcSpecies();
+
+    /// Returns map of energetics of process
+    map<string,vector<double>> getProcEnergetics();
+
+    /// Returns map of stoichiometry of process
+    map<string,vector<double>> getProcStoichiometry();
 
 private:
     ///Path of input.kmc
