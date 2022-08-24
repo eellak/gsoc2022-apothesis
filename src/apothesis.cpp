@@ -489,7 +489,7 @@ void Apothesis::init()
 void Apothesis::exec()
 {
   ///Perform the number of KMC steps read from the input.
-  long double simulationTime = pParameters->getTime();
+  long double simulationTime = pTxtReader->getTime();
 
   if (simulationTime == 0)
   {
