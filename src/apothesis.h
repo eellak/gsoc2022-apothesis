@@ -36,7 +36,8 @@ namespace SurfaceTiles{ class Site; }
 namespace MicroProcesses { class Process; class Adsorption; class Desorption; class Diffusion; class SurfaceReaction;}
 class Lattice;
 class IO;
-class Read;
+//class Read;
+class TxtReader;
 
 class Apothesis
 {
@@ -50,7 +51,10 @@ public:
     IO* pIO;
 
     /// Ponter to the read class
-    Read* pRead;
+//    Read* pRead;
+
+    /// Pointer to the txt reader class
+    TxtReader* pTxtReader;
 
     /// Pointer to the lattice class
     Lattice* pLattice;

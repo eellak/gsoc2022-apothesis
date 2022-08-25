@@ -35,15 +35,15 @@
 
 using namespace MicroProcesses;
 
-typedef rapidjson::Document Document;
-typedef rapidjson::Value Value;
-typedef rapidjson::SizeType SizeType;
+//typedef rapidjson::Document Document;
+//typedef rapidjson::Value Value;
+//typedef rapidjson::SizeType SizeType;
 
 //using namespace Utils;
 
 Apothesis::Apothesis(int argc, char *argv[])
     : pLattice(0),
-      pRead(0),
+//      pRead(0),
       m_debugMode(false),
       m_time(0),
       m_writeFrequency(500),
@@ -59,13 +59,13 @@ Apothesis::Apothesis(int argc, char *argv[])
   // Create input instance
   pIO = new IO(this);
 
-  pRead = new Read(this);
+//  pRead = new Read(this);
 
   pTxtReader = new TxtReader(this,"./input.txt");
 
   pTxtReader->parseFile();
 
-  vector<string> pName = pRead->getSpeciesNames();
+  //vector<string> pName = pRead->getSpeciesNames();
 
   // Build the lattice. This should always follow the read input
 
@@ -81,7 +81,7 @@ Apothesis::Apothesis(int argc, char *argv[])
 Apothesis::~Apothesis()
 {
   delete pIO;
-  delete pRead;
+//  delete pRead;
   delete pTxtReader;
   delete pLattice;
 
@@ -104,11 +104,11 @@ void Apothesis::init()
     pIO->openOutputFile("Output-700K");
 
   // Processes in this case
-  vector<string> pProc = m_processes;
+  //vector<string> pProc = m_processes;
 
-  cout << pProc[0] << endl;
+  //cout << pProc[0] << endl;
 
-  Document &doc = pRead->getDoc();
+  //Document &doc = pRead->getDoc();
 
   pIO->writeLogOutput("Initializing instances of species");
   /*if (std::find(pProc.begin(), pProc.end(), "Reaction") == pProc.end())
