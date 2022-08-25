@@ -4,6 +4,7 @@ TxtReader::TxtReader(Apothesis *apothesis, string inputPath): Pointers(apothesis
                                        m_inputPath(inputPath),
                                        m_sBuildKey("build_lattice"),
                                        m_sReadKey("read_lattice"),
+                                       m_sStepKey("steps"),
                                        m_sNSpeciesKey("nspecies"),
                                        m_sNProcKey("nprocesses"),
                                        m_sPressureKey("pressure"),
@@ -11,7 +12,13 @@ TxtReader::TxtReader(Apothesis *apothesis, string inputPath): Pointers(apothesis
                                        m_sTimeKey("time"),
                                        m_ssiteKey("*"),
                                        m_sCommentLine("#")
-{}
+{
+    //Initialize the map for the lattice
+    m_apothesis=apothesis;
+    m_LatticeType["NONE"] = Lattice::NONE;
+    m_LatticeType["BCC"] = Lattice::BCC;
+    m_LatticeType["FCC"] = Lattice::FCC;
+}
 
 void TxtReader::parseFile(){
 
@@ -59,6 +66,12 @@ void TxtReader::parseFile(){
             m_fsetPressure(vsTokens[1]);
         }
 
+        if (vsTokens[0].compare(m_sStepKey) == 0)
+        {
+            m_fsetSteps(vsTokens);
+        }
+
+
         if (vsTokens[0].compare(m_sTemperatureKey) == 0)
         {
             m_fsetTemperature(vsTokens[1]);
@@ -76,6 +89,7 @@ void TxtReader::parseFile(){
 
     }
 
+    initializeLattice();
 }
 
 void TxtReader::openInputFile(string path){
@@ -86,6 +100,59 @@ void TxtReader::openInputFile(string path){
       m_errorHandler->error_simple_msg("Cannot open file input.kmc.");
       EXIT;
     }
+}
+
+void TxtReader::initializeLattice(){
+
+    switch (m_LatticeType[m_sLatticeType])
+    {
+    case Lattice::FCC:
+    {
+      if (m_bSteps)
+      {
+        FCC *lattice = new FCC(m_apothesis, true, m_vSteps);
+        m_apothesis->pLattice = lattice;
+      }
+      else
+      {
+        FCC *lattice = new FCC(m_apothesis);
+        m_apothesis->pLattice = lattice;
+        m_lattice->setType("FCC");
+        break;
+      }
+
+    }
+    case Lattice::BCC:
+    {
+      if (m_bSteps)
+      {
+        BCC *lattice = new BCC(m_apothesis, true, m_vSteps);
+        m_apothesis->pLattice = lattice;
+
+      }
+      else
+      {
+        BCC *lattice = new BCC(m_apothesis);
+        m_apothesis->pLattice = lattice;
+      }
+      m_lattice->setType("BCC");
+
+      break;
+    }
+    default:
+    {
+      cout<<"Unresolvable lattice type found. Exiting..."<<endl;
+      EXIT;
+    }
+    }
+
+    m_lattice = m_apothesis->pLattice;
+    m_lattice->setType(m_sLatticeType);
+    m_lattice->setX(m_vLatticeDims[0]);
+    m_lattice->setY(m_vLatticeDims[1]);
+    m_lattice->setInitialHeight(m_vLatticeDims[2]);
+
+
 }
 
 vector<string> TxtReader::inputFileLines()
@@ -120,10 +187,12 @@ vector<string> TxtReader::inputFileLines()
 
 void TxtReader::m_fsetLattice(vector<string> vsTokens){
 
-    std::cout << "lattice type : "<<vsTokens[1]<< std::endl;
+    m_sLatticeType=vsTokens[1];
+    std::cout << "lattice type : "<< m_sLatticeType << std::endl;
 
     if (isNumber(vsTokens[2]))
     {
+     m_vLatticeDims.push_back(toInt(vsTokens[2]));
      std::cout << "lattice x : "<<toInt(vsTokens[2]) << std::endl;
 
     }
@@ -135,7 +204,7 @@ void TxtReader::m_fsetLattice(vector<string> vsTokens){
 
     if (isNumber(vsTokens[3]))
     {
-
+      m_vLatticeDims.push_back(toInt(vsTokens[3]));
       std::cout << "lattice y : "<<toInt(vsTokens[3]) << std::endl;
     }
     else
@@ -146,12 +215,26 @@ void TxtReader::m_fsetLattice(vector<string> vsTokens){
 
     if (isNumber(vsTokens[4]))
     {
+       m_vLatticeDims.push_back(toInt(vsTokens[4]));
        std::cout << "lattice initial height : "<<toInt(vsTokens[4]) << std::endl;
     }
     else
     {
       m_errorHandler->error_simple_msg("The height must be a number.");
       EXIT;
+    }
+}
+
+void TxtReader::m_fsetSteps(vector<string> vsTokens){
+    m_bSteps=false;
+    if (isNumber(vsTokens[1]) && isNumber(vsTokens[2]) && isNumber(vsTokens[3]))
+    {
+        m_vSteps={toInt(vsTokens[1]), toInt(vsTokens[2]), toInt(vsTokens[3])};
+        if(toInt(vsTokens[1])==0 && toInt(vsTokens[2])==0 && toInt(vsTokens[3])==0)
+            m_bSteps=false;
+        else
+            m_bSteps=true;
+
     }
 }
 

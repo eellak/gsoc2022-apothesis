@@ -20,7 +20,7 @@
 #include "lattice.h"
 #include "FCC.h"
 #include "io.h"
-#include "read.h"
+//#include "read.h"
 #include "txt_reader.h"
 #include "errorhandler.h"
 #include "parameters.h"

@@ -9,6 +9,9 @@
 #include <map>
 #include <algorithm>
 
+#include "lattice.h"
+#include "FCC.h"
+#include "BCC.h"
 #include "pointers.h"
 #include "apothesis.h"
 #include "errorhandler.h"
@@ -97,6 +100,13 @@ public:
     /// Returns map of stoichiometry of process
     map<string,vector<double>> getProcStoichiometry();
 
+protected:
+    /// Supported lattice types
+    map< string, Lattice::Type> m_LatticeType;
+
+    /// Set lattice using input info
+    void initializeLattice();
+
 private:
     ///Path of input.kmc
     string m_inputPath;
@@ -107,6 +117,9 @@ private:
     /// Keywords:
     /// Build lattice keyword
     string m_sBuildKey;
+
+    /// Step lattice keyword
+    string m_sStepKey;
 
     /// Read lattice from file keyword
     string m_sReadKey;
@@ -135,8 +148,6 @@ private:
     /// Comment
     string m_sCommentLine;
 
-
-
     /// Input variables:
     /// Simulation temperature
     double m_dTemperature;
@@ -159,7 +170,20 @@ private:
     map<string,vector<double>> m_mProcStoichiometry;
 
     /// Lattice
+    /// The type of lattice
+    string m_sLatticeType;
 
+    /// Lattice dimensions
+    vector<int> m_vLatticeDims;
+
+    /// Lattice build steps
+    vector<int> m_vSteps;
+
+    /// Do lattice build steps
+    bool m_bSteps;
+
+    /// Set lattice steps
+    void m_fsetSteps(vector<string>);
 
     /// Set lattice info
     void m_fsetLattice(vector<string>);
@@ -208,6 +232,9 @@ private:
 
     ///Diffusion
     bool m_bisDiffusion(vector<string>,vector<string>);
+
+    ///Apothesis member variable
+    Apothesis * m_apothesis;
 
 
 };
