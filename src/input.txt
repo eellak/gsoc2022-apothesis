@@ -1,4 +1,5 @@
 build_lattice  BCC  10 10 10 #read_lattice file.xyz file.cml 
+steps 1 1 0
 
 nspecies 1 
 O2 32
