@@ -586,7 +586,9 @@ vector<double> Apothesis::calculateProbabilities(vector<Process *> pProcesses)
   {
     Process *process = *itr;
     double prob = process->getProbability();
+    cout <<process->getName() << endl;
     probability.push_back(prob + total);
+
     total += prob;
   }
 

@@ -428,6 +428,7 @@ void TxtReader::m_fsetTime(string time){
     if (isNumber(time))
     {
       m_dTime=toDouble(time);
+      m_parameters->setTime(m_dTime);
       std::cout << "Time "<<toDouble(time)<<std::endl;
     }
     else
@@ -441,6 +442,7 @@ void TxtReader::m_fsetPressure(string pressure){
     if (isNumber(pressure))
     {
       m_dPressure=toDouble(pressure);
+      m_parameters->setPressure(m_dPressure);
       std::cout << "Pressure : "<<toDouble(pressure) << std::endl;
     }
     else
@@ -454,6 +456,7 @@ void TxtReader::m_fsetTemperature(string temperature){
     if (isNumber(temperature))
     {
       m_dTemperature=toDouble(temperature);
+      m_parameters->setTemperature(m_dTemperature);
       std::cout << "Temperature : "<<toDouble(temperature) << std::endl;
     }
     else

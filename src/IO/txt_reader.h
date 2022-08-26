@@ -15,10 +15,12 @@
 #include "pointers.h"
 #include "apothesis.h"
 #include "errorhandler.h"
+#include "parameters.h"
 
 #define EXIT { printf("Apothesis terminated. \n"); exit( EXIT_FAILURE ); }
 
 using namespace std;
+using namespace Utils;
 
 class TxtReader: public Pointers
 {
