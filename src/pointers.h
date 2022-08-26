@@ -38,7 +38,8 @@ public:
     Pointers( Apothesis* apothesis):m_apothesis( apothesis),
                         m_lattice( apothesis->pLattice),
                         m_io(apothesis->pIO),
-                        m_read(apothesis->pRead),
+//                        m_read(apothesis->pRead),
+                        m_txtReader(apothesis->pTxtReader),
                         m_errorHandler(apothesis->pErrorHandler),
                         m_parameters(apothesis->pParameters)
     {}
@@ -54,7 +55,10 @@ protected:
     IO*& m_io;
 
     /// Pointers to the classes of kmc.cpp
-    Read*& m_read;
+//    Read*& m_read;
+
+    /// Pointers to the classes of kmc.cpp
+    TxtReader*& m_txtReader;
 
     /// Pointers to the classes of kmc.cpp
     Utils::ErrorHandler*& m_errorHandler;
