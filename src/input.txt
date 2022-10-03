@@ -1,0 +1,17 @@
+build_lattice  BCC  10 10 10 #read_lattice file.xyz file.cml 
+steps 20 1 0
+
+nspecies 1 
+O2 32
+
+nprocesses 2
+O2 + * -> O2*, simple 0.1 1.0 1.0e+19
+O2* -> O2 + *, simple 1.0e+13 1.0e+13
+#O2* -> O2*, simple 7.14e+4 7.14e+4
+
+#Settings
+time  0.001
+temperature 1000
+pressure 101325
+debug  On
+

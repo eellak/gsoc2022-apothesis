@@ -20,7 +20,8 @@
 #include "lattice.h"
 #include "FCC.h"
 #include "io.h"
-#include "read.h"
+//#include "read.h"
+#include "txt_reader.h"
 #include "errorhandler.h"
 #include "parameters.h"
 #include "process.h"
@@ -34,15 +35,15 @@
 
 using namespace MicroProcesses;
 
-typedef rapidjson::Document Document;
-typedef rapidjson::Value Value;
-typedef rapidjson::SizeType SizeType;
+//typedef rapidjson::Document Document;
+//typedef rapidjson::Value Value;
+//typedef rapidjson::SizeType SizeType;
 
 //using namespace Utils;
 
 Apothesis::Apothesis(int argc, char *argv[])
     : pLattice(0),
-      pRead(0),
+//      pRead(0),
       m_debugMode(false),
       m_time(0),
       m_writeFrequency(500),
@@ -58,9 +59,13 @@ Apothesis::Apothesis(int argc, char *argv[])
   // Create input instance
   pIO = new IO(this);
 
-  pRead = new Read(this);
+//  pRead = new Read(this);
 
-  vector<string> pName = pRead->getSpeciesNames();
+  pTxtReader = new TxtReader(this,"./input.txt");
+
+  pTxtReader->parseFile();
+
+  //vector<string> pName = pRead->getSpeciesNames();
 
   // Build the lattice. This should always follow the read input
 
@@ -76,7 +81,8 @@ Apothesis::Apothesis(int argc, char *argv[])
 Apothesis::~Apothesis()
 {
   delete pIO;
-  delete pRead;
+//  delete pRead;
+  delete pTxtReader;
   delete pLattice;
 
   // Delete the processes created by the factory method
@@ -98,14 +104,14 @@ void Apothesis::init()
     pIO->openOutputFile("Output-700K");
 
   // Processes in this case
-  vector<string> pProc = m_processes;
+  //vector<string> pProc = m_processes;
 
-  cout << pProc[0] << endl;
+  //cout << pProc[0] << endl;
 
-  Document &doc = pRead->getDoc();
+  //Document &doc = pRead->getDoc();
 
   pIO->writeLogOutput("Initializing instances of species");
-  if (std::find(pProc.begin(), pProc.end(), "Reaction") == pProc.end())
+  /*if (std::find(pProc.begin(), pProc.end(), "Reaction") == pProc.end())
   {
     vector<double> mws = pRead->getMWs();
     vector<string> names = pRead->getSpeciesNames();
@@ -116,32 +122,19 @@ void Apothesis::init()
       m_nSpecies++;
       m_species[names[i]] = s;
     }
-  }
+  }*/
 
+  for(const auto& [key,value]:pTxtReader->getSpecies()){
+      Species *s = new Species(key, value, m_nSpecies);
+      m_nSpecies++;
+      m_species[key] = s;
+      cout << key <<endl;
+  }
   // Initializing interactions between species
-  pIO->writeLogOutput("Reading interactions between species");
-  Value &speciesName = doc["Species"];
-  for (Value::ConstMemberIterator itr = speciesName.MemberBegin(); itr != speciesName.MemberEnd(); ++itr)
-  {
-    const char *name = itr->name.GetString();
-    Value &singleSpecies = speciesName[name];
-    if (singleSpecies.HasMember("Interactions"))
-    {
-      Value &interactions = singleSpecies["Interactions"];
-
-      pIO->writeLogOutput("Initializing interactions between species...");
-
-      int numInters = interactions.Size();
-      for (int i = 0; i < numInters; i++)
-      {
-        m_interactions.push_back(make_tuple(name, interactions[i].GetString()));
-        pIO->writeLogOutput("(" + get<0>(m_interactions.back()) + ", " + get<1>(m_interactions.back()) + ")");
-      }
-    }
-  }
+  //pIO->writeLogOutput("Reading interactions between species");
 
   pIO->writeLogOutput("Initializing processes");
-
+/*
   if (std::find(pProc.begin(), pProc.end(), "Adsorption") != pProc.end())
   {
     pIO->writeLogOutput("Initializing Adsorption");
@@ -414,7 +407,35 @@ void Apothesis::init()
     m_vSurfaceReaction.push_back(s);
     pIO->writeLogOutput("...Done initializing reaction.");
   }
+*/
+  map<string,vector<double>> procEnergetics=pTxtReader->getProcEnergetics();
+  map<string,vector<double>> procStoichiometry=pTxtReader->getProcStoichiometry();
 
+  for(const auto& [key,value]:pTxtReader->getProcSpecies()){
+      vector<double> energetics=procEnergetics[key];
+      vector<string> species=value;
+      if(pTxtReader->contains(key,"Adsorption")){
+          cout << key << " "<< "Adsorption" <<" " << species[0]<<  endl;
+          Adsorption *a = new Adsorption(this, species[0], m_species[species[0]], energetics[0], energetics[1], false);
+          m_vProcesses.push_back(a);
+      }
+      else if(pTxtReader->contains(key,"Desorption")){
+          cout << key << " "<< "Desorption" << endl;
+          Desorption *ds = new Desorption(this, species[0], m_species[species[0]], energetics[0], energetics[1]);
+          m_vProcesses.push_back(ds);
+      }
+      else if(pTxtReader->contains(key,"Diffusion")){
+          cout << key << " "<< "Diffusion" << endl;
+          Diffusion *df = new Diffusion(this, species[0], energetics[0], energetics[1]);
+          m_vProcesses.push_back(df);
+      }else{
+          cout << key << " "<< "Reaction" << endl;
+          //SurfaceReaction *sr = new SurfaceReaction(this, m_species[species[0]], procStoichiometry[key], energetics[0], energetics[1], false);
+          //m_vProcesses.push_back(sr);
+      }
+  }
+
+/*
   // Initialize interactions between adsorption species and classes
   vector<tuple<string, string>>::iterator itr = m_interactions.begin();
   // For each pair of interactions, add the possible interaction (2-way) within the appropriate pointers
@@ -447,7 +468,7 @@ void Apothesis::init()
   cout << endl;
   cout << endl;
   /// First the processes that participate in the simulation
-
+*/
   /// that were read from the file input and the I/O functionality
   //m_vProcesses[0]->setInstance( this );
   for (vector<Process *>::iterator itr = m_vProcesses.begin(); itr != m_vProcesses.end(); ++itr)
@@ -468,7 +489,7 @@ void Apothesis::init()
 void Apothesis::exec()
 {
   ///Perform the number of KMC steps read from the input.
-  long double simulationTime = pParameters->getTime();
+  long double simulationTime = pTxtReader->getTime();
 
   if (simulationTime == 0)
   {
@@ -566,6 +587,7 @@ vector<double> Apothesis::calculateProbabilities(vector<Process *> pProcesses)
     Process *process = *itr;
     double prob = process->getProbability();
     probability.push_back(prob + total);
+
     total += prob;
   }
 
@@ -673,3 +695,5 @@ vector<SurfaceReaction *> Apothesis::getReactionPointers()
 {
   return m_vSurfaceReaction;
 }
+
+
